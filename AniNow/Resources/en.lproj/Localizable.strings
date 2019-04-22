@@ -1,0 +1,75 @@
+/* 
+  Localizable.strings
+  AniNow
+
+  Created by IL KYOUNG HWANG on 2018/12/04.
+  Copyright © 2018 Sizuha. All rights reserved.
+*/
+
+"ok"="OK";
+"cancel"="Cancel";
+"remove"="Delete";
+"add_new"="Add";
+"edit"="Edit";
+
+"sort"="Sort";
+"sort_f_title"="Title▲";
+"sort_f_title_desc"="Title▼";
+"sort_f_date"="Published Date▲";
+"sort_f_date_desc"="Published Date▼";
+"sort_f_rating"="Rating▲";
+"sort_f_rating_desc"="Rating▼";
+"sort_f_media"="Media";
+
+"anime_list"="List";
+"filter_media"="filter: Media";
+"filter_rating"="filter: Rating";
+
+"finished"="Finished";
+"setting"="Settings";
+"select"="Select";
+"all_view"="All";
+"now_view"="Now";
+"anime_title"="Title";
+"anime_title_2nd"="Sub Title";
+"media"="Media";
+"memo"="Memo";
+"empty_memo"="";
+"none_value"="None";
+"none_value2"="None";
+"unknown"="Unknown";
+"empty_items"="Empty";
+"no_rating"="No Rating";
+
+"label_fin"="Finished";
+"final_ep"="Final Ep.";
+"label_progress"="Current Ep.";
+"pub_date"="Published";
+"rating"="Rating";
+
+"info"="Information";
+"count_now"="Now items";
+"count_finished"="Finished items";
+"backup"="Backup";
+"import"="Import";
+"export"="Export";
+"last_backup"="Last Backup";
+
+"err_fail_remove"="Remove failed!";
+"err_fail_save"="Save failed!";
+
+"delete_all"="Delete All Data";
+"clear_and_import"="Add the contents of this file after Delete All";
+"append_import"="Add to existing data";
+"msg_confirm_remove"="Do you really want to delete this?";
+"msg_confirm_remove_all"="Delete all data.\nAre you sure?";
+"msg_confirm_export"="Do you want to export the contents?";
+"msg_end_backup"="Backup completed";
+"msg_confirm_import"="Do you want to read the contents of this file?";
+
+"fmt_year"="%4d";
+"fmt_month"="%2d";
+"fmt_year_month"="%2$2d/%1$04d";
+"fmt_end_import"="Loading is complete! (%d items)";
+
+"backup_csv_header"="Title,Sub title,Media,Published,Current Ep.,Final Ep.,Finished,Rating,Memo,Link";

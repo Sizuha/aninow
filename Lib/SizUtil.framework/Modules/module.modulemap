@@ -1,0 +1,11 @@
+framework module SizUtil {
+  umbrella header "SizUtil.h"
+
+  export *
+  module * { export * }
+}
+
+module SizUtil.Swift {
+    header "SizUtil-Swift.h"
+    requires objc
+}

@@ -1,0 +1,11 @@
+framework module SQuery {
+  umbrella header "SQuery.h"
+
+  export *
+  module * { export * }
+}
+
+module SQuery.Swift {
+    header "SQuery-Swift.h"
+    requires objc
+}

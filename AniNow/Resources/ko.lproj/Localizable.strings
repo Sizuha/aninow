@@ -1,0 +1,75 @@
+/* 
+  Localizable.strings
+  AniNow
+
+  Created by IL KYOUNG HWANG on 2018/12/04.
+  Copyright © 2018 Sizuha. All rights reserved.
+*/
+
+"ok"="확인";
+"cancel"="취소";
+"remove"="삭제";
+"add_new"="추가";
+"edit"="편집";
+
+"sort"="정렬";
+"sort_f_title"="제목▲";
+"sort_f_title_desc"="제목▼";
+"sort_f_date"="시작일▲";
+"sort_f_date_desc"="시작일▼";
+"sort_f_rating"="평가▲";
+"sort_f_rating_desc"="평가▼";
+"sort_f_media"="매체별";
+
+"anime_list"="작품목록";
+"filter_media"="매체별";
+"filter_rating"="평가별";
+
+"finished"="완료";
+"setting"="설정";
+"select"="선택";
+"all_view"="전체";
+"now_view"="진행중";
+"anime_title"="제목";
+"anime_title_2nd"="부제목";
+"media"="매체";
+"memo"="메모";
+"empty_memo"="";
+"none_value"="미정";
+"none_value2"="없음";
+"unknown"="모름";
+"empty_items"="비어있음";
+"no_rating"="평가없음";
+
+"label_fin"="감상완료";
+"final_ep"="최종화";
+"label_progress"="진행（화）";
+"pub_date"="시작일";
+"rating"="평가";
+
+"info"="정보";
+"count_now"="진행준인 작품수";
+"count_finished"="완료된 작품수";
+"backup"="백업";
+"import"="읽어오기";
+"export"="백업";
+"last_backup"="최근 백업";
+
+"err_fail_remove"="삭제할 수 없습니다！";
+"err_fail_save"="저장하지 못했습니다!";
+
+"delete_all"="모든 데이터를 지움";
+"clear_and_import"="기존 데이터를 지우고, 이 파일의 내용으로 채움";
+"append_import"="기존 데이터에 추가";
+"msg_confirm_remove"="정말로 삭제 합니까?";
+"msg_confirm_remove_all"="모든 데이터가 사라집니다.\n괜찮겠습니까?";
+"msg_confirm_export"="백업을 진행합니다";
+"msg_end_backup"="백업을 완료했습니다";
+"msg_confirm_import"="이 파일의 내용을 읽어들입니다";
+
+"fmt_year"="%4d년";
+"fmt_month"="%2d원";
+"fmt_year_month"="%4d년 %d월";
+"fmt_end_import"="%d개의 데이터를 읽어 들였습니다.";
+
+"backup_csv_header"="제목,부제목,매체,시작일,진행（화）,최종화,완료,평가,메모,URL";
