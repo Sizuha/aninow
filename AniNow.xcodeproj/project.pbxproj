@@ -12,10 +12,10 @@
 		D51C17EE21D20B7F00F7CF3D /* RatingFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */; };
 		D51C17F121D2119A00F7CF3D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17F021D2119A00F7CF3D /* HomeViewController.swift */; };
 		D51C17F721D4751700F7CF3D /* AnimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17F621D4751700F7CF3D /* AnimeTableView.swift */; };
-		D51ED9232251EA4D005DEECD /* SQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED8EC2251DEA3005DEECD /* SQuery.framework */; };
-		D51ED9242251EA4D005DEECD /* SQuery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED8EC2251DEA3005DEECD /* SQuery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D51ED9252251EA4D005DEECD /* SizUtil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED91F2251E30C005DEECD /* SizUtil.framework */; };
-		D51ED9262251EA4D005DEECD /* SizUtil.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED91F2251E30C005DEECD /* SizUtil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D51ED9242251EA4D005DEECD /* SQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED8EC2251DEA3005DEECD /* SQuery.framework */; };
+		D51ED9262251EA4D005DEECD /* SizUtil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED91F2251E30C005DEECD /* SizUtil.framework */; };
+		D550991E22702F86004BA41B /* SQuery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED8EC2251DEA3005DEECD /* SQuery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D550991F22702F86004BA41B /* SizUtil.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED91F2251E30C005DEECD /* SizUtil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D56BEDFF21C222030070AB45 /* AnimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEDFE21C222030070AB45 /* AnimeViewController.swift */; };
 		D56BEE0121C741760070AB45 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEE0021C741760070AB45 /* Settings.swift */; };
 		D56BEE0321C9D1D00070AB45 /* AnimeDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEE0221C9D1D00070AB45 /* AnimeDataManager.swift */; };
@@ -65,8 +65,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D51ED9242251EA4D005DEECD /* SQuery.framework in Embed Frameworks */,
-				D51ED9262251EA4D005DEECD /* SizUtil.framework in Embed Frameworks */,
+				D550991E22702F86004BA41B /* SQuery.framework in Embed Frameworks */,
+				D550991F22702F86004BA41B /* SizUtil.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -121,8 +121,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5AE2E5121B1030B00906CC7 /* libsqlite3.tbd in Frameworks */,
-				D51ED9232251EA4D005DEECD /* SQuery.framework in Frameworks */,
-				D51ED9252251EA4D005DEECD /* SizUtil.framework in Frameworks */,
+				D51ED9242251EA4D005DEECD /* SQuery.framework in Frameworks */,
+				D51ED9262251EA4D005DEECD /* SizUtil.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
