@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			let _ = SQuery(at: "\(path)\(USER_DB_FILE)").from(Anime.tableName)?.drop()
 		}
 		
-		let _ = AnimeDataManager.shared.createDbTable()
+		AnimeDataManager.shared.createDbTables()
 	}
 
 	func applicationWillResignActive(_ application: UIApplication) {

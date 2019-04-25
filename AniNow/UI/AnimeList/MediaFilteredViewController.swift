@@ -12,14 +12,14 @@ import SQuery
 class MediaFilteredViewController: AnimeItemsViewController {
 	
 	override func getTitle() -> String {
-		return mediaFilter.toString()
+		return AnimeDataManager.shared.getMediaLable(mediaFilter)
 	}
 	
-	var mediaFilter: Anime.MediaType = .none
+	var mediaFilter: Int = 0
 	
 	override func applyFilter(to target: TableQuery) {
 		super.applyFilter(to: target)
-		let _ = target.whereAnd("media=?", mediaFilter.rawValue)
+		let _ = target.whereAnd("media=?", mediaFilter)
 	}
 	
 	override func createNewItem() -> Anime {

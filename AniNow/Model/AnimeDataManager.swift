@@ -28,10 +28,10 @@ class AnimeDataManager {
 		return sharedInstance ?? AnimeDataManager(source: "\(path)/\(USER_DB_FILE)")
 	}
 	
-	func createDbTable() -> Bool {
-		if let tableAnime = db.tableCreator(name: Anime.tableName) {
-			defer { tableAnime.close() }
-			return tableAnime
+	func createDbTables() {
+		if let table = db.tableCreator(name: Anime.tableName) {
+			defer { table.close() }
+			let _ = table
 				.addAutoInc(Anime.F_IDX)
 				.addColumn(Anime.F_TITLE, type: .text, notNull: true)
 				.addColumn(Anime.F_TITLE_OTHER, type: .text)
@@ -45,10 +45,63 @@ class AnimeDataManager {
 				.addColumn(Anime.F_LINK, type: .text)
 				.addColumn(Anime.F_IMG_PATH, type: .text)
 				.addColumn(Anime.F_REMOVED, type: .integer)
-				.create(ifNotExists: true) != nil
+				.create(ifNotExists: true)
 		}
-		return false
+		
+		if let table = db.tableCreator(name: AnimeMedia.tableName) {
+			defer { table.close() }
+			let err = table
+				.addPrimaryKey(AnimeMedia.F_IDX, type: .integer, notNull: true)
+				.addColumn(AnimeMedia.F_LABEL, type: .text, notNull: true)
+				.create(ifNotExists: true)
+			
+			if err == nil {
+				addMedia(0, Strings.NONE_VALUE)
+				addMedia(1, "OVA")
+				addMedia(2, "Movie")
+				addMedia(3, "TV")
+				addMedia(4, "Netflix")
+			}
+		}
 	}
+	
+	//--- Media Item ---
+	
+	func addMedia(_ idx: Int, _ label: String) {
+		if let table = db.from(AnimeMedia.tableName) {
+			defer { table.close() }
+			let _ = table
+				.values([AnimeMedia.F_IDX: idx, AnimeMedia.F_LABEL: label])
+				.insertOrUpdate()
+		}
+	}
+	
+	func loadMedias() -> [Int:String] {
+		var result = [Int:String]()
+		if let table = db.from(AnimeMedia.tableName) {
+			defer { table.close() }
+			let _ = table.select(factory: { AnimeMedia() }) { row in
+				result[row.idx] = row.label
+			}
+		}
+		return result
+	}
+	
+	func getMediaLable(_ code: Int) -> String {
+		if let table = db.from(AnimeMedia.tableName) {
+			defer { table.close() }
+			let (row, _) = table
+				.whereAnd("idx=?", code)
+				.selectOne { AnimeMedia() }
+			
+			if let row = row {
+				return row.label
+			}
+		}
+		return Strings.UNKNOWN
+	}
+	
+	//--- Anime Item ---
 	
 	func loadItems(filter: AnimeListFilter, sortBy: SortType = .byTitle, sortAsc: Bool = true) -> [Anime] {
 		if let anime = db.from(Anime.tableName) {

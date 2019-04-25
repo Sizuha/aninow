@@ -20,6 +20,10 @@
 		D56BEE0121C741760070AB45 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEE0021C741760070AB45 /* Settings.swift */; };
 		D56BEE0321C9D1D00070AB45 /* AnimeDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEE0221C9D1D00070AB45 /* AnimeDataManager.swift */; };
 		D56BEE0521C9DBD20070AB45 /* ImportCsvViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEE0421C9DBD20070AB45 /* ImportCsvViewController.swift */; };
+		D585E9DA22719BA500CBB318 /* AnimeMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = D585E9D922719BA500CBB318 /* AnimeMedia.swift */; };
+		D585E9DC2271A94C00CBB318 /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D585E9DB2271A94C00CBB318 /* DatePickerView.swift */; };
+		D585E9DE2271B24700CBB318 /* MediaPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D585E9DD2271B24700CBB318 /* MediaPickerView.swift */; };
+		D585E9E12271B99200CBB318 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D585E9E02271B99200CBB318 /* SettingsViewController.swift */; };
 		D5A24CAB21B123E800E2F39B /* AnimeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CAA21B123E800E2F39B /* AnimeData.swift */; };
 		D5A24CAE21B4CC3B00E2F39B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CAD21B4CC3B00E2F39B /* Config.swift */; };
 		D5A24CB021B4E70300E2F39B /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CAF21B4E70300E2F39B /* YearMonth.swift */; };
@@ -86,6 +90,10 @@
 		D56BEE0221C9D1D00070AB45 /* AnimeDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeDataManager.swift; sourceTree = "<group>"; };
 		D56BEE0421C9DBD20070AB45 /* ImportCsvViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCsvViewController.swift; sourceTree = "<group>"; };
 		D56BEE0621CA49300070AB45 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D585E9D922719BA500CBB318 /* AnimeMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeMedia.swift; sourceTree = "<group>"; };
+		D585E9DB2271A94C00CBB318 /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
+		D585E9DD2271B24700CBB318 /* MediaPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerView.swift; sourceTree = "<group>"; };
+		D585E9E02271B99200CBB318 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D5A24CAA21B123E800E2F39B /* AnimeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeData.swift; sourceTree = "<group>"; };
 		D5A24CAD21B4CC3B00E2F39B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D5A24CAF21B4E70300E2F39B /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
@@ -156,6 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				D5A24CC821B660C100E2F39B /* EditAnimeViewController.swift */,
+				D585E9DB2271A94C00CBB318 /* DatePickerView.swift */,
+				D585E9DD2271B24700CBB318 /* MediaPickerView.swift */,
 				D5A24CD221BF5A7400E2F39B /* EditAnimeMemoController.swift */,
 			);
 			path = AnimeEdit;
@@ -169,10 +179,19 @@
 			path = AnimeView;
 			sourceTree = "<group>";
 		};
+		D585E9DF2271B93300CBB318 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D585E9E02271B99200CBB318 /* SettingsViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		D5A24CA921B123D000E2F39B /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				D5A24CAA21B123E800E2F39B /* AnimeData.swift */,
+				D585E9D922719BA500CBB318 /* AnimeMedia.swift */,
 				D56BEE0221C9D1D00070AB45 /* AnimeDataManager.swift */,
 				D56BEE0021C741760070AB45 /* Settings.swift */,
 				D5A24CAF21B4E70300E2F39B /* YearMonth.swift */,
@@ -199,6 +218,7 @@
 				D5A24CB421B522CC00E2F39B /* AnimeList */,
 				D579CAFE21C2157600D3E653 /* AnimeView */,
 				D579CAFD21C2156000D3E653 /* AnimeEdit */,
+				D585E9DF2271B93300CBB318 /* Settings */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -428,11 +448,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D51C17EA21D2090600F7CF3D /* AllViewController.swift in Sources */,
+				D585E9DE2271B24700CBB318 /* MediaPickerView.swift in Sources */,
+				D585E9DC2271A94C00CBB318 /* DatePickerView.swift in Sources */,
 				D5A24CBC21B63E6500E2F39B /* resources.swift in Sources */,
 				D51C17EC21D20A6900F7CF3D /* MediaFilteredViewController.swift in Sources */,
 				D51C17EE21D20B7F00F7CF3D /* RatingFilteredViewController.swift in Sources */,
 				D5A24CC021B649B400E2F39B /* NowViewController.swift in Sources */,
 				D5A24CB021B4E70300E2F39B /* YearMonth.swift in Sources */,
+				D585E9E12271B99200CBB318 /* SettingsViewController.swift in Sources */,
 				D5A24CC921B660C100E2F39B /* EditAnimeViewController.swift in Sources */,
 				D56BEE0321C9D1D00070AB45 /* AnimeDataManager.swift in Sources */,
 				D5A24CBA21B6273500E2F39B /* CommonUI.swift in Sources */,
@@ -444,6 +467,7 @@
 				D56BEDFF21C222030070AB45 /* AnimeViewController.swift in Sources */,
 				D5AE2E2021B101B300906CC7 /* AppDelegate.swift in Sources */,
 				D5A24CD321BF5A7400E2F39B /* EditAnimeMemoController.swift in Sources */,
+				D585E9DA22719BA500CBB318 /* AnimeMedia.swift in Sources */,
 				D5AE2E2221B101B300906CC7 /* AnimeItemsViewController.swift in Sources */,
 				D56BEE0121C741760070AB45 /* Settings.swift in Sources */,
 				D56BEE0521C9DBD20070AB45 /* ImportCsvViewController.swift in Sources */,

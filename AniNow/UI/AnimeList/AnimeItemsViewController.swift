@@ -120,6 +120,8 @@ class AnimeItemsViewController:
 	}
 	
 	func reloadItems() {
+		let medias = AnimeDataManager.shared.loadMedias()
+		
 		self.animeTableView.sections.removeAll()
 		let rows = AnimeDataManager.shared.loadItems(
 			filter: self,
@@ -134,7 +136,7 @@ class AnimeItemsViewController:
 			case .byDate:
 				secTitle = row.startDate?.toString() ?? Strings.UNKNOWN
 			case .byMedia:
-				secTitle = row.media.toString()
+				secTitle = medias[row.media] ?? Strings.UNKNOWN
 			case .byRating:
 				secTitle = row.rating > 0 ? row.getStarRating() : Strings.NONE_VALUE2
 			default:

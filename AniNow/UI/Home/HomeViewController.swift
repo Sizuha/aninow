@@ -15,24 +15,18 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	private var menuTable: SizPropertyTableView!
 	private var menus = [SizPropertyTableSection]()
 	
+	private var btnSettings: UIBarButtonItem!
 	private var btnNew: UIBarButtonItem!
 	
 	// item Count
 	private var countOfAll: Int = 0
 	private var countOfNow: Int = 0
 	private var countOfFinished: Int = 0
-	private var countByMedia = [Anime.MediaType:Int]()
+	private var countByMedia = [Int:Int]()
 	private var countByRating = [Int:Int]()
-	
-	// for Settings
-	private var dispLastBackup: UILabel?
-	private var dateTimeFmt: DateFormatter!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		self.dateTimeFmt = SQuery.newDateTimeFormat()
-		self.dateTimeFmt.timeZone = TimeZone.current
 
 		initStatusBar()
 		initNavigationBar()
@@ -54,16 +48,17 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	private func initNavigationBar() {
-		if let navigationBar = self.navigationController?.navigationBar {
-			self.navigationController?.delegate = self
+		if let navigationBar = navigationController?.navigationBar {
+			navigationController?.delegate = self
 			initNavigationBarStyle(navigationBar)
 		}
 		
-		self.btnNew = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
+		btnSettings = UIBarButtonItem(image: Icons.SETTINGS, style: .plain, target: self, action: #selector(showSettings))
+		btnNew = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
 		
-		self.navigationItem.title = "AniNow"
-		self.navigationItem.rightBarButtonItems = []
-		self.navigationItem.rightBarButtonItems!.append(self.btnNew)
+		navigationItem.title = "AniNow"
+		navigationItem.leftBarButtonItems = [btnSettings]
+		navigationItem.rightBarButtonItems = [self.btnNew]
 	}
 	
 	private func initTableView() {
@@ -101,15 +96,18 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		))
 
 		// filter: Media
+		let medias = AnimeDataManager.shared.loadMedias().sorted(by: <)
+		
+		var mediaRows = [SizPropertyTableRow]()
+		for (code, label) in medias {
+			mediaRows.append(createMediaFilterMenu(code, label: label))
+		}
+		
 		self.menus.append(SizPropertyTableSection(
 			title: Strings.FILTER_MEDIA,
-			rows: [
-				createMediaFilterMenu(.tv),
-				createMediaFilterMenu(.ova),
-				createMediaFilterMenu(.movie),
-				createMediaFilterMenu(.none),
-			]
+			rows: mediaRows
 		))
+
 		
 		// filter: Rating
 		self.menus.append(SizPropertyTableSection(
@@ -124,73 +122,12 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			]
 		))
 		
-		// Info
-		self.menus.append(SizPropertyTableSection(
-			title: Strings.INFO,
-			rows: [
-				// Version
-				SizPropertyTableRow(label: "Version")
-					.bindData { getAppShortVer() + "." + getAppBuildVer() }
-			]
-		))
-		
-		// Backup
-		self.menus.append(SizPropertyTableSection(
-			title: Strings.BACKUP,
-			rows: [
-				// Last Backup
-				SizPropertyTableRow(label: Strings.LAST_BACKUP)
-					.bindData {
-						if let date = Settings.shared.lastBackupDate {
-							return self.dateTimeFmt.string(from: date)
-						}
-						return Strings.NONE_VALUE2
-					}
-					.onCreate { c in
-						self.dispLastBackup = c.detailTextLabel
-					}
-				
-				// Export
-				,SizPropertyTableRow(type: .button, label: Strings.EXPORT)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.confirmExport()
-					}
-				
-				// Import
-				,SizPropertyTableRow(label: Strings.IMPORT)
-					.textColor(self.menuTable.tintColor)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.moveToImportUI()
-					}
-			]
-		))
-		
-		// etc
-		self.menus.append(SizPropertyTableSection(
-			rows: [
-				// Clear
-				SizPropertyTableRow(type: .button, label: Strings.DELETE_ALL)
-					.tintColor(.red)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.tryClearAll()
-					}
-					.onCreate { c in
-						if let cell = c as? SizCellForButton {
-							cell.textLabel?.textAlignment = .center
-						}
-					}
-			]
-		))
-		
 		self.menuTable.setDataSource(self.menus)
 		self.view.addSubview(self.menuTable)
 	}
 	
-	private func createMediaFilterMenu(_ media: Anime.MediaType) -> SizPropertyTableRow{
-		return SizPropertyTableRow(label: media.toString())
+	private func createMediaFilterMenu(_ media: Int, label: String) -> SizPropertyTableRow{
+		return SizPropertyTableRow(label: label)
 			.bindData { String(self.countByMedia[media] ?? 0) }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
@@ -216,60 +153,6 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		openEditAnimePage(self, item: Anime())
 	}
 	
-	func confirmExport() {
-		SizAlertBuilder(style: .actionSheet)
-			.setMessage(Strings.MSG_CONFIRM_EXPORT)
-			.addAction(title: Strings.OK) { _ in
-				self.fadeOut { fin in
-					self.startNowLoading()
-					DispatchQueue.main.async {
-						self.exportToCSV()
-					}
-				}
-			}
-			.addAction(title: Strings.CANCEL, style: .cancel)
-			.show(parent: self)
-	}
-	
-	func exportToCSV() {
-		let now = Date()
-		
-		let fmt = DateFormatter()
-		fmt.locale = SQuery.standardLocal
-		fmt.dateFormat = "yyyy-MM-dd_HHmmss"
-		fmt.timeZone = TimeZone.current
-		
-		let fileName = "aninow_\(fmt.string(from: now)).csv"
-		let outFilePath = "\(SizPath.appDocument)/\(fileName)"
-		
-		AnimeDataManager.shared.exportTo(file: outFilePath)
-		
-		Settings.shared.lastBackupDate = now
-		self.dispLastBackup?.text = self.dateTimeFmt.string(from: now)
-		
-		stopNowLoading()
-		fadeIn()
-		
-		let dlg = createAlertDialog(message: Strings.MSG_END_BACKUP)
-		present(dlg, animated: true)
-	}
-	
-	func moveToImportUI() {
-		let nextView = ImportCsvViewController()
-		self.navigationController?.pushViewController(nextView, animated: true)
-	}
-	
-	func tryClearAll() {
-		SizAlertBuilder()
-			.setMessage(Strings.MSG_CONFIRM_REMOVE_ALL)
-			.addAction(title: Strings.CANCEL)
-			.addAction(title: Strings.REMOVE, style: .destructive) { _ in
-				AnimeDataManager.shared.removeAll()
-				self.refresh()
-			}
-			.show(parent: self)
-	}
-	
 	func refresh() {
 		fadeOut(start: 0.0, end: 0.0) { fin in
 			guard fin else { return }
@@ -283,9 +166,10 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 				//self.countOfAll = dm.count()
 				self.countOfAll = self.countOfNow + self.countOfFinished
 				
-				for media in Anime.MediaType.allCases {
-					self.countByMedia[media] = dm.countWithFilter { f in
-						let _ = f.whereAnd("media=?", media.rawValue)
+				let medias = AnimeDataManager.shared.loadMedias()
+				for (code, _) in medias {
+					self.countByMedia[code] = dm.countWithFilter { f in
+						let _ = f.whereAnd("media=?", code)
 					}
 				}
 				
@@ -300,6 +184,13 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 				self.fadeIn()
 			}
 		}
+	}
+	
+	@objc func showSettings() {
+		let naviController = UINavigationController()
+		let vc = SettingsViewController()
+		naviController.pushViewController(vc, animated: false)
+		present(naviController, animated: true, completion: nil)
 	}
 	
 }

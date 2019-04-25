@@ -23,6 +23,8 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	private let HEADER_HEIGHT = CGFloat(140)
 	
+	private let medias = AnimeDataManager.shared.loadMedias()
+	
 	convenience init(item: Anime) {
 		self.init(id: item.id)
 	}
@@ -193,7 +195,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		
 		// Media
 		section.rows.append(SizPropertyTableRow(label: Strings.MEDIA).bindData {
-			self.item?.media.toString()
+			self.medias[self.item?.media ?? 0]
 		})
 		
 		// Rating

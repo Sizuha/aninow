@@ -48,22 +48,7 @@ class Anime: SQueryRow, CsvSerializable {
 	// yyyyMM
 	var startDate: YearMonth? = nil
 	
-	enum MediaType: Int, CaseIterable {
-		case none = 0
-		case ova = 1
-		case movie = 2
-		case tv = 3
-		
-		func toString(ifEmpty: String = Strings.NONE_VALUE) -> String {
-			switch self {
-			case .ova: return "OVA"
-			case .movie: return "Movie"
-			case .tv: return "TV"
-			default: return ifEmpty
-			}
-		}
-	}
-	var media: MediaType = .none
+	var media: Int = 0
 	
 	// 話
 	var progress: Float = 0.0
@@ -99,7 +84,7 @@ class Anime: SQueryRow, CsvSerializable {
 		self.title = ""
 		self.titleOther = ""
 		self.startDate = nil
-		self.media = .none
+		self.media = 0
 		self.progress = 0
 		self.total = 0
 		self.finished = false
@@ -128,8 +113,7 @@ class Anime: SQueryRow, CsvSerializable {
 				}
 				
 			case Anime.F_MEDIA:
-				let mediaCode = cur.getInt(i) ?? 0
-				self.media = MediaType(rawValue: mediaCode) ?? MediaType.none
+				self.media = cur.getInt(i) ?? 0
 				
 			case Anime.F_PROGRESS:
 				self.progress = cur.getFloat(i) ?? 0
@@ -158,7 +142,7 @@ class Anime: SQueryRow, CsvSerializable {
 			Anime.F_TITLE: self.title,
 			Anime.F_TITLE_OTHER: self.titleOther,
 			Anime.F_START_DATE: self.startDate?.toInt(),
-			Anime.F_MEDIA: self.media.rawValue,
+			Anime.F_MEDIA: self.media,
 			Anime.F_PROGRESS: self.progress,
 			Anime.F_TOTAL: self.total,
 			Anime.F_FIN: self.finished,
@@ -175,7 +159,7 @@ class Anime: SQueryRow, CsvSerializable {
 		if !self.removed {
 			result.append(self.title)
 			result.append(self.titleOther)
-			result.append(self.media.toString(ifEmpty: ""))
+			result.append("\(self.media)")
 			result.append("\(self.startDate?.toInt() ?? 0)")
 			result.append("\(self.progress)")
 			result.append("\(self.total)")
@@ -192,13 +176,7 @@ class Anime: SQueryRow, CsvSerializable {
 		switch csvColumn.colIdx {
 		case 0: self.title = csvColumn.data
 		case 1: self.titleOther = csvColumn.data
-		case 2:
-			switch csvColumn.data.lowercased() {
-			case "tv": self.media = .tv
-			case "ovat": self.media = .ova
-			case "movie": self.media = .movie
-			default: self.media = .none
-			}
+		case 2: self.media = csvColumn.asInt ?? 0
 		case 3: self.startDate = YearMonth(from: csvColumn.asInt ?? 0)
 		case 4: self.progress = csvColumn.asFloat ?? 0
 		case 5: self.total = csvColumn.asInt ?? 0

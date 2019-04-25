@@ -9,12 +9,7 @@
 import UIKit
 import SizUtil
 
-class EditAnimeViewController:
-	CommonUIViewController,
-	UITextFieldDelegate,
-	SizPopupPickerViewDelegate,
-	UIPickerViewDataSource
-{
+class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
 	private var navigationBar: UINavigationBar!
 	
@@ -41,12 +36,10 @@ class EditAnimeViewController:
 	private var dispMemoHint: UILabel?
 	private var cellMemo: SizCellForMultiLine?
 	
-	private var pickerPubDate: SizPopupPickerView!
+	private var pickerPubDate: DatePickerView!
+	private var pickerMedia: MediaPickerView!
 	
-	private var yearList = [(Int,String)]()
-	private var monthList = [(Int,String)]()
-	private let calendar = Calendar(identifier: .gregorian)
-	private let today = Date()
+	private let medias = AnimeDataManager.shared.loadMedias()
 	
 	func setItem(_ item: Anime) {
 		self.editItem = item
@@ -69,6 +62,8 @@ class EditAnimeViewController:
 		}
 		
 		initPubDatePicker()
+		initMedaiPicker()
+		
 		initTableView()
 		//setupKeyboardDismissRecognizer(view: editTableView)
 	}
@@ -98,25 +93,42 @@ class EditAnimeViewController:
 	}
 	
 	private func initPubDatePicker() {
-		self.yearList.append( (0, Strings.UNKNOWN) )
-		let todayYear = self.calendar.component(.year, from: self.today)
-		for y in stride(from: todayYear, to: BEGIN_OF_YEAR-1, by: -1) {
-			self.yearList.append( (y, String(format: Strings.FMT_YEAR, y)) )
+		pickerPubDate = DatePickerView()
+		pickerPubDate.onHidden = { self.fadeIn() }
+		pickerPubDate.onSelected = { numbers in
+			if self.editItem.startDate == nil {
+				self.editItem.startDate = YearMonth()
+			}
+			
+			if let pubDate = self.editItem.startDate {
+				pubDate.year = self.pickerPubDate.years[numbers[0]].0
+				pubDate.month = numbers[1]
+				self.dispPubDate?.text = pubDate.toString()
+			}
 		}
 		
-		self.monthList.append( (0, Strings.UNKNOWN) )
-		for m in 1...12 {
-			self.monthList.append( (m, String(format: Strings.FMT_MONTH, m)) )
-		}
-		
-		self.pickerPubDate = SizPopupPickerView()
-		self.pickerPubDate.setDataSource(self)
-		self.pickerPubDate.delegate = self
 		if let window = UIApplication.shared.keyWindow {
-			window.addSubview(self.pickerPubDate)
+			window.addSubview(pickerPubDate)
 		}
 		else {
-			self.view.addSubview(self.pickerPubDate)
+			view.addSubview(pickerPubDate)
+		}
+	}
+	
+	private func initMedaiPicker() {
+		pickerMedia = MediaPickerView()
+		pickerMedia.onHidden = { self.fadeIn() }
+		pickerMedia.onSelected = { number in
+			let (code, label) = self.pickerMedia.medias[number]
+			self.editItem.media = code
+			self.dispMedia?.text = label
+		}
+		
+		if let window = UIApplication.shared.keyWindow {
+			window.addSubview(pickerMedia)
+		}
+		else {
+			view.addSubview(pickerMedia)
 		}
 	}
 	
@@ -234,7 +246,7 @@ class EditAnimeViewController:
 			
 			// Media
 			,SizPropertyTableRow(label: Strings.MEDIA)
-				.bindData { self.editItem.media.toString() }
+				.bindData { self.medias[self.editItem.media] }
 				.onSelect { i in
 					self.showChoiceMedia()
 					self.editTableView.deselectRow(at: i, animated: false)
@@ -326,40 +338,6 @@ class EditAnimeViewController:
 		}
 		
 		return true
-	}
-	
-	//------ SizPopupPickerViewDelegate
-	
-	func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
-		if self.editItem.startDate == nil {
-			self.editItem.startDate = YearMonth()
-		}
-		
-		if let pubDate = self.editItem.startDate {
-			pubDate.year = self.yearList[numbers[0]].0
-			pubDate.month = numbers[1]
-			self.dispPubDate?.text = pubDate.toString()
-		}
-	}
-	
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 2
-	}
-	
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		switch component {
-		case 0: return self.yearList.count
-		case 1: fallthrough
-		default: return self.monthList.count
-		}
-	}
-	
-	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		switch component {
-		case 0: return yearList[row].1
-		case 1: fallthrough
-		default: return monthList[row].1
-		}
 	}
 	
 	//------ Body
@@ -456,25 +434,16 @@ class EditAnimeViewController:
 	}
 	
 	private func showChoiceMedia() {
-		SizAlertBuilder(title: Strings.MEDIA, style: .actionSheet)
-			.addAction(title: Strings.NONE_VALUE) { _ in
-				self.editItem.media = .none
-				self.dispMedia?.text = self.editItem.media.toString()
-			}
-			.addAction(title: "TV") { _ in
-				self.editItem.media = .tv
-				self.dispMedia?.text = self.editItem.media.toString()
-			}
-			.addAction(title: "OVA") { _ in
-				self.editItem.media = .ova
-				self.dispMedia?.text = self.editItem.media.toString()
-			}
-			.addAction(title: "Movie") { _ in
-				self.editItem.media = .movie
-				self.dispMedia?.text = self.editItem.media.toString()
-			}
-			.addAction(title: Strings.CANCEL, style: .cancel)
-			.show(parent: self)
+		var selIdx = 0
+		for (code, _) in pickerMedia.medias {
+			if code == editItem.media { break }
+			selIdx += 1
+		}
+		
+		fadeOut()
+		
+		pickerMedia.selectedRows = [selIdx]
+		pickerMedia.show()
 	}
 	
 	private func showPubDatePicker() {
@@ -483,7 +452,7 @@ class EditAnimeViewController:
 		
 		var idx = 0
 		var idxY = 0
-		for y in self.yearList {
+		for y in pickerPubDate.years {
 			if y.0 == selYear {
 				idxY = idx
 				break
@@ -493,7 +462,7 @@ class EditAnimeViewController:
 		
 		idx = 0
 		var idxM = 0
-		for m in self.monthList {
+		for m in pickerPubDate.months {
 			if m.0 == selMonth {
 				idxM = idx
 				break
@@ -503,9 +472,8 @@ class EditAnimeViewController:
 		
 		fadeOut()
 		
-		self.pickerPubDate.selectedRows = [idxY, idxM]
-		self.pickerPubDate.onHidden = { self.fadeIn() }
-		self.pickerPubDate.show()
+		pickerPubDate.selectedRows = [idxY, idxM]
+		pickerPubDate.show()
 	}
 
 	private func showEditMemo() {

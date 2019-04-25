@@ -76,8 +76,8 @@ class AnimeItemCell: UITableViewCell, SizViewUpdater {
 		txtProgress.text = "Episode: \(currStr) / " + maxStr
 	}
 	
-	func setMedia(_ media: Anime.MediaType) {
-		txtMedia.text = media.toString()
+	func setMedia(_ media: Int) {
+		txtMedia.text = AnimeDataManager.shared.getMediaLable(media)
 	}
 	
 	func setDate(_ date: YearMonth) {
