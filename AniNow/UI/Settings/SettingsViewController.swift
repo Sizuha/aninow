@@ -17,16 +17,46 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	
 	private var dispLastBackup: UILabel?
 	private var dateTimeFmt: DateFormatter!
-
+	
+	private var backupSateText: String = ""
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		backupSateText = Strings.MSG_NOW_LOADING
+		
 		dateTimeFmt = SQuery.newDateTimeFormat()
 		dateTimeFmt.timeZone = TimeZone.current
 
 		initStatusBar()
 		initNavigationBar()
 		initTableView()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		dispLastBackup?.text = backupSateText
+		Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
+			var result = AnimeDataManager.shared.syncBackupData()
+			
+			if result {
+				if let modiDate = try? FileManager.default.attributesOfItem(atPath: iCloudBackupUrl!.path)[.modificationDate] as? Date {
+					self.backupSateText = self.dateTimeFmt.string(from: modiDate)
+				}
+				else {
+					result = false
+				}
+			}
+			
+			if (!result) {
+				if let date = Settings.shared.lastBackupDate {
+					self.backupSateText = self.dateTimeFmt.string(from: date)
+				}
+				else {
+					self.backupSateText = Strings.NONE_VALUE2
+				}
+			}
+			
+			self.dispLastBackup?.text = self.backupSateText
+		}
 	}
 	
 	override func viewWillLayoutSubviews() {
@@ -68,10 +98,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 				SizPropertyTableRow(label: Strings.BACKUP)
 					.textColor(self.menuTable.tintColor)
 					.bindData {
-						if let date = Settings.shared.lastBackupDate {
-							return self.dateTimeFmt.string(from: date)
-						}
-						return Strings.NONE_VALUE2
+						return self.backupSateText
 					}
 					.onCreate { c in
 						c.accessoryType = .none
@@ -185,7 +212,8 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		}
 		
 		Settings.shared.lastBackupDate = now
-		self.dispLastBackup?.text = self.dateTimeFmt.string(from: now)
+		self.backupSateText = self.dateTimeFmt.string(from: now)
+		self.dispLastBackup?.text = self.backupSateText
 		
 		stopNowLoading()
 		fadeIn()
@@ -197,7 +225,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	func confirmImportFromBackup() {
 		SizAlertBuilder(style: .actionSheet)
 			.setMessage(Strings.MSG_CONFIRM_RESTORE)
-			.addAction(title: Strings.OK, style: .destructive) { _ in
+			.addAction(title: Strings.RESTORE, style: .destructive) { _ in
 				self.fadeOut { fin in
 					if fin {
 						self.startNowLoading()
@@ -212,10 +240,18 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	}
 	
 	func importFromCsv() {
-		let insertCount = max(AnimeDataManager.shared.restore(), 0)
+		let insertCount = AnimeDataManager.shared.restore()
 		
 		stopNowLoading()
 		fadeIn()
+		
+		guard insertCount >= 0 else {
+			SizAlertBuilder()
+				.setMessage(Strings.MSG_NO_BACKUP)
+				.addAction(title: Strings.OK)
+				.show(parent: self)
+			return
+		}
 		
 		SizAlertBuilder()
 			.setMessage(String(format: Strings.FMT_END_IMPORT, insertCount))

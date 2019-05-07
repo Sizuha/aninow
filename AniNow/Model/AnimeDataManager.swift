@@ -287,6 +287,17 @@ class AnimeDataManager {
 	
 	//--- backup/restore ---
 	
+	func syncBackupData() -> Bool {
+		let url = iCloudBackupUrl?.appendingPathComponent("backup.csv")
+		do {
+			try FileManager.default.startDownloadingUbiquitousItem(at: url!)
+			return true
+		}
+		catch {
+			return false
+		}
+	}
+	
 	func backup() -> Bool {
 		guard let iCloudUrl = iCloudBackupUrl else {
 			return false
@@ -297,10 +308,8 @@ class AnimeDataManager {
 		let appDocUrl = fileMng.urls(for: .documentDirectory, in: .userDomainMask).first!
 		let fromUrl = appDocUrl.appendingPathComponent("__backup.csv")
 		let toUrl = iCloudUrl.appendingPathComponent("backup.csv")
-		do {
-			try FileManager.default.startDownloadingUbiquitousItem(at: toUrl)
-		}
-		catch {
+		
+		guard syncBackupData() else {
 			return false
 		}
 
@@ -319,15 +328,11 @@ class AnimeDataManager {
 	}
 	
 	func restore() -> Int {
-		guard let iCloudUrl = iCloudBackupUrl else {
+		guard let fromUrl = iCloudBackupUrl?.appendingPathComponent("backup.csv") else {
 			return -1
 		}
-		let fromUrl = iCloudUrl.appendingPathComponent("backup.csv")
-
-		do {
-			try FileManager.default.startDownloadingUbiquitousItem(at: fromUrl)
-		}
-		catch {
+		
+		guard syncBackupData() else {
 			return -1
 		}
 		

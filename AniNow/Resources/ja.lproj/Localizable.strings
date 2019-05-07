@@ -68,7 +68,9 @@
 "msg_confirm_export"="CSV形式で書き出します";
 "msg_end_backup"="バックアップを完了しました";
 "msg_confirm_import"="このファイルの内容を読み込みますか？";
-"msg_confirm_restore"="最後にバックアップした状態に戻します。この作業あは後戻りできません。宜しいですか？";
+"msg_confirm_restore"="最後にバックアップした状態に戻します。この作業は後戻りできません。宜しいですか？";
+"msg_no_backup"="バックアップがありません";
+"msg_now_loading"="確認中...";
 
 "fmt_year"="%4d年";
 "fmt_month"="%2d月";

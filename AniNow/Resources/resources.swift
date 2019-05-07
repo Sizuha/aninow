@@ -89,6 +89,8 @@ public class Strings {
 	static let MSG_CONFIRM_IMPORT = "msg_confirm_import".localized()
 	static let MSG_CONFIRM_RESTORE = "msg_confirm_restore".localized()
 	static let FMT_END_IMPORT = "fmt_end_import".localized()
+	static let MSG_NO_BACKUP = "msg_no_backup".localized()
+	static let MSG_NOW_LOADING = "msg_now_loading".localized()
 
 	static let FMT_YEAR = "fmt_year".localized()
 	static let FMT_MONTH = "fmt_month".localized()
