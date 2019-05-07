@@ -62,11 +62,13 @@
 "delete_all"="全てのデータを削除する";
 "clear_and_import"="既存のデータを削除し、このファイルの内容を追加する";
 "append_import"="既存のデータに追加する";
+"msg_fail"="失敗しました";
 "msg_confirm_remove"="本当に削除しますか？";
 "msg_confirm_remove_all"="全てのデータを削除します。\nよろしいでしょうか？";
-"msg_confirm_export"="バックアップしますか？";
+"msg_confirm_export"="CSV形式で書き出します";
 "msg_end_backup"="バックアップを完了しました";
 "msg_confirm_import"="このファイルの内容を読み込みますか？";
+"msg_confirm_restore"="最後にバックアップした状態に戻します。この作業あは後戻りできません。宜しいですか？";
 
 "fmt_year"="%4d年";
 "fmt_month"="%2d月";

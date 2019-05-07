@@ -62,11 +62,13 @@
 "delete_all"="Delete All Data";
 "clear_and_import"="Add the contents of this file after Delete All";
 "append_import"="Add to existing data";
+"msg_fail"="Failed";
 "msg_confirm_remove"="Do you really want to delete this?";
 "msg_confirm_remove_all"="Delete all data.\nAre you sure?";
 "msg_confirm_export"="Do you want to export the contents?";
 "msg_end_backup"="Backup completed";
 "msg_confirm_import"="Do you want to read the contents of this file?";
+"msg_confirm_restore"="Revert to the last backed up state. This work can not go back.";
 
 "fmt_year"="%4d";
 "fmt_month"="%2d";

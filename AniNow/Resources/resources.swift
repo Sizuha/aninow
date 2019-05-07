@@ -74,18 +74,20 @@ public class Strings {
 	static let IMPORT = "import".localized()
 	static let EXPORT = "export".localized()
 	static let LAST_BACKUP = "last_backup".localized()
-
+	
 	static let ERR_FAIL_REMOVE = "err_fail_remove".localized()
 	static let ERR_FAIL_SAVE = "err_fail_save".localized()
 	
 	static let DELETE_ALL = "delete_all".localized()
 	static let CLEAR_AND_IMPORT = "clear_and_import".localized()
 	static let APPEND_IMPORT = "append_import".localized()
+	static let MSG_FAIL = "msg_fail".localized()
 	static let MSG_CONFIRM_REMOVE = "msg_confirm_remove".localized()
 	static let MSG_CONFIRM_REMOVE_ALL = "msg_confirm_remove_all".localized()
 	static let MSG_CONFIRM_EXPORT = "msg_confirm_export".localized()
 	static let MSG_END_BACKUP = "msg_end_backup".localized()
 	static let MSG_CONFIRM_IMPORT = "msg_confirm_import".localized()
+	static let MSG_CONFIRM_RESTORE = "msg_confirm_restore".localized()
 	static let FMT_END_IMPORT = "fmt_end_import".localized()
 
 	static let FMT_YEAR = "fmt_year".localized()

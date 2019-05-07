@@ -62,7 +62,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		
 		// Backup
 		self.menus.append(SizPropertyTableSection(
-			title: Strings.BACKUP,
+			title: "\(Strings.BACKUP) (iCloud)",
 			rows: [
 				// Last Backup
 				SizPropertyTableRow(label: Strings.BACKUP)
@@ -82,16 +82,8 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 						self.backup()
 					}
 				
-//				// Backup
-//				,SizPropertyTableRow(type: .button, label: Strings.BACKUP)
-//					.onSelect { i in
-//						self.menuTable.deselectRow(at: i, animated: true)
-//						self.backup()
-//					}
-				
 				// Restore
 				,SizPropertyTableRow(type: .button, label: Strings.RESTORE)
-					.textColor(self.menuTable.tintColor)
 					.onSelect { i in
 						self.menuTable.deselectRow(at: i, animated: true)
 						self.confirmImportFromBackup()
@@ -183,7 +175,14 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	
 	func backup() {
 		let now = Date()
-		AnimeDataManager.shared.backup()
+		guard AnimeDataManager.shared.backup() else {
+			stopNowLoading()
+			fadeIn()
+			
+			let dlg = createAlertDialog(message: Strings.MSG_FAIL)
+			present(dlg, animated: true)
+			return
+		}
 		
 		Settings.shared.lastBackupDate = now
 		self.dispLastBackup?.text = self.dateTimeFmt.string(from: now)
@@ -196,9 +195,9 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	}
 	
 	func confirmImportFromBackup() {
-		SizAlertBuilder(style: .alert)
-			.setMessage(Strings.MSG_CONFIRM_IMPORT)
-			.addAction(title: Strings.OK) { _ in
+		SizAlertBuilder(style: .actionSheet)
+			.setMessage(Strings.MSG_CONFIRM_RESTORE)
+			.addAction(title: Strings.OK, style: .destructive) { _ in
 				self.fadeOut { fin in
 					if fin {
 						self.startNowLoading()
@@ -213,7 +212,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	}
 	
 	func importFromCsv() {
-		let insertCount = AnimeDataManager.shared.restore()
+		let insertCount = max(AnimeDataManager.shared.restore(), 0)
 		
 		stopNowLoading()
 		fadeIn()

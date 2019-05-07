@@ -245,6 +245,8 @@ SWIFT_PROTOCOL("_TtP7SizUtil23FloatRatingViewDelegate_")
 @end
 
 
+
+
 SWIFT_CLASS("_TtC7SizUtil20SizPropertyTableCell")
 @interface SizPropertyTableCell : UITableViewCell
 - (nonnull instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString * _Nullable)reuseIdentifier OBJC_DESIGNATED_INITIALIZER;
