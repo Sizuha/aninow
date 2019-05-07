@@ -70,6 +70,7 @@ public class Strings {
 	static let COUNT_NOW = "count_now".localized()
 	static let COUNT_FINISHED = "count_finished".localized()
 	static let BACKUP = "backup".localized()
+	static let RESTORE = "restore".localized()
 	static let IMPORT = "import".localized()
 	static let EXPORT = "export".localized()
 	static let LAST_BACKUP = "last_backup".localized()

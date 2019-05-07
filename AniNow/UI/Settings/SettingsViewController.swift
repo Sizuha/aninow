@@ -65,7 +65,8 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 			title: Strings.BACKUP,
 			rows: [
 				// Last Backup
-				SizPropertyTableRow(label: Strings.LAST_BACKUP)
+				SizPropertyTableRow(label: Strings.BACKUP)
+					.textColor(self.menuTable.tintColor)
 					.bindData {
 						if let date = Settings.shared.lastBackupDate {
 							return self.dateTimeFmt.string(from: date)
@@ -73,11 +74,37 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 						return Strings.NONE_VALUE2
 					}
 					.onCreate { c in
+						c.accessoryType = .none
 						self.dispLastBackup = c.detailTextLabel
-				}
+					}
+					.onSelect { i in
+						self.menuTable.deselectRow(at: i, animated: true)
+						self.backup()
+					}
 				
+//				// Backup
+//				,SizPropertyTableRow(type: .button, label: Strings.BACKUP)
+//					.onSelect { i in
+//						self.menuTable.deselectRow(at: i, animated: true)
+//						self.backup()
+//					}
+				
+				// Restore
+				,SizPropertyTableRow(type: .button, label: Strings.RESTORE)
+					.textColor(self.menuTable.tintColor)
+					.onSelect { i in
+						self.menuTable.deselectRow(at: i, animated: true)
+						self.confirmImportFromBackup()
+					}
+			]
+		))
+		
+		// import/export CSV
+		self.menus.append(SizPropertyTableSection(
+			title: "CSV",
+			rows: [
 				// Export
-				,SizPropertyTableRow(type: .button, label: Strings.EXPORT)
+				SizPropertyTableRow(type: .button, label: Strings.EXPORT)
 					.onSelect { i in
 						self.menuTable.deselectRow(at: i, animated: true)
 						self.confirmExport()
@@ -147,6 +174,17 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		
 		AnimeDataManager.shared.exportTo(file: outFilePath)
 		
+		stopNowLoading()
+		fadeIn()
+		
+		let dlg = createAlertDialog(message: Strings.MSG_END_BACKUP)
+		present(dlg, animated: true)
+	}
+	
+	func backup() {
+		let now = Date()
+		AnimeDataManager.shared.backup()
+		
 		Settings.shared.lastBackupDate = now
 		self.dispLastBackup?.text = self.dateTimeFmt.string(from: now)
 		
@@ -155,6 +193,35 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		
 		let dlg = createAlertDialog(message: Strings.MSG_END_BACKUP)
 		present(dlg, animated: true)
+	}
+	
+	func confirmImportFromBackup() {
+		SizAlertBuilder(style: .alert)
+			.setMessage(Strings.MSG_CONFIRM_IMPORT)
+			.addAction(title: Strings.OK) { _ in
+				self.fadeOut { fin in
+					if fin {
+						self.startNowLoading()
+						DispatchQueue.main.async {
+							self.importFromCsv()
+						}
+					}
+				}
+			}
+			.addAction(title: Strings.CANCEL, style: .cancel)
+			.show(parent: self)
+	}
+	
+	func importFromCsv() {
+		let insertCount = AnimeDataManager.shared.restore()
+		
+		stopNowLoading()
+		fadeIn()
+		
+		SizAlertBuilder()
+			.setMessage(String(format: Strings.FMT_END_IMPORT, insertCount))
+			.addAction(title: Strings.OK)
+			.show(parent: self)
 	}
 	
 	func moveToImportUI() {

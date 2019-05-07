@@ -244,6 +244,15 @@ class AnimeDataManager {
 		return [Anime]()
 	}
 	
+	func removeAll() {
+		if let anime = db.from(Anime.tableName) {
+			defer { anime.close() }
+			let _ = anime.delete()
+		}
+	}
+
+	//--- import/export CSV ---
+	
 	func importFrom(file filepath: String) -> Int {
 		var count = 0
 		
@@ -276,11 +285,54 @@ class AnimeDataManager {
 		}
 	}
 	
-	func removeAll() {
-		if let anime = db.from(Anime.tableName) {
-			defer { anime.close() }
-			let _ = anime.delete()
+	//--- backup/restore ---
+	
+	func backup() -> Bool {
+		guard let iCloudUrl = iCloudBackupUrl else {
+			return false
 		}
+		
+		let fileMng = FileManager.default
+		
+		let appDocUrl = fileMng.urls(for: .documentDirectory, in: .userDomainMask).first!
+		let fromUrl = appDocUrl.appendingPathComponent("__backup.csv")
+		let toUrl = iCloudUrl.appendingPathComponent("backup.csv")
+		do {
+			try FileManager.default.startDownloadingUbiquitousItem(at: toUrl)
+		}
+		catch {
+			return false
+		}
+
+		let path = fromUrl.path
+		exportTo(file: path)
+		
+		do { try fileMng.removeItem(at: toUrl) } catch {
+			print("fail: remove a old backup.csv")
+		}
+		do { try fileMng.moveItem(at: fromUrl, to: toUrl) } catch {
+			print("fail: rename backup.csv")
+			return false
+		}
+		
+		return true
+	}
+	
+	func restore() -> Int {
+		guard let iCloudUrl = iCloudBackupUrl else {
+			return -1
+		}
+		let fromUrl = iCloudUrl.appendingPathComponent("backup.csv")
+
+		do {
+			try FileManager.default.startDownloadingUbiquitousItem(at: fromUrl)
+		}
+		catch {
+			return -1
+		}
+		
+		removeAll()
+		return importFrom(file: fromUrl.path)
 	}
 	
 }

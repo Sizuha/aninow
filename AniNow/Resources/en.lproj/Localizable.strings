@@ -51,6 +51,7 @@
 "count_now"="Now items";
 "count_finished"="Finished items";
 "backup"="Backup";
+"restore"="Restore";
 "import"="Import";
 "export"="Export";
 "last_backup"="Last Backup";

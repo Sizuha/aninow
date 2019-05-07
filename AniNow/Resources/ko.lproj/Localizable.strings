@@ -51,6 +51,7 @@
 "count_now"="진행준인 작품수";
 "count_finished"="완료된 작품수";
 "backup"="백업";
+"restore"="복구";
 "import"="읽어오기";
 "export"="백업";
 "last_backup"="최근 백업";
