@@ -22,8 +22,10 @@ class AnimeMedia: SQueryRow {
 		cursor.forEachColumn { cur, i in
 			let name = cur.getColumnName(i)
 			switch name {
-			case AnimeMedia.F_IDX: idx = cur.getInt(i) ?? 0
-			case AnimeMedia.F_LABEL: label = cur.getString(i) ?? Strings.NONE_VALUE
+			case AnimeMedia.F_IDX:
+				idx = cur.getInt(i) ?? 0
+			case AnimeMedia.F_LABEL:
+				label = cur.getString(i) ?? ""
 			default: break
 			}
 		}

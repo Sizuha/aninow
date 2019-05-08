@@ -10,7 +10,7 @@ import UIKit
 import SizUtil
 import SQuery
 
-class SettingsViewController: CommonUIViewController, UINavigationControllerDelegate {
+class SettingsViewController: CommonUIViewController {
 	
 	private var menuTable: SizPropertyTableView!
 	private var menus = [SizPropertyTableSection]()
@@ -66,22 +66,18 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 	
 	private func initNavigationBar() {
 		if let navigationBar = navigationController?.navigationBar {
-			navigationController?.delegate = self
 			initNavigationBarStyle(navigationBar)
 		}
 		
-		let btnDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(close))
-		
 		navigationItem.title = Strings.SETTING
-		navigationItem.rightBarButtonItems = [btnDone]
 	}
 	
 	private func initTableView() {
-		self.menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
-		self.menuTable.translatesAutoresizingMaskIntoConstraints = false
+		menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
+		menuTable.translatesAutoresizingMaskIntoConstraints = false
 		
 		// Info
-		self.menus.append(SizPropertyTableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.INFO,
 			rows: [
 				// Version
@@ -90,8 +86,21 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 			]
 		))
 		
+		// Edit
+		menus.append(SizPropertyTableSection(
+			title: Strings.EDIT,
+			rows: [
+				// Media
+				SizPropertyTableRow(label: "Media")
+					.onSelect { i in
+						self.navigationController?.pushViewController(EditMediaViewController(), animated: true)
+						self.menuTable.deselectRow(at: i, animated: true)
+					}
+			]
+		))
+			
 		// Backup
-		self.menus.append(SizPropertyTableSection(
+		menus.append(SizPropertyTableSection(
 			title: "\(Strings.BACKUP) (iCloud)",
 			rows: [
 				// Last Backup
@@ -100,7 +109,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 					.bindData {
 						return self.backupSateText
 					}
-					.onCreate { c in
+					.onCreate { c, _ in
 						c.accessoryType = .none
 						self.dispLastBackup = c.detailTextLabel
 					}
@@ -119,7 +128,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		))
 		
 		// import/export CSV
-		self.menus.append(SizPropertyTableSection(
+		menus.append(SizPropertyTableSection(
 			title: "CSV",
 			rows: [
 				// Export
@@ -131,7 +140,6 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 				
 				// Import
 				,SizPropertyTableRow(label: Strings.IMPORT)
-					.textColor(self.menuTable.tintColor)
 					.onSelect { i in
 						self.menuTable.deselectRow(at: i, animated: true)
 						self.moveToImportUI()
@@ -140,7 +148,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		))
 		
 		// etc
-		self.menus.append(SizPropertyTableSection(
+		menus.append(SizPropertyTableSection(
 			rows: [
 				// Clear
 				SizPropertyTableRow(type: .button, label: Strings.DELETE_ALL)
@@ -149,7 +157,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 						self.menuTable.deselectRow(at: i, animated: true)
 						self.tryClearAll()
 					}
-					.onCreate { c in
+					.onCreate { c, _ in
 						if let cell = c as? SizCellForButton {
 							cell.textLabel?.textAlignment = .center
 						}
@@ -157,12 +165,8 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 			]
 		))
 		
-		self.menuTable.setDataSource(self.menus)
-		self.view.addSubview(self.menuTable)
-	}
-	
-	@objc func close() {
-		popSelf()
+		menuTable.setDataSource(menus)
+		view.addSubview(menuTable)
 	}
 	
 	func confirmExport() {
@@ -230,7 +234,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 					if fin {
 						self.startNowLoading()
 						DispatchQueue.main.async {
-							self.importFromCsv()
+							self.restoreFromBackup()
 						}
 					}
 				}
@@ -239,13 +243,13 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 			.show(parent: self)
 	}
 	
-	func importFromCsv() {
-		let insertCount = AnimeDataManager.shared.restore()
+	func restoreFromBackup() {
+		let result = AnimeDataManager.shared.restore()
 		
 		stopNowLoading()
 		fadeIn()
 		
-		guard insertCount >= 0 else {
+		guard result else {
 			SizAlertBuilder()
 				.setMessage(Strings.MSG_NO_BACKUP)
 				.addAction(title: Strings.OK)
@@ -254,7 +258,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		}
 		
 		SizAlertBuilder()
-			.setMessage(String(format: Strings.FMT_END_IMPORT, insertCount))
+			.setMessage(Strings.MSG_END_RESTORE)
 			.addAction(title: Strings.OK)
 			.show(parent: self)
 	}

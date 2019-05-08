@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		// *** for DEBUG ***
 		if ENABLE_STARTUP_RESET_DB {
-			let _ = SQuery(at: "\(path)\(USER_DB_FILE)").from(Anime.tableName)?.drop()
+			let _ = SQuery(at: "\(path)\(USER_DB_FILENAME)").from(Anime.tableName)?.drop()
 		}
 		
 		AnimeDataManager.shared.createDbTables()

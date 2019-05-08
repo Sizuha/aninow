@@ -25,7 +25,7 @@ class AnimeDataManager {
 	private static var sharedInstance: AnimeDataManager? = nil
 	static var shared: AnimeDataManager {
 		let path = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-		return sharedInstance ?? AnimeDataManager(source: "\(path)/\(USER_DB_FILE)")
+		return sharedInstance ?? AnimeDataManager(source: "\(path)/\(USER_DB_FILENAME)")
 	}
 	
 	func createDbTables() {
@@ -56,18 +56,17 @@ class AnimeDataManager {
 				.create(ifNotExists: true)
 			
 			if err == nil {
-				addMedia(0, Strings.NONE_VALUE)
-				addMedia(1, "OVA")
-				addMedia(2, "Movie")
-				addMedia(3, "TV")
-				addMedia(4, "Netflix")
+				updateMedia(1, "OVA")
+				updateMedia(2, "Movie")
+				updateMedia(3, "TV")
+				updateMedia(4, "Netflix")
 			}
 		}
 	}
 	
 	//--- Media Item ---
 	
-	func addMedia(_ idx: Int, _ label: String) {
+	func updateMedia(_ idx: Int, _ label: String) {
 		if let table = db.from(AnimeMedia.tableName) {
 			defer { table.close() }
 			let _ = table
@@ -76,18 +75,35 @@ class AnimeDataManager {
 		}
 	}
 	
+	func deleteMedia(_ idx: Int) {
+		if let table = db.from(AnimeMedia.tableName) {
+			defer { table.close() }
+			let _ = table
+				.whereAnd("\(AnimeMedia.F_IDX) = ?", idx)
+				.delete()
+		}
+	}
+	
 	func loadMedias() -> [Int:String] {
 		var result = [Int:String]()
 		if let table = db.from(AnimeMedia.tableName) {
 			defer { table.close() }
-			let _ = table.select(factory: { AnimeMedia() }) { row in
+			let _ = table
+				.whereAnd("\(AnimeMedia.F_IDX) > 0")
+				.select(factory: { AnimeMedia() }) { row in
 				result[row.idx] = row.label
 			}
 		}
+		
+		result[0] = Strings.NO_CATEGORY
 		return result
 	}
 	
 	func getMediaLable(_ code: Int) -> String {
+		if code < 1 {
+			return Strings.NO_CATEGORY
+		}
+		
 		if let table = db.from(AnimeMedia.tableName) {
 			defer { table.close() }
 			let (row, _) = table
@@ -288,56 +304,55 @@ class AnimeDataManager {
 	//--- backup/restore ---
 	
 	func syncBackupData() -> Bool {
-		let url = iCloudBackupUrl?.appendingPathComponent("backup.csv")
+		let url = iCloudBackupUrl?.appendingPathComponent(BACKUP_DB_FILENAME)
 		do {
 			try FileManager.default.startDownloadingUbiquitousItem(at: url!)
 			return true
 		}
-		catch {
+		catch let error {
+			print("error: \(error.localizedDescription)")
 			return false
 		}
 	}
 	
-	func backup() -> Bool {
-		guard let iCloudUrl = iCloudBackupUrl else {
-			return false
-		}
-		
+	private func copyDbFile(from fromUrl: URL, to toUrl: URL) -> Bool {
 		let fileMng = FileManager.default
-		
-		let appDocUrl = fileMng.urls(for: .documentDirectory, in: .userDomainMask).first!
-		let fromUrl = appDocUrl.appendingPathComponent("__backup.csv")
-		let toUrl = iCloudUrl.appendingPathComponent("backup.csv")
-		
-		guard syncBackupData() else {
-			return false
-		}
-
-		let path = fromUrl.path
-		exportTo(file: path)
-		
 		do { try fileMng.removeItem(at: toUrl) } catch {
-			print("fail: remove a old backup.csv")
+			print("fail: remove a target file")
 		}
-		do { try fileMng.moveItem(at: fromUrl, to: toUrl) } catch {
-			print("fail: rename backup.csv")
+		do { try fileMng.copyItem(at: fromUrl, to: toUrl) } catch {
+			print("fail: copy file")
 			return false
 		}
 		
 		return true
 	}
 	
-	func restore() -> Int {
-		guard let fromUrl = iCloudBackupUrl?.appendingPathComponent("backup.csv") else {
-			return -1
+	func backup() -> Bool {
+		guard let iCloudUrl = iCloudBackupUrl else { return false }
+		guard let appDocUrl = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+			return false
 		}
+
+		let fromUrl = appDocUrl.appendingPathComponent(USER_DB_FILENAME)
+		let toUrl = iCloudUrl.appendingPathComponent(BACKUP_DB_FILENAME)
 		
+		return copyDbFile(from: fromUrl, to: toUrl)
+	}
+	
+	func restore() -> Bool {
+		guard let fromUrl = iCloudBackupUrl?.appendingPathComponent(BACKUP_DB_FILENAME) else {
+			return false
+		}
 		guard syncBackupData() else {
-			return -1
+			return false
+		}
+		guard let appDocUrl = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+			return false
 		}
 		
-		removeAll()
-		return importFrom(file: fromUrl.path)
+		let toUrl = appDocUrl.appendingPathComponent(USER_DB_FILENAME)
+		return copyDbFile(from: fromUrl, to: toUrl)
 	}
 	
 }

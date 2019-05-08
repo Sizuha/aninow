@@ -56,7 +56,7 @@ class EditAnimeMemoController: UIViewController {
 				.onHeight { return self.view.frame.height * 0.45 }
 				.bindData { return self.value }
 				.hint(Strings.MEMO)
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForMultiLine {
 						cell.setEnableEdit()
 						self.editText = cell.textView
@@ -64,10 +64,10 @@ class EditAnimeMemoController: UIViewController {
 				}
 		]))
 		
-		self.editTableView = SizPropertyTableView(frame: .zero, style: .grouped)
-		self.editTableView.translatesAutoresizingMaskIntoConstraints = false
-		self.editTableView.setDataSource(sections)
-		self.view.addSubview(self.editTableView)
+		editTableView = SizPropertyTableView(frame: .zero, style: .grouped)
+		editTableView.translatesAutoresizingMaskIntoConstraints = false
+		editTableView.setDataSource(sections)
+		view.addSubview(editTableView)
 	}
 	
 	@objc func save() {

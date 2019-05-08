@@ -34,12 +34,14 @@
 "anime_title_2nd"="부제목";
 "media"="매체";
 "memo"="메모";
-"empty_memo"="";
+"empty_memo"="메모없음";
+"no_category"="미분류";
 "none_value"="미정";
 "none_value2"="없음";
 "unknown"="모름";
 "empty_items"="비어있음";
 "no_rating"="평가없음";
+"not_used"="사용안함";
 
 "label_fin"="감상완료";
 "final_ep"="최종화";
@@ -71,6 +73,7 @@
 "msg_confirm_restore"="마지막으로 백업한 상태로 되돌립니다. 이 작업은 취소가 불가능합니다. 계속 진행하시겠습니까?";
 "msg_no_backup"="백업한 데이터가 없습니다";
 "msg_now_loading"="불러오는중...";
+"msg_end_restore"="데이터 복원 완료";
 
 "fmt_year"="%4d년";
 "fmt_month"="%2d원";

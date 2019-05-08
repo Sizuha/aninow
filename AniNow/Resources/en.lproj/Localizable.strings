@@ -35,11 +35,13 @@
 "media"="Media";
 "memo"="Memo";
 "empty_memo"="";
+"no_category"="etc.";
 "none_value"="None";
 "none_value2"="None";
 "unknown"="Unknown";
 "empty_items"="Empty";
 "no_rating"="No Rating";
+"not_used"="Not Used";
 
 "label_fin"="Finished";
 "final_ep"="Final Ep.";
@@ -71,6 +73,7 @@
 "msg_confirm_restore"="Revert to the last backed up state. This work can not go back.";
 "msg_no_backup"="There is no backup";
 "msg_now_loading"="Loading...";
+"msg_end_restore"="Complete";
 
 "fmt_year"="%4d";
 "fmt_month"="%2d";

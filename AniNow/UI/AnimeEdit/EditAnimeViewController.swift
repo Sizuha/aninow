@@ -138,7 +138,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			SizPropertyTableRow(type: .editText)
 				.bindData { self.editItem.title }
 				.hint(Strings.ANIME_TITLE)
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
 						self.editTitle = cell.textField
 						self.editTitle?.clearButtonMode = .whileEditing
@@ -152,7 +152,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			,SizPropertyTableRow(type: .editText)
 				.bindData { self.editItem.titleOther }
 				.hint(Strings.ANIME_TITLE_2ND)
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
 						self.editTitleOther = cell.textField
 						self.editTitleOther?.clearButtonMode = .whileEditing
@@ -166,7 +166,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			,SizPropertyTableRow(type: .editText)
 				.bindData { self.editItem.link }
 				.hint("URL")
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
 						self.editUrl = cell.textField
 						self.editUrl?.keyboardType = .URL
@@ -192,7 +192,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			SizPropertyTableRow(type: .onOff, label: Strings.LABEL_FIN)
 				.bindData { self.editItem.finished }
 				.tintColor(Colors.ACTION)
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForOnOff {
 						self.editFinished = cell.switchCtrl
 						cell.switchCtrl.thumbTintColor = Colors.NAVI_BG
@@ -205,7 +205,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			,SizPropertyTableRow(type: .editText, label: Strings.FINAL_EP)
 				.bindData { self.editItem.total > 0 ? String(self.editItem.total) : "" }
 				.hint("00")
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
 						self.editTotal = cell.textField
 						self.editTotal?.keyboardType = .numberPad
@@ -224,7 +224,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 						: ""
 				}
 				.hint("00")
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
 						self.editProgress = cell.textField
 						self.editProgress?.keyboardType = .decimalPad
@@ -242,7 +242,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 					self.showPubDatePicker()
 					self.editTableView.deselectRow(at: i, animated: false)
 				}
-				.onCreate { c in self.dispPubDate = c.detailTextLabel }
+				.onCreate { c, _ in self.dispPubDate = c.detailTextLabel }
 			
 			// Media
 			,SizPropertyTableRow(label: Strings.MEDIA)
@@ -251,12 +251,12 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 					self.showChoiceMedia()
 					self.editTableView.deselectRow(at: i, animated: false)
 				}
-				.onCreate { c in self.dispMedia = c.detailTextLabel }
+				.onCreate { c, _ in self.dispMedia = c.detailTextLabel }
 			
 			// Rating
 			,SizPropertyTableRow(type: .rating, label: Strings.RATING)
 				.bindData { Double(self.editItem.rating) }
-				.onCreate { c in
+				.onCreate { c, _ in
 					self.editRating = (c as? SizCellForRating)?.ratingBar
 					self.editRating?.emptyImage = Icons.STAR5_EMPTY
 					self.editRating?.fullImage = Icons.STAR5_FILL
@@ -285,7 +285,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 					self.showEditMemo()
 					self.editTableView.deselectRow(at: i, animated: true)
 				}
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForMultiLine {
 						self.cellMemo = cell
 						self.dispMemo = cell.textView
@@ -302,7 +302,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 						self.editTableView.deselectRow(at: i, animated: false)
 						self.tryRemove()
 					}
-					.onCreate { c in
+					.onCreate { c, _ in
 						if let cell = c as? SizCellForButton {
 							cell.textLabel?.textAlignment = .center
 						}

@@ -62,11 +62,11 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	private func initTableView() {
-		self.menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
-		self.menuTable.translatesAutoresizingMaskIntoConstraints = false
+		menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
+		menuTable.translatesAutoresizingMaskIntoConstraints = false
 		
 		// Categories
-		self.menus.append(SizPropertyTableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.LABEL_ANIME_LIST,
 			rows: [
 				SizPropertyTableRow(label: Strings.ALL_VIEWING)
@@ -96,21 +96,20 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		))
 
 		// filter: Media
-		let medias = AnimeDataManager.shared.loadMedias().sorted(by: <)
+		//let medias = AnimeDataManager.shared.loadMedias().sorted(by: <)
 		
-		var mediaRows = [SizPropertyTableRow]()
-		for (code, label) in medias {
-			mediaRows.append(createMediaFilterMenu(code, label: label))
-		}
-		
-		self.menus.append(SizPropertyTableSection(
+//		var mediaRows = [SizPropertyTableRow]()
+//		for (code, label) in medias {
+//			mediaRows.append(createMediaFilterMenu(code, label: label))
+//		}
+		menus.append(SizPropertyTableSection(
 			title: Strings.FILTER_MEDIA,
-			rows: mediaRows
+			rows: [] //mediaRows
 		))
 
 		
 		// filter: Rating
-		self.menus.append(SizPropertyTableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.FILTER_RATING,
 			rows: [
 				createRatingFilterMenu(5),
@@ -122,8 +121,18 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			]
 		))
 		
-		self.menuTable.setDataSource(self.menus)
-		self.view.addSubview(self.menuTable)
+		menuTable.setDataSource(menus)
+		view.addSubview(menuTable)
+	}
+	
+	func updateMediaFilters() {
+		let medias = AnimeDataManager.shared.loadMedias().sorted(by: <)
+		
+		var mediaRows = [SizPropertyTableRow]()
+		for (code, label) in medias {
+			mediaRows.append(createMediaFilterMenu(code, label: label))
+		}
+		menus[1].rows = mediaRows
 	}
 	
 	private func createMediaFilterMenu(_ media: Int, label: String) -> SizPropertyTableRow{
@@ -135,7 +144,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 				nextView.mediaFilter = media
 				self.navigationController?.pushViewController(nextView, animated: true)
 			}
-			.onCreate { c in c.textLabel?.textColor = UIColor.darkText }
+			.onCreate { c, _ in c.textLabel?.textColor = UIColor.darkText }
 	}
 	
 	private func createRatingFilterMenu(_ rating: Int) -> SizPropertyTableRow{
@@ -156,6 +165,8 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	func refresh() {
 		fadeOut(start: 0.0, end: 0.0) { fin in
 			guard fin else { return }
+			
+			self.updateMediaFilters()
 			
 			self.startNowLoading()
 			DispatchQueue.main.async {
@@ -187,10 +198,12 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	@objc func showSettings() {
-		let naviController = UINavigationController()
-		let vc = SettingsViewController()
-		naviController.pushViewController(vc, animated: false)
-		present(naviController, animated: true, completion: nil)
+		navigationController?.pushViewController(SettingsViewController(), animated: true)
+		
+//		let naviController = UINavigationController()
+//		let vc = SettingsViewController()
+//		naviController.pushViewController(vc, animated: false)
+//		present(naviController, animated: true, completion: nil)
 	}
 	
 }

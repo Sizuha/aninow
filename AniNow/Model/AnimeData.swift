@@ -125,12 +125,12 @@ class Anime: SQueryRow, CsvSerializable {
 				self.rating = cur.getFloat(i) ?? 0
 			case Anime.F_MEMO:
 				self.memo = cur.getString(i) ?? ""
-			case Anime.F_LINK: self.link =
-				cur.getString(i) ?? ""
-			case Anime.F_IMG_PATH: self.imagePath =
-				cur.getString(i) ?? ""
-			case Anime.F_REMOVED: self.removed =
-				cur.getBool(i) == true
+			case Anime.F_LINK:
+				self.link = cur.getString(i) ?? ""
+			case Anime.F_IMG_PATH:
+				self.imagePath = cur.getString(i) ?? ""
+			case Anime.F_REMOVED:
+				self.removed = cur.getBool(i) == true
 			default: break
 			}
 		}

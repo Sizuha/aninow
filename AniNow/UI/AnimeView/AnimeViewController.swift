@@ -178,7 +178,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 					let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
 					return Double(currEp)
 				}
-				.onCreate { c in
+				.onCreate { c, _ in
 					if let cell = c as? SizCellForStepper {
 						cell.enableConvertIntWhenChanged = true
 						cell.minValue = 0
@@ -201,7 +201,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Rating
 		section.rows.append(SizPropertyTableRow(type: .rating, label: Strings.RATING)
 			.bindData { Double(self.item?.rating ?? 0) }
-			.onCreate { c in
+			.onCreate { c, _ in
 				if let cell = c as? SizCellForRating {
 					cell.ratingBar.emptyImage = Icons.STAR5_EMPTY
 					cell.ratingBar.fullImage = Icons.STAR5_FILL
@@ -222,7 +222,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 			}
 			.bindData { self.item?.memo }
 			.hint(Strings.EMPTY_MEMO)
-			.onCreate { c in
+			.onCreate { c, _ in
 				if let cell = c as? SizCellForMultiLine {
 					self.dispMemo = cell.textView
 				}
