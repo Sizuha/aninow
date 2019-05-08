@@ -184,7 +184,7 @@ class SettingsViewController: CommonUIViewController, UINavigationControllerDele
 		let now = Date()
 		
 		let fmt = DateFormatter()
-		fmt.locale = SQuery.standardLocal
+		fmt.locale = Locale.standard
 		fmt.dateFormat = "yyyy-MM-dd_HHmmss"
 		fmt.timeZone = TimeZone.current
 		

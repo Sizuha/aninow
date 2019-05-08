@@ -74,9 +74,9 @@ class Anime: SQueryRow, CsvSerializable {
 	
 	init() {
 		self.fmtYearMonth = DateFormatter()
-		self.fmtYearMonth.locale = SQuery.standardLocal
+		self.fmtYearMonth.locale = Locale.standard
 		self.fmtYearMonth.dateFormat = "yyyyMM"
-		self.fmtYearMonth.timeZone = SQuery.utcTimeZone
+		self.fmtYearMonth.timeZone = TimeZone.utc
 	}
 	
 	private func reset() {
