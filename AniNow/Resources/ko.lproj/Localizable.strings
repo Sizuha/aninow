@@ -80,4 +80,4 @@
 "fmt_year_month"="%4d년 %d월";
 "fmt_end_import"="%d개의 데이터를 읽어 들였습니다.";
 
-"backup_csv_header"="제목,부제목,매체,시작일,진행（화）,최종화,완료,평가,메모,URL";
+"backup_csv_header"="제목,부제목,매체코드,시작일,진행（화）,최종화,완료,평가,메모,URL,매체";

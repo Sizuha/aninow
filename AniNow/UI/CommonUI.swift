@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SizUtil
 
 extension UIViewController {
 	
@@ -151,4 +152,18 @@ func getRatingToStarText(_ rating: Int) -> String {
 		star.append(Strings.STAR)
 	}
 	return star.isEmpty ? Strings.NO_RATING : star
+}
+
+class ActionPropertyTableView: SizPropertyTableView {
+	
+	var onDeleteItem: ((IndexPath)->Bool)? = nil
+	
+	override func trailingSwipeActions(rowAt: IndexPath) -> UISwipeActionsConfiguration? {
+		return SizSwipeActionBuilder()
+			.addAction(title: Strings.REMOVE, style: .destructive, handler: { action, view, handler in
+				handler(self.onDeleteItem?(rowAt) == true)
+			})
+			.createConfig()
+	}
+	
 }

@@ -80,4 +80,4 @@
 "fmt_year_month"="%4d年%d月";
 "fmt_end_import"="%d件のデータを読み込みました！";
 
-"backup_csv_header"="タイトル,サブタイトル,Media,開始日,進行（話）,最終話,完了,評価,メモ,Link";
+"backup_csv_header"="タイトル,サブタイトル,Media(コード),開始日,進行（話）,最終話,完了,評価,メモ,Link,Media(テキスト)";

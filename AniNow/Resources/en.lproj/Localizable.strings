@@ -80,4 +80,4 @@
 "fmt_year_month"="%2$2d/%1$04d";
 "fmt_end_import"="Loading is complete! (%d items)";
 
-"backup_csv_header"="Title,Sub title,Media,Published,Current Ep.,Final Ep.,Finished,Rating,Memo,Link";
+"backup_csv_header"="Title,Sub title,Media(Code),Published,Current Ep.,Final Ep.,Finished,Rating,Memo,Link,Medua(Text)";

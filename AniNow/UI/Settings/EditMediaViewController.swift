@@ -11,7 +11,7 @@ import SizUtil
 
 class EditMediaViewController: UIViewController, UITextFieldDelegate {
 
-	private var menuTable: SizPropertyTableView!
+	private var menuTable: ActionPropertyTableView!
 	private var menus = [SizPropertyTableSection]()
 	
 	private var editItems = [Int:String]()
@@ -33,7 +33,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	private func initTableView() {
-		menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
+		menuTable = ActionPropertyTableView(frame: .zero, style: .grouped)
 		menuTable.autoEndEditing = false
 		menuTable.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 400))
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
@@ -45,9 +45,6 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 		}
 		
 		var rows = [SizPropertyTableRow]()
-//		rows.append(SizPropertyTableRow().label("TEST").bindData({
-//			return "AAAA"
-//		}))
 		for i in 1...10 {
 			let row = SizPropertyTableRow(type: .editText, label: "\(i)")
 				.hint(Strings.NOT_USED)
@@ -62,11 +59,6 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 						//cell.textField.clearButtonMode = .whileEditing
 					}
 				}
-//				.onSelect{ i in
-//					if i.row >= 7 {
-//						self.menuTable.scrollToRow(at: i, at: .bottom, animated: true)
-//					}
-//				}
 				.onChanged { value in
 					self.editItems[i] = (value as? String) ?? ""
 				}
@@ -75,6 +67,13 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 		menus.append(SizPropertyTableSection(rows: rows))
 		
 		menuTable.setDataSource(menus)
+		menuTable.onDeleteItem = { i in
+			let mediaCode = i.row+1
+			self.editItems[mediaCode] = ""
+			self.menuTable.reloadRows(at: [i], with: .automatic)
+			return false
+		}
+
 		view.addSubview(menuTable)
 	}
 	
@@ -97,7 +96,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 		let row = textField.tag
 		if row >= 7 {
-			self.menuTable.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: true)
+			menuTable.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: true)
 		}
 
 	}
