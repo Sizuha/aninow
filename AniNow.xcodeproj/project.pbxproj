@@ -12,10 +12,6 @@
 		D51C17EE21D20B7F00F7CF3D /* RatingFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */; };
 		D51C17F121D2119A00F7CF3D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17F021D2119A00F7CF3D /* HomeViewController.swift */; };
 		D51C17F721D4751700F7CF3D /* AnimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17F621D4751700F7CF3D /* AnimeTableView.swift */; };
-		D51ED9242251EA4D005DEECD /* SQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED8EC2251DEA3005DEECD /* SQuery.framework */; };
-		D51ED9262251EA4D005DEECD /* SizUtil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED91F2251E30C005DEECD /* SizUtil.framework */; };
-		D550991E22702F86004BA41B /* SQuery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED8EC2251DEA3005DEECD /* SQuery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D550991F22702F86004BA41B /* SizUtil.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D51ED91F2251E30C005DEECD /* SizUtil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D564AFF02282C78A00FD983D /* EditMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D564AFEF2282C78A00FD983D /* EditMediaViewController.swift */; };
 		D56BEDFF21C222030070AB45 /* AnimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEDFE21C222030070AB45 /* AnimeViewController.swift */; };
 		D56BEE0121C741760070AB45 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56BEE0021C741760070AB45 /* Settings.swift */; };
@@ -37,6 +33,8 @@
 		D5A24CD321BF5A7400E2F39B /* EditAnimeMemoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CD221BF5A7400E2F39B /* EditAnimeMemoController.swift */; };
 		D5A24CDA21C0C2CC00E2F39B /* AnimeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */; };
 		D5A24CDC21C0CECB00E2F39B /* AnimeItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */; };
+		D5ACFB6E22BC738D00E5C48C /* SQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5ACFB6D22BC738C00E5C48C /* SQuery.framework */; };
+		D5ACFB7422BC77E700E5C48C /* SizUtil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5ACFB7122BC77B600E5C48C /* SizUtil.framework */; };
 		D5AE2E2021B101B300906CC7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E1F21B101B300906CC7 /* AppDelegate.swift */; };
 		D5AE2E2221B101B300906CC7 /* AnimeItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E2121B101B300906CC7 /* AnimeItemsViewController.swift */; };
 		D5AE2E2421B101B300906CC7 /* FinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E2321B101B300906CC7 /* FinishedViewController.swift */; };
@@ -62,21 +60,6 @@
 			remoteInfo = AniNow;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		D51ED9272251EA4D005DEECD /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D550991E22702F86004BA41B /* SQuery.framework in Embed Frameworks */,
-				D550991F22702F86004BA41B /* SizUtil.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D51C17E921D2090600F7CF3D /* AllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +94,8 @@
 		D5A24CD221BF5A7400E2F39B /* EditAnimeMemoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAnimeMemoController.swift; sourceTree = "<group>"; };
 		D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeItemCell.swift; sourceTree = "<group>"; };
 		D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnimeItemCell.xib; sourceTree = "<group>"; };
+		D5ACFB6D22BC738C00E5C48C /* SQuery.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQuery.framework; path = Carthage/Build/iOS/SQuery.framework; sourceTree = "<group>"; };
+		D5ACFB7122BC77B600E5C48C /* SizUtil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SizUtil.framework; path = Carthage/Build/iOS/SizUtil.framework; sourceTree = "<group>"; };
 		D5AE2E1C21B101B200906CC7 /* AniNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5AE2E1F21B101B300906CC7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D5AE2E2121B101B300906CC7 /* AnimeItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeItemsViewController.swift; sourceTree = "<group>"; };
@@ -132,8 +117,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5AE2E5121B1030B00906CC7 /* libsqlite3.tbd in Frameworks */,
-				D51ED9242251EA4D005DEECD /* SQuery.framework in Frameworks */,
-				D51ED9262251EA4D005DEECD /* SizUtil.framework in Frameworks */,
+				D5ACFB6E22BC738D00E5C48C /* SQuery.framework in Frameworks */,
+				D5ACFB7422BC77E700E5C48C /* SizUtil.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,7 +231,6 @@
 		D5AE2E1321B101B200906CC7 = {
 			isa = PBXGroup;
 			children = (
-				D5AE2E5221B1031C00906CC7 /* Lib */,
 				D5AE2E1E21B101B200906CC7 /* AniNow */,
 				D5AE2E3521B101B400906CC7 /* AniNowTests */,
 				D5AE2E4021B101B400906CC7 /* AniNowUITests */,
@@ -300,18 +284,13 @@
 		D5AE2E4F21B1030B00906CC7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5ACFB7122BC77B600E5C48C /* SizUtil.framework */,
+				D5ACFB6D22BC738C00E5C48C /* SQuery.framework */,
 				D5AE2E5021B1030B00906CC7 /* libsqlite3.tbd */,
 				D51ED8EC2251DEA3005DEECD /* SQuery.framework */,
 				D51ED91F2251E30C005DEECD /* SizUtil.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D5AE2E5221B1031C00906CC7 /* Lib */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Lib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,7 +303,7 @@
 				D5AE2E1821B101B200906CC7 /* Sources */,
 				D5AE2E1921B101B200906CC7 /* Frameworks */,
 				D5AE2E1A21B101B200906CC7 /* Resources */,
-				D51ED9272251EA4D005DEECD /* Embed Frameworks */,
+				D5ACFB7022BC756600E5C48C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -454,6 +433,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D5ACFB7022BC756600E5C48C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SQuery.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SizUtil.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D5AE2E1821B101B200906CC7 /* Sources */ = {
@@ -671,7 +672,7 @@
 				DEVELOPMENT_TEAM = R8QQLU625A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Lib",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = AniNow/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
@@ -697,7 +698,7 @@
 				DEVELOPMENT_TEAM = R8QQLU625A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Lib",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = AniNow/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
