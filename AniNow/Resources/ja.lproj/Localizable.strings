@@ -54,7 +54,7 @@
 "count_finished"="完了した作品数";
 "backup"="バックアップ";
 "restore"="復元";
-"import"="読み込み";
+"import"="読み込む";
 "export"="書き出す";
 "last_backup"="最近のバックアップ";
 
