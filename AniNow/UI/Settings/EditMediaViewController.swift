@@ -25,7 +25,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
     
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		setMatchToParent(parent: view, child: menuTable)
+		menuTable.setMatchTo(parent: view)
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -48,7 +48,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 		for i in 1...10 {
 			let row = SizPropertyTableRow(type: .editText, label: "\(i)")
 				.hint(Strings.NOT_USED)
-				.bindData {
+				.dataSource {
 					return self.editItems[i] ?? ""
 				}
 				.onCreate { c, i in

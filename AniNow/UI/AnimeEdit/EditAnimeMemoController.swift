@@ -29,7 +29,7 @@ class EditAnimeMemoController: UIViewController {
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		setMatchToParent(parent: self.view, child: self.editTableView)
+		self.editTableView.setMatchTo(parent: self.view)
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -54,7 +54,7 @@ class EditAnimeMemoController: UIViewController {
 			// Memo
 			SizPropertyTableRow(type: .multiLine)
 				.onHeight { return self.view.frame.height * 0.45 }
-				.bindData { return self.value }
+				.dataSource { return self.value }
 				.hint(Strings.MEMO)
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForMultiLine {

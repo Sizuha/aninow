@@ -35,29 +35,27 @@ open class SizPropertyTableRow {
 	public enum CellType {
 		case
 		text,
-		//description,
 		editText,
 		onOff,
 		select,
 		rating,
 		multiLine,
-		date,
-		time,
 		button,
 		stepper,
-		custome
+		custome,
+		datetime
 	}
 	
 	let type: CellType
 	let cellClass: AnyClass
 	
 	var label: String = ""
-	var bindData: (()->Any?)? = nil
+	var dataSource: (()->Any?)? = nil
 	var hint: String = ""
 	var textColor: UIColor? = nil
 	var tintColor: UIColor? = nil
-	
 	var height: (()->CGFloat)? = nil
+	var selectionItems: [String]? = nil
 	
 	let viewID: String
 	
@@ -66,7 +64,12 @@ open class SizPropertyTableRow {
 	public var onWillDisplay: ((UITableViewCell, IndexPath)->Void)? = nil
 	public var onChanged: ((_ value: Any?)->Void)? = nil
 	
-	public init(type: CellType = .text, cellClass: AnyClass? = nil, id: String? = nil, label: String = "") {
+	public init(
+		type: CellType = .text,
+		cellClass: AnyClass? = nil,
+		id: String? = nil,
+		label: String = ""
+	) {
 		self.type = cellClass != nil ? .custome : type
 		self.label = label
 		
@@ -89,12 +92,16 @@ open class SizPropertyTableRow {
 		case .multiLine:
 			self.viewID = id ?? "siz_multiLine"
 			self.cellClass = SizCellForMultiLine.self
-		case .date, .time:
-			self.viewID = id ?? "siz_datetime"
-			self.cellClass = SizCellForDateTime.self
 		case .button:
 			self.viewID = id ?? "siz_button"
 			self.cellClass = SizCellForButton.self
+		case .select:
+			self.viewID = id ?? "siz_select"
+			self.cellClass = SizCellForSelect.self
+		case .datetime:
+			self.viewID = id ?? "siz_datetime"
+			self.cellClass = SizCellForDateTime.self
+
 		default:
 			guard id != nil else {
 				fatalError("Cell ID is not defined")
@@ -116,8 +123,12 @@ open class SizPropertyTableRow {
 		self.label = text
 		return self
 	}
-	public func bindData(_ binder: (()->Any?)? = nil) -> Self {
-		self.bindData = binder
+	public func dataSource(_ sourceFrom: (()->Any?)? = nil) -> Self {
+		self.dataSource = sourceFrom
+		return self
+	}
+	public func selection(items: [String]) -> Self {
+		self.selectionItems = items
 		return self
 	}
 	public func hint(_ text: String) -> Self {
@@ -241,99 +252,127 @@ open class SizPropertyTableView: SizTableView, UITableViewDataSource
 	}
 	
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cellView: UITableViewCell
-		
-		if let cellItem = self.source?[indexPath.section].rows[indexPath.row] {
-			cellView = dequeueReusableCell(withIdentifier: cellItem.viewID)
-				?? UITableViewCell()
-			
-			cellView.textLabel?.textColor = cellItem.textColor ?? UIColor.darkText
-			
-			switch cellItem.type {
-			case .editText:
-				if let cell = cellView as? SizCellForEditText {
-					cell.placeholder = cellItem.hint
-					cell.textValue =  cellItem.bindData?() as? String ?? ""
-					if !cellItem.label.isEmpty {
-						cell.textLabel?.text = cellItem.label
-						cell.textField.textAlignment = .right
-					}
-				}
-			case .stepper:
-				if let cell = cellView as? SizCellForStepper {
-					cell.placeholder = cellItem.hint
-					cell.textField.textAlignment = .right
-					cell.textLabel?.text = cellItem.label
-					cell.stepper.tintColor = cellItem.tintColor ?? self.tintColor
-
-					let data = cellItem.bindData?()
-					cell.value = data as? Double
-						?? Double(data as? Float ?? Float(data as? Int ?? 0))
-				}
-
-			case .onOff:
-				if let cell = cellView as? SizCellForOnOff {
-					cell.textLabel?.text = cellItem.label
-					cell.switchCtrl.isOn = cellItem.bindData?() as? Bool == true
-				}
-				
-			case .rating:
-				if let cell = cellView as? SizCellForRating {
-					cell.textLabel?.text = cellItem.label
-					cell.ratingBar.rating = cellItem.bindData?() as? Double ?? 0.0
-				}
-				
-			case .date:
-				if let cell = cellView as? SizCellForDateTime {
-					cell.textLabel?.text = cellItem.label
-					cell.picker.datePickerMode = .date
-				}
-			case .time:
-				if let cell = cellView as? SizCellForDateTime {
-					cell.textLabel?.text = cellItem.label
-					cell.picker.datePickerMode = .time
-				}
-				
-			case .custome: break
-				
-			case .multiLine:
-				cellView.accessoryType = cellItem.onSelect != nil
-					? .disclosureIndicator
-					: .none
-				
-				if let cell = cellView as? SizCellForMultiLine {
-					cell.contentText = cellItem.bindData?() as? String ?? ""
-					cell.placeholder = cellItem.hint
-					if let textColor = cellItem.textColor {
-						cell.textView.textColor = textColor
-					}
-				}
-				
-			case .button:
-				cellView.textLabel?.text = cellItem.label
-				cellView.textLabel?.textColor = cellItem.tintColor ?? self.tintColor
-				
-			case .text: fallthrough
-			default:
-				cellView.accessoryType = cellItem.onSelect != nil
-					? .disclosureIndicator
-					: .none
-				
-				cellView.textLabel?.text = cellItem.label
-				cellView.detailTextLabel?.text = cellItem.bindData?() as? String ?? ""
-			}
-			
-			cellView.selectionStyle = cellItem.onSelect != nil ? .default : .none
-			if let sizCell = cellView as? SizPropertyTableCell {
-				sizCell.onGetCellHieght = cellItem.height
-				sizCell.onValueChanged = cellItem.onChanged
-			}
-			cellItem.onCreate?(cellView, indexPath)
-		}
-		else {
+		guard let cellItem = self.source?[indexPath.section].rows[indexPath.row] else {
 			assertionFailure("Wrong Cell")
-			cellView = UITableViewCell()
+			return UITableViewCell()
 		}
+		
+		let cellView = dequeueReusableCell(withIdentifier: cellItem.viewID)
+			?? UITableViewCell()
+		
+		cellView.textLabel?.textColor = cellItem.textColor ?? UIColor.defaultText
+		
+		switch cellItem.type {
+		case .select:
+			cellView.accessoryType = .disclosureIndicator
+			if let cell = cellView as? SizCellForSelect {
+				cell.selectionTitles = cellItem.selectionItems
+				cell.placeholder = cellItem.hint
+				if !cellItem.label.isEmpty {
+					cell.textLabel?.text = cellItem.label
+					cell.textField.textAlignment = .right
+				}
+				
+				let selIdx = cellItem.dataSource?() as? Int ?? -1
+				var displayText: String
+				if selIdx >= 0 && selIdx < (cellItem.selectionItems?.count ?? 0) {
+					displayText = cellItem.selectionItems?[selIdx] ?? ""
+				}
+				else {
+					displayText = ""
+				}
+				cell.textValue = displayText
+			}
+
+		case .editText:
+			if let cell = cellView as? SizCellForEditText {
+				cell.placeholder = cellItem.hint
+				cell.textValue = cellItem.dataSource?() as? String ?? ""
+				if !cellItem.label.isEmpty {
+					cell.textLabel?.text = cellItem.label
+					cell.textField.textAlignment = .right
+				}
+			}
+			
+		case .datetime:
+			if let cell = cellView as? SizCellForDateTime {
+				guard let textfield = cell.textField as? SizDatePickerField else { break }
+				
+				cell.placeholder = cellItem.hint
+				
+				if !cellItem.label.isEmpty {
+					cell.textLabel?.text = cellItem.label
+					cell.textField.textAlignment = .right
+				}
+				
+				if let date = cellItem.dataSource?() as? Date {
+					textfield.date = date
+					textfield.updateText()
+				}
+				else {
+					textfield.text = nil
+				}
+			}
+			
+		case .stepper:
+			if let cell = cellView as? SizCellForStepper {
+				cell.placeholder = cellItem.hint
+				cell.textField.textAlignment = .right
+				cell.textLabel?.text = cellItem.label
+				cell.stepper.tintColor = cellItem.tintColor ?? self.tintColor
+				
+				let data = cellItem.dataSource?()
+				cell.value = data as? Double
+					?? Double(data as? Float ?? Float(data as? Int ?? 0))
+			}
+			
+		case .onOff:
+			if let cell = cellView as? SizCellForOnOff {
+				cell.textLabel?.text = cellItem.label
+				cell.switchCtrl.isOn = cellItem.dataSource?() as? Bool == true
+			}
+			
+		case .rating:
+			if let cell = cellView as? SizCellForRating {
+				cell.textLabel?.text = cellItem.label
+				cell.ratingBar.rating = cellItem.dataSource?() as? Double ?? 0.0
+			}
+			
+		case .custome: break
+			
+		case .multiLine:
+			cellView.accessoryType = cellItem.onSelect != nil
+				? .disclosureIndicator
+				: .none
+			
+			if let cell = cellView as? SizCellForMultiLine {
+				cell.contentText = cellItem.dataSource?() as? String ?? ""
+				cell.placeholder = cellItem.hint
+				if let textColor = cellItem.textColor {
+					cell.textView.textColor = textColor
+				}
+			}
+			
+		case .button:
+			cellView.textLabel?.text = cellItem.label
+			cellView.textLabel?.textColor = cellItem.tintColor ?? self.tintColor
+			
+		case .text: fallthrough
+		default:
+			cellView.accessoryType = cellItem.onSelect != nil
+				? .disclosureIndicator
+				: .none
+			
+			cellView.textLabel?.text = cellItem.label
+			cellView.detailTextLabel?.text = cellItem.dataSource?() as? String ?? ""
+		}
+		
+		cellView.selectionStyle = cellItem.onSelect != nil ? .default : .none
+		if let sizCell = cellView as? SizPropertyTableCell {
+			sizCell.onGetCellHieght = cellItem.height
+			sizCell.onValueChanged = cellItem.onChanged
+		}
+		cellItem.onCreate?(cellView, indexPath)
 		return cellView
 	}
 	
@@ -370,6 +409,9 @@ open class SizPropertyTableView: SizTableView, UITableViewDataSource
 	}
 	override open func didSelect(rowAt: IndexPath) {
 		if let cellItem = self.source?[rowAt.section].rows[rowAt.row] {
+			if cellItem.type == .select {
+				// TODO call show selection picker
+			}
 			cellItem.onSelect?(rowAt)
 		}
 	}
@@ -385,15 +427,12 @@ open class SizPropertyTableView: SizTableView, UITableViewDataSource
 }
 
 //------ Cell: Edit Text
-
 open class SizCellForEditText: SizPropertyTableCell, UITextFieldDelegate {
 	public var delegate: UITextFieldDelegate? = nil
 	public var maxLength: Int = 0
 	
-	private var editText: UITextField!
-	public var textField: UITextField {
-		return editText
-	}
+	public var textField: UITextField!
+	public var valueViewWidth: CGFloat = HALF_WIDTH
 	
 	private var contentViewRect: CGRect {
 		return CGRect(
@@ -404,28 +443,29 @@ open class SizCellForEditText: SizPropertyTableCell, UITextFieldDelegate {
 	}
 	
 	open override func onInit() {
-		editText = UITextField(frame: .zero)
-		editText.returnKeyType = .next
-		editText.textColor = .darkGray
-		editText.delegate = self
+		super.onInit()
+		textField = UITextField(frame: .zero)
+		textField.returnKeyType = .next
+		textField.textColor = .inputText
+		textField.delegate = self
 		
-		contentView.addSubview(editText)
+		contentView.addSubview(textField)
 	}
 	
 	public var textValue: String? {
-		get { return editText.text }
-		set(value) { editText.text = value }
+		get { return textField.text }
+		set(value) { textField.text = value }
 	}
 	
 	public var placeholder: String? {
-		get { return editText.placeholder }
-		set(value) { editText.placeholder = value }
+		get { return textField.placeholder }
+		set(value) { textField.placeholder = value }
 	}
 	
 	public override func refreshViews() {
 		let width: CGFloat
 		let x: CGFloat
-		let rightPadding = editText.clearButtonMode == .never
+		let rightPadding = textField.clearButtonMode == .never
 			? DefaultCellPadding.right
 			: DefaultCellPadding.right/2
 		
@@ -434,11 +474,16 @@ open class SizCellForEditText: SizPropertyTableCell, UITextFieldDelegate {
 			x = DefaultCellPadding.left
 		}
 		else {
-			width = contentView.frame.size.width/2 - rightPadding
-			x = contentView.frame.size.width/2
+			switch self.valueViewWidth {
+			case HALF_WIDTH:
+				width = contentView.frame.size.width/2 - rightPadding
+			default:
+				width = (self.valueViewWidth > 0 ? self.valueViewWidth : contentView.frame.size.width) - rightPadding
+			}
+			x = contentView.frame.size.width - width - rightPadding
 		}
 		
-		editText.frame = CGRect(
+		textField.frame = CGRect(
 			x: x,
 			y: 0,
 			width: width,
@@ -503,6 +548,24 @@ open class SizCellForEditText: SizPropertyTableCell, UITextFieldDelegate {
 	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		return self.delegate?.textFieldShouldReturn?(textField) ?? true
 	}
+	
+//	open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+//		return true
+//	}
+
+}
+
+//------ Cell: DateTime
+open class SizCellForDateTime: SizCellForEditText {
+	
+	open override func onInit() {
+		super.textField = SizDatePickerField(frame: .zero)
+		super.textField.returnKeyType = .next
+		super.textField.textColor = .inputText
+		
+		contentView.addSubview(super.textField)
+	}
+	
 }
 
 //------ Cell: Stepper
@@ -597,7 +660,6 @@ open class SizCellForStepper: SizCellForEditText {
 }
 
 //------ Cell: OnOff
-
 open class SizCellForOnOff: SizPropertyTableCell {
 	private var onOffCtrl: UISwitch!
 	public var switchCtrl: UISwitch {
@@ -605,6 +667,7 @@ open class SizCellForOnOff: SizPropertyTableCell {
 	}
 	
 	open override func onInit() {
+		super.onInit()
 		onOffCtrl = UISwitch(frame: .zero)
 		onOffCtrl.addTarget(self, action: #selector(onSwitchChanged), for: .valueChanged)
 		
@@ -628,7 +691,6 @@ open class SizCellForOnOff: SizPropertyTableCell {
 }
 
 //------ Cell: Text
-
 open class SizCellForText: SizPropertyTableCell {
 	private var valueLabel: UILabel!
 	open override var detailTextLabel: UILabel? {
@@ -647,9 +709,10 @@ open class SizCellForText: SizPropertyTableCell {
 	}
 	
 	open override func onInit() {
+		super.onInit()
 		self.valueLabel = UILabel(frame: .zero)
 		self.valueLabel.textAlignment = .right
-		self.valueLabel.textColor = UIColor.darkGray
+		self.valueLabel.textColor = .inputText
 		self.valueLabel.lineBreakMode = .byTruncatingTail
 		addSubview(self.valueLabel)
 	}
@@ -674,7 +737,6 @@ open class SizCellForText: SizPropertyTableCell {
 }
 
 //------ Cell: MultiLine Text
-
 open class SizCellForMultiLine: SizPropertyTableCell {
 	private var defaultRowHeight: CGFloat!
 	
@@ -697,17 +759,19 @@ open class SizCellForMultiLine: SizPropertyTableCell {
 	}
 	
 	open override func onInit() {
+		super.onInit()
 		self.defaultRowHeight = contentView.frame.height
 		
 		let textView = UITextView()
 		textView.frame = CGRect(x: 0, y: 0, width: editWidth, height: self.defaultRowHeight)
 		textView.textAlignment = .left
-		textView.textColor = .darkGray
+		textView.textColor = .inputText
 		textView.font = UIFont.systemFont(ofSize: 16)
 		textView.translatesAutoresizingMaskIntoConstraints = true
 		textView.isEditable = false
 		textView.isUserInteractionEnabled = false
 		textView.isScrollEnabled = false
+		textView.backgroundColor = .clear
 		//textView.backgroundColor = .blue // for DEBUG
 		
 		self.subTextView = textView
@@ -715,7 +779,13 @@ open class SizCellForMultiLine: SizPropertyTableCell {
 		
 		let placeholderView = UILabel()
 		placeholderView.isUserInteractionEnabled = false
-		placeholderView.textColor = .placeholderGray
+		
+		if #available(iOS 13.0, *) {
+			placeholderView.textColor = .placeholderText
+		} else {
+			placeholderView.textColor = .placeholderGray
+		}
+		
 		placeholderView.font = textView.font
 		self.subHintView = placeholderView
 		self.addSubview(placeholderView)
@@ -786,7 +856,6 @@ open class SizCellForMultiLine: SizPropertyTableCell {
 }
 
 //------ Cell: Star Rating
-
 open class SizCellForRating: SizPropertyTableCell, FloatRatingViewDelegate {
 	private var ratingView: FloatRatingView!
 	public var ratingBar: FloatRatingView { return self.ratingView }
@@ -794,6 +863,7 @@ open class SizCellForRating: SizPropertyTableCell, FloatRatingViewDelegate {
 	public var delegate: FloatRatingViewDelegate? = nil
 	
 	open override func onInit() {
+		super.onInit()
 		self.ratingView = FloatRatingView(frame: .zero)
 		self.ratingView.editable = true
 		self.ratingView.type = .wholeRatings
@@ -827,27 +897,52 @@ open class SizCellForRating: SizPropertyTableCell, FloatRatingViewDelegate {
 	}
 }
 
-//------ Cell: Date Time Picker
-
-open class SizCellForDateTime: SizPropertyTableCell {
-	private var dateTimePickerView: UIDatePicker!
-	public var picker: UIDatePicker { return dateTimePickerView }
-	
-	open override func onInit() {
-		dateTimePickerView = UIDatePicker()
-	}
-	
-	public override func refreshViews() {}
-}
-
 //------ Cell: Button
-
 open class SizCellForButton: SizPropertyTableCell {
 	
 	open override func onInit() {
+		super.onInit()
 		textLabel?.textAlignment = .left
 	}
 	
 	public override func refreshViews() {}
 
 }
+
+//------ Cell: Sellect
+open class SizCellForSelect: SizCellForEditText, UIPickerViewDelegate, UIPickerViewDataSource {
+	
+	var selectionTitles: [String]! = nil
+	public let picker: UIPickerView = UIPickerView()
+	
+	open override func onInit() {
+		super.onInit()
+		self.picker.delegate = self
+		self.picker.dataSource = self
+		self.picker.showsSelectionIndicator = true		
+		self.textField.inputView = self.picker
+	}
+	
+	public override func refreshViews() {}
+	
+	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+		return 1
+	}
+	
+	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		return self.selectionTitles.count
+	}
+	
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		guard row >= 0 && row < self.selectionTitles.count else {
+			return self.placeholder
+		}
+		return self.selectionTitles[row]
+	}
+	
+	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		self.onValueChanged?(row)
+	}
+	
+}
+

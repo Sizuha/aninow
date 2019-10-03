@@ -53,7 +53,7 @@ class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UI
 	}
 	
 	override func viewWillLayoutSubviews() {
-		setMatchToParent(parent: self.view, child: self.filesView)
+		self.filesView.setMatchTo(parent: self.view)
 		
 		self.emptyView.centerXAnchor.constraint(equalTo: self.filesView.centerXAnchor).isActive = true
 		self.emptyView.centerYAnchor.constraint(

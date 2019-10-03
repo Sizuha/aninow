@@ -194,6 +194,8 @@
 				D5A24CBD21B643E700E2F39B /* Assets.xcassets */,
 				D5A24CBB21B63E6500E2F39B /* resources.swift */,
 				D5A24CC621B65BC200E2F39B /* Localizable.strings */,
+				D5AE2E2A21B101B400906CC7 /* LaunchScreen.storyboard */,
+				D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -202,7 +204,6 @@
 			isa = PBXGroup;
 			children = (
 				D5A24CB921B6273500E2F39B /* CommonUI.swift */,
-				D5AE2E2A21B101B400906CC7 /* LaunchScreen.storyboard */,
 				D51C17EF21D2117D00F7CF3D /* Home */,
 				D5A24CB421B522CC00E2F39B /* AnimeList */,
 				D579CAFE21C2157600D3E653 /* AnimeView */,
@@ -218,7 +219,6 @@
 				D5AE2E2121B101B300906CC7 /* AnimeItemsViewController.swift */,
 				D51C17F621D4751700F7CF3D /* AnimeTableView.swift */,
 				D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */,
-				D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */,
 				D51C17E921D2090600F7CF3D /* AllViewController.swift */,
 				D5A24CBF21B649B400E2F39B /* NowViewController.swift */,
 				D5AE2E2321B101B300906CC7 /* FinishedViewController.swift */,

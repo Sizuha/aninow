@@ -25,6 +25,14 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	private let medias = AnimeDataManager.shared.loadMedias()
 	
+	private var ratingBar: FloatRatingView!
+	private func applyRatingBarImages(_ ratingBar: FloatRatingView) {
+		let empty = self.applyThemeTintColor(image: Icons.STAR5_EMPTY)
+		let full = self.applyThemeTintColor(image: Icons.STAR5_FILL)
+		ratingBar.emptyImage = empty
+		ratingBar.fullImage = full
+	}
+	
 	convenience init(item: Anime) {
 		self.init(id: item.id)
 	}
@@ -41,7 +49,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		view.backgroundColor = Colors.WIN_BG
+		view.backgroundColor = getThemeColor(.background)
 		initStatusBar()
 		initNaviItems()
 		
@@ -52,7 +60,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		setMatchToParent(parent: view, child: self.tableView)
+		self.tableView.setMatchTo(parent: self.view)
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -69,7 +77,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	private func createHeaderCell() -> UIView {
 		self.headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: HEADER_HEIGHT))
-		self.headerView.backgroundColor = Colors.WIN_BG
+		self.headerView.backgroundColor = self.getThemeColor(.background)
 		
 		// Title
 		self.txtTitle = UILabel()
@@ -90,7 +98,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.txtSubTitle.lineBreakMode = .byTruncatingTail
 		self.txtSubTitle.numberOfLines = 1
 		self.txtSubTitle.font = UIFont.systemFont(ofSize: 11)
-		self.txtSubTitle.textColor = .darkGray
+		self.txtSubTitle.textColor = .inputText
 		
 		self.headerView.addSubview(self.txtSubTitle)
 		self.headerView.addSubview(self.txtTitle)
@@ -155,18 +163,18 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	private func initTableView() {
 		self.tableView = SizPropertyTableView(frame: view.frame, style: .plain)
 		self.tableView.translatesAutoresizingMaskIntoConstraints = false
-		self.tableView.backgroundColor = Colors.WIN_BG
+		self.tableView.backgroundColor = self.getThemeColor(.background)
 		self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: HEADER_HEIGHT))
 		
 		let section = SizPropertyTableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
 		
 		// Published Date
-		section.rows.append(SizPropertyTableRow(label: Strings.PUB_DATE).bindData {
+		section.rows.append(SizPropertyTableRow(label: Strings.PUB_DATE).dataSource {
 			self.item?.startDate?.toString()
 		})
 		
 		// Final Ep.
-		section.rows.append(SizPropertyTableRow(label: Strings.FINAL_EP).bindData {
+		section.rows.append(SizPropertyTableRow(label: Strings.FINAL_EP).dataSource {
 			let finalEp: Int = (self.item?.total ?? 0) > 0 ? self.item!.total : 0
 			return finalEp > 0 ? "\(finalEp)" : Strings.NONE_VALUE
 		})
@@ -174,7 +182,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Current Ep.
 		if self.item?.finished != true {
 			section.rows.append(SizPropertyTableRow(type: .stepper, label: Strings.LABEL_CURR_EP)
-				.bindData {
+				.dataSource {
 					let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
 					return Double(currEp)
 				}
@@ -194,18 +202,18 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		}
 		
 		// Media
-		section.rows.append(SizPropertyTableRow(label: Strings.MEDIA).bindData {
+		section.rows.append(SizPropertyTableRow(label: Strings.MEDIA).dataSource {
 			self.medias[self.item?.media ?? 0]
 		})
 		
 		// Rating
 		section.rows.append(SizPropertyTableRow(type: .rating, label: Strings.RATING)
-			.bindData { Double(self.item?.rating ?? 0) }
+			.dataSource { Double(self.item?.rating ?? 0) }
 			.onCreate { c, _ in
 				if let cell = c as? SizCellForRating {
-					cell.ratingBar.emptyImage = Icons.STAR5_EMPTY
-					cell.ratingBar.fullImage = Icons.STAR5_FILL
+					self.applyRatingBarImages(cell.ratingBar)
 					cell.ratingBar.isUserInteractionEnabled = false
+					self.ratingBar = cell.ratingBar
 				}
 			}
 		)
@@ -220,7 +228,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 				}
 				return DEFAULT_HEIGHT
 			}
-			.bindData { self.item?.memo }
+			.dataSource { self.item?.memo }
 			.hint(Strings.EMPTY_MEMO)
 			.onCreate { c, _ in
 				if let cell = c as? SizCellForMultiLine {
@@ -234,16 +242,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	@objc func showEdit() {
-		let editNaviController = UINavigationController()
-		
-		let editView = EditAnimeViewController()
-		if let item = item {
-			editView.setItem(item)
-		}
-		editNaviController.pushViewController(editView, animated: false)
-		
-		present(editNaviController, animated: true, completion: nil)
-		//self.navigationController?.pushViewController(editView, animated: true)
+		openEditAnimePage(self, item: item)
 	}
 	
 	@objc func openLink() {
@@ -264,6 +263,11 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		if loadItem() {
 			self.tableView.reloadData()
 		}
+	}
+	
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		guard let ratingBar = self.ratingBar else { return }
+		applyRatingBarImages(ratingBar)
 	}
 	
 	//------ TableView Delegate

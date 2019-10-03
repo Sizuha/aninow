@@ -38,7 +38,7 @@ class AnimeItemsViewController:
 		super.viewDidLoad()
 		if DEBUG_MODE { NSLog("called: viewDidLoad()") }
 		
-		self.view.backgroundColor = Colors.WIN_BG
+		self.view.backgroundColor = getThemeColor(.background)
 
 		initStatusBar()
 		initNavigationBar()
@@ -88,7 +88,7 @@ class AnimeItemsViewController:
 	
 	private func initSearchBar() {
 		self.searchBar = UISearchBar(frame: CGRect(x: 0, y: -50, width: self.view.frame.width, height: 50))
-		self.searchBar.barTintColor = Colors.NAVI_BG
+		self.searchBar.barTintColor = getThemeColor(.navigationBackground)
 		self.view.addSubview(self.searchBar)
 	}
 

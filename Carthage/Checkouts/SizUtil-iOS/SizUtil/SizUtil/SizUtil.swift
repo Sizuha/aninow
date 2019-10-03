@@ -2,7 +2,7 @@
 //  SizUtil.swift
 //  SizUtil
 //
-//  Created by IL KYOUNG HWANG on 2019/04/10.
+//  Created by Sizuha on 2019/04/10.
 //  Copyright © 2019 Sizuha. All rights reserved.
 //
 
@@ -139,4 +139,11 @@ extension String {
 		return attributedString
 	}
 	
+}
+
+public func convertToWav(from fromPath: URL, to toPath: URL, options: AKConverter.Options, onComplete: @escaping (_ result: Bool)->Void) {
+	let converter = AKConverter(inputURL: fromPath, outputURL: toPath, options: options)
+	converter.start(completionHandler: { error in
+		onComplete(error != nil)
+	})
 }

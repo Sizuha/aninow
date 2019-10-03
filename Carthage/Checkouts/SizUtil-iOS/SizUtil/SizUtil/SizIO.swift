@@ -22,7 +22,7 @@ public class SizPath {
 	
 }
 
-private func containsNeedEscapeChars(csvCellText: String) -> Bool {
+fileprivate func containsNeedEscapeChars(csvCellText: String) -> Bool {
 	let specialChrs: [Character] = ["\"",",","\n"]
 	for chr in csvCellText {
 		if specialChrs.contains(chr) {
@@ -143,6 +143,7 @@ public func toCsvCellText(_ str: String, withoutComma: Bool = false) -> String {
 	return cellData + (withoutComma ? "" : ",")
 }
 
+/// CSV形式のデータを読み取る
 open class SizCsvParser {
 	
 	open class ColumnData {
@@ -162,9 +163,12 @@ open class SizCsvParser {
 		public var asFloat: Float? {
 			return Float(self.data)
 		}
+		var asDouble: Double? {
+			return Double(self.data)
+		}
 		public var asBool: Bool {
 			switch data.first {
-			case "1","t","T": return true
+			case "1","t","T","y","Y": return true
 			default: return false
 			}
 		}
@@ -176,6 +180,11 @@ open class SizCsvParser {
 		self.skipLines = skipLines
 	}
 	
+	/// CSV形式のデータから、行(row)と列(column)を読み取る
+	///
+	/// - Parameters:
+	///   - from: CSVデータの入力ストリーム
+	///   - onReadColumn: 各行(row)の各列(column)を読み取った時の処理内容
 	open func parse(from: InputStream, onReadColumn: (_ column: ColumnData) -> Void) {
 		var colIdx = 0
 		var rowIdx = 0
@@ -435,9 +444,37 @@ extension OutputStream {
 	}
 }
 
+extension URL {
+	public var fileSize: Int {
+		return getFileSize(url: self)
+	}
+}
 
 //--- Utils ------------------------------------------------------------------------------------------------------------
 
 public func getFileSize(url: URL) -> Int {
 	return (try? FileManager.default.attributesOfItem(atPath: url.path)[.size]) as? Int ?? 0
+}
+
+public func scanDirs(url: URL) -> [URL] {
+	var result = [URL]()
+	let fileManager = FileManager.default
+	
+	if let urls = try? fileManager.contentsOfDirectory(
+		at: url,
+		includingPropertiesForKeys: [.isDirectoryKey],
+		options: [.skipsHiddenFiles])
+	{
+		for url in urls {
+			if url.pathExtension.isEmpty {
+				result.append(url)
+			}
+		}
+	}
+	
+	result.sort {
+		$0.absoluteString > $1.absoluteString
+	}
+	
+	return result
 }

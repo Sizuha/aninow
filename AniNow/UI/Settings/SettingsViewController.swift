@@ -61,7 +61,7 @@ class SettingsViewController: CommonUIViewController {
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		setMatchToParent(parent: view, child: menuTable)
+		self.menuTable.setMatchTo(parent: self.view)
 	}
 	
 	private func initNavigationBar() {
@@ -82,7 +82,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Version
 				SizPropertyTableRow(label: "Version")
-					.bindData { getAppShortVer() + "." + getAppBuildVer() }
+					.dataSource { getAppShortVer() + "." + getAppBuildVer() }
 			]
 		))
 		
@@ -98,7 +98,7 @@ class SettingsViewController: CommonUIViewController {
 					}
 			]
 		))
-			
+
 		// Backup
 		menus.append(SizPropertyTableSection(
 			title: "\(Strings.BACKUP) (iCloud)",
@@ -106,7 +106,7 @@ class SettingsViewController: CommonUIViewController {
 				// Last Backup
 				SizPropertyTableRow(label: Strings.BACKUP)
 					.textColor(self.menuTable.tintColor)
-					.bindData {
+					.dataSource {
 						return self.backupSateText
 					}
 					.onCreate { c, _ in

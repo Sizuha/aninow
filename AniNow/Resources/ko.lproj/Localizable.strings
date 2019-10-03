@@ -69,6 +69,7 @@
 "msg_confirm_remove_all"="모든 데이터가 사라집니다.\n괜찮겠습니까?";
 "msg_confirm_export"="현재 내용을 CSV파일로 내보냅니다";
 "msg_end_backup"="백업을 완료했습니다";
+"msg_end_export"="CSV파일로 내보내기를 완료했습니다";
 "msg_confirm_import"="이 파일의 내용을 읽어들입니다";
 "msg_confirm_restore"="마지막으로 백업한 상태로 되돌립니다. 이 작업은 취소가 불가능합니다. 계속 진행하시겠습니까?";
 "msg_no_backup"="백업한 데이터가 없습니다";

@@ -8,17 +8,10 @@
 
 import UIKit
 
-public class Colors {
-	static let WIN_BG: UIColor = .white
-	static let ACTION: UIColor = .red
-	static let NAVI_ACTION: UIColor = .white
-	static let NAVI_BG: UIColor = .black
-}
-
 public class Icons {
-	static let STAR5_EMPTY = UIImage(named: "star5_empty")
-	static let STAR5_FILL = UIImage(named: "star5_fill")
-	static let SETTINGS = UIImage(named: "setting")
+	static let STAR5_EMPTY = UIImage(named: "star5_empty")!
+	static let STAR5_FILL = UIImage(named: "star5_fill")!
+	static let SETTINGS = UIImage(named: "setting")!
 }
 
 public class Strings {
@@ -88,6 +81,7 @@ public class Strings {
 	static var MSG_CONFIRM_REMOVE_ALL: String { return "msg_confirm_remove_all".localized() }
 	static var MSG_CONFIRM_EXPORT: String { return "msg_confirm_export".localized() }
 	static var MSG_END_BACKUP: String { return "msg_end_backup".localized() }
+	static var MSG_END_EXPORT: String { return "msg_end_export".localized() }
 	static var MSG_CONFIRM_IMPORT: String { return "msg_confirm_import".localized() }
 	static var MSG_CONFIRM_RESTORE: String { return "msg_confirm_restore".localized() }
 	static var FMT_END_IMPORT: String { return "fmt_end_import".localized() }

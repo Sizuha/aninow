@@ -69,6 +69,7 @@
 "msg_confirm_remove_all"="Delete all data.\nAre you sure?";
 "msg_confirm_export"="Do you want to export the contents?";
 "msg_end_backup"="Backup completed";
+"msg_end_export"="Export completed";
 "msg_confirm_import"="Do you want to read the contents of this file?";
 "msg_confirm_restore"="Revert to the last backed up state. This work can not go back.";
 "msg_no_backup"="There is no backup";

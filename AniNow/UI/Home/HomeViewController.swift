@@ -35,7 +35,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		setMatchToParent(parent: self.view, child: self.menuTable)
+		self.menuTable.setMatchTo(parent: self.view)
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +70,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			title: Strings.LABEL_ANIME_LIST,
 			rows: [
 				SizPropertyTableRow(label: Strings.ALL_VIEWING)
-					.bindData { String(self.countOfAll) }
+					.dataSource { String(self.countOfAll) }
 					.onSelect { i in
 						self.menuTable.deselectRow(at: i, animated: true)
 						let nextView = AllViewController()
@@ -78,7 +78,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 					}
 
 				,SizPropertyTableRow(label: Strings.NOW_VIEWING)
-					.bindData { String(self.countOfNow) }
+					.dataSource { String(self.countOfNow) }
 					.onSelect { i in
 						self.menuTable.deselectRow(at: i, animated: true)
 						let nextView = NowViewController()
@@ -86,7 +86,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 					}
 				
 				,SizPropertyTableRow(label: Strings.END_VIEWING)
-					.bindData { String(self.countOfFinished) }
+					.dataSource { String(self.countOfFinished) }
 					.onSelect { i in
 						self.menuTable.deselectRow(at: i, animated: true)
 						let nextView = FinishedViewController()
@@ -107,18 +107,10 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			rows: [] //mediaRows
 		))
 
-		
 		// filter: Rating
 		menus.append(SizPropertyTableSection(
 			title: Strings.FILTER_RATING,
-			rows: [
-				createRatingFilterMenu(5),
-				createRatingFilterMenu(4),
-				createRatingFilterMenu(3),
-				createRatingFilterMenu(2),
-				createRatingFilterMenu(1),
-				createRatingFilterMenu(0),
-			]
+			rows: (0...5).reversed().map { createRatingFilterMenu($0) }
 		))
 		
 		menuTable.setDataSource(menus)
@@ -137,19 +129,19 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	
 	private func createMediaFilterMenu(_ media: Int, label: String) -> SizPropertyTableRow{
 		return SizPropertyTableRow(label: label)
-			.bindData { String(self.countByMedia[media] ?? 0) }
+			.dataSource { String(self.countByMedia[media] ?? 0) }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
 				let nextView = MediaFilteredViewController()
 				nextView.mediaFilter = media
 				self.navigationController?.pushViewController(nextView, animated: true)
 			}
-			.onCreate { c, _ in c.textLabel?.textColor = UIColor.darkText }
+			.onCreate { c, _ in c.textLabel?.textColor = UIColor.defaultText }
 	}
 	
 	private func createRatingFilterMenu(_ rating: Int) -> SizPropertyTableRow{
 		return SizPropertyTableRow(label: getRatingToStarText(rating))
-			.bindData { String(self.countByRating[rating] ?? 0) }
+			.dataSource { String(self.countByRating[rating] ?? 0) }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
 				let nextView = RatingFilteredViewController()

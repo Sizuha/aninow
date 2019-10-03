@@ -41,6 +41,14 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
 	private let medias = AnimeDataManager.shared.loadMedias()
 	
+	private func applyRatingBarImages(_ ratingBar: FloatRatingView) {
+		let empty = self.applyThemeTintColor(image: Icons.STAR5_EMPTY)
+		let full = self.applyThemeTintColor(image: Icons.STAR5_FILL)
+		ratingBar.emptyImage = empty
+		ratingBar.fullImage = full
+	}
+
+	
 	func setItem(_ item: Anime) {
 		self.editItem = item
 	}
@@ -136,7 +144,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		self.sections.append(SizPropertyTableSection(rows: [
 			// Title
 			SizPropertyTableRow(type: .editText)
-				.bindData { self.editItem.title }
+				.dataSource { self.editItem.title }
 				.hint(Strings.ANIME_TITLE)
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
@@ -150,7 +158,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// Title Other
 			,SizPropertyTableRow(type: .editText)
-				.bindData { self.editItem.titleOther }
+				.dataSource { self.editItem.titleOther }
 				.hint(Strings.ANIME_TITLE_2ND)
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
@@ -164,7 +172,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// URL
 			,SizPropertyTableRow(type: .editText)
-				.bindData { self.editItem.link }
+				.dataSource { self.editItem.link }
 				.hint("URL")
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
@@ -190,20 +198,20 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		self.sections.append(SizPropertyTableSection(rows: [
 			// Finished
 			SizPropertyTableRow(type: .onOff, label: Strings.LABEL_FIN)
-				.bindData { self.editItem.finished }
-				.tintColor(Colors.ACTION)
+				.dataSource { self.editItem.finished }
+				.tintColor(self.getThemeColor(.action))
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForOnOff {
 						self.editFinished = cell.switchCtrl
-						cell.switchCtrl.thumbTintColor = Colors.NAVI_BG
-						cell.switchCtrl.onTintColor = Colors.ACTION
+						cell.switchCtrl.thumbTintColor = self.isDarkMode ? UIColor.white : UIColor.black
+						cell.switchCtrl.onTintColor = self.getThemeColor(.action)
 					}
 				}
 				.onChanged { value in self.editItem.finished = value as? Bool == true }
 			
 			// Final Episode
 			,SizPropertyTableRow(type: .editText, label: Strings.FINAL_EP)
-				.bindData { self.editItem.total > 0 ? String(self.editItem.total) : "" }
+				.dataSource { self.editItem.total > 0 ? String(self.editItem.total) : "" }
 				.hint("00")
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForEditText {
@@ -218,7 +226,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// Current Episode
 			,SizPropertyTableRow(type: .editText, label: Strings.LABEL_CURR_EP)
-				.bindData {
+				.dataSource {
 					self.editItem.progress > 0
 						? progressFmt.string(for: self.editItem.progress)
 						: ""
@@ -237,7 +245,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// Published Date
 			,SizPropertyTableRow(label: Strings.PUB_DATE)
-				.bindData { self.editItem.startDate?.toString() ?? Strings.UNKNOWN }
+				.dataSource { self.editItem.startDate?.toString() ?? Strings.UNKNOWN }
 				.onSelect { i in
 					self.showPubDatePicker()
 					self.editTableView.deselectRow(at: i, animated: false)
@@ -246,7 +254,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// Media
 			,SizPropertyTableRow(label: Strings.MEDIA)
-				.bindData { self.medias[self.editItem.media] }
+				.dataSource { self.medias[self.editItem.media] }
 				.onSelect { i in
 					self.showChoiceMedia()
 					self.editTableView.deselectRow(at: i, animated: false)
@@ -255,11 +263,10 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// Rating
 			,SizPropertyTableRow(type: .rating, label: Strings.RATING)
-				.bindData { Double(self.editItem.rating) }
+				.dataSource { Double(self.editItem.rating) }
 				.onCreate { c, _ in
 					self.editRating = (c as? SizCellForRating)?.ratingBar
-					self.editRating?.emptyImage = Icons.STAR5_EMPTY
-					self.editRating?.fullImage = Icons.STAR5_FILL
+					self.applyRatingBarImages(self.editRating!)
 				}
 				.onChanged { value in
 					self.editItem.rating = Float(value as? Double ?? 0)
@@ -279,7 +286,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 					}
 					return DEFAULT_HEIGHT
 				}
-				.bindData { self.editItem.memo }
+				.dataSource { self.editItem.memo }
 				.hint(Strings.MEMO)
 				.onSelect { i in
 					self.showEditMemo()
@@ -317,7 +324,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 	
 	private func initTableViewPositions() {
-		setMatchToParent(parent: self.view, child: self.editTableView)
+		self.editTableView.setMatchTo(parent: self.view)
 	}
 	
 	//------ UITextFieldDelegate
@@ -492,6 +499,11 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		
 		self.editTableView.endUpdates()
 		self.cellMemo?.refreshViews()
+	}
+	
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		guard let ratingBar = self.editRating else { return }
+		applyRatingBarImages(ratingBar)
 	}
 	
 }

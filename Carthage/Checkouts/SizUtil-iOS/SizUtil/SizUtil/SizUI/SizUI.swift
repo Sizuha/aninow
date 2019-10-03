@@ -1,12 +1,10 @@
 //
 // UI Utilities for Swift(iOS)
 //
-// - Version: 0.1
-//
 
 import UIKit
 
-//Color extention to hex
+// Color extention to hex
 extension UIColor {
 	public convenience init(hexString: String, alpha: CGFloat = 1.0) {
 		let hexString: String = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -64,15 +62,88 @@ extension UIColor {
 	public static var placeholderGray: UIColor {
 		return UIColor(red: 0, green: 0, blue: 0.0980392, alpha: 0.22)
 	}
+	
+	public func toColor(_ color: UIColor, percentage: CGFloat) -> UIColor {
+		let percentage = max(min(percentage, 100), 0) / 100
+		switch percentage {
+		case 0: return self
+		case 1: return color
+		default:
+			var (r1, g1, b1, a1): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
+			var (r2, g2, b2, a2): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
+			guard self.getRed(&r1, green: &g1, blue: &b1, alpha: &a1) else { return self }
+			guard color.getRed(&r2, green: &g2, blue: &b2, alpha: &a2) else { return self }
+			
+			return UIColor(
+				red: CGFloat(r1 + (r2 - r1) * percentage),
+				green: CGFloat(g1 + (g2 - g1) * percentage),
+				blue: CGFloat(b1 + (b2 - b1) * percentage),
+				alpha: CGFloat(a1 + (a2 - a1) * percentage)
+			)
+		}
+	}
+	
+	public class func transitionColor(fromColor:UIColor, toColor:UIColor, progress:CGFloat) -> UIColor {
+		var percentage = progress < 0 ?  0 : progress
+		percentage = percentage > 1 ?  1 : percentage
+		
+		var fRed:CGFloat = 0
+		var fBlue:CGFloat = 0
+		var fGreen:CGFloat = 0
+		var fAlpha:CGFloat = 0
+		
+		var tRed:CGFloat = 0
+		var tBlue:CGFloat = 0
+		var tGreen:CGFloat = 0
+		var tAlpha:CGFloat = 0
+		
+		fromColor.getRed(&fRed, green: &fGreen, blue: &fBlue, alpha: &fAlpha)
+		toColor.getRed(&tRed, green: &tGreen, blue: &tBlue, alpha: &tAlpha)
+		
+		let red:CGFloat = (percentage * (tRed - fRed)) + fRed;
+		let green:CGFloat = (percentage * (tGreen - fGreen)) + fGreen;
+		let blue:CGFloat = (percentage * (tBlue - fBlue)) + fBlue;
+		let alpha:CGFloat = (percentage * (tAlpha - fAlpha)) + fAlpha;
+		
+		return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+	}
+	
+	/// iOS 13以上の場合は「UIColor.label」、他は「UIColor.darkText」
+	public static var defaultText: UIColor {
+		if #available(iOS 13, *) {
+			return UIColor.label
+		}
+		return UIColor.darkText
+	}
+	
+	public static var inputText: UIColor {
+		if #available(iOS 13, *) {			
+			return UIColor.secondaryLabel
+		}
+		return UIColor.darkGray
+	}
 }
 
 extension UIApplication {
-	// ex) UIApplication.shared.statusBarView?
+	@available(iOS, introduced: 11.0, obsoleted: 13.0, message: "iOS 13で廃止されました")
 	public var statusBarView: UIView? {
 		if responds(to: Selector(("statusBar"))) {
 			return value(forKey: "statusBar") as? UIView
 		}
 		return nil
+	}
+}
+
+extension UIView {
+	public func makeRoundCornor(_ radius: CGFloat = 5) {
+		self.layer.cornerRadius = radius
+	}
+	
+	public func setMatchTo(parent: UIView) {
+		self.leftAnchor.constraint(equalTo: parent.leftAnchor).isActive = true
+		self.rightAnchor.constraint(equalTo: parent.rightAnchor).isActive = true
+		self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+		self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
 	}
 }
 
@@ -83,6 +154,11 @@ public enum FadeType: TimeInterval {
 }
 
 extension UIViewController {
+	@available(iOS 12.0, *)
+	public var isDarkMode: Bool {
+		return traitCollection.userInterfaceStyle == .dark
+	}
+	
 	public func setupKeyboardDismissRecognizer(view: UIView? = nil) {
 		let tapRecognizer: UITapGestureRecognizer =
 			UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -115,6 +191,26 @@ extension UIViewController {
 			}
 		}
 	}
+	
+	public func changeStatusBar(color: UIColor) {
+		if #available(iOS 13, *) {
+			let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
+
+			let statusbarView = UIView()
+			statusbarView.backgroundColor = color
+			view.addSubview(statusbarView)
+
+			statusbarView.translatesAutoresizingMaskIntoConstraints = false
+			statusbarView.heightAnchor.constraint(equalToConstant: statusBarHeight).isActive = true
+			statusbarView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0).isActive = true
+			statusbarView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+			statusbarView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+		}
+		else {
+			UIApplication.shared.statusBarView?.backgroundColor = color
+		}
+	}
+
 }
 
 extension UITableView {
@@ -127,7 +223,25 @@ public protocol SizViewUpdater {
 	func refreshViews()
 }
 
-//------ Alert Dialog
+//------ Alert Dialog --------------------------------------------------------------------------------------------------
+
+extension UIAlertController {
+	public class func showIndicatorAlert(viewController: UIViewController, message: String) -> UIAlertController {
+		let alert: UIAlertController = self.init(title: nil, message: message, preferredStyle: .alert)
+		
+		// Add Indicator
+		let indicator = UIActivityIndicatorView(style: .gray)
+		indicator.center = CGPoint(x: 25, y: 30)
+		alert.view.addSubview(indicator)
+		
+		DispatchQueue.main.async {
+			indicator.startAnimating()
+			viewController.present(alert, animated: true, completion: nil)
+		}
+		
+		return alert
+	}
+}
 
 public class SizAlertBuilder {
 	private let alert: UIAlertController
@@ -210,7 +324,9 @@ public func createConfirmDialog(
 		.create()
 }
 
-//------ Swipe Actions
+
+
+//------ Swipe Actions -------------------------------------------------------------------------------------------------
 
 public class SizSwipeActionBuilder {
 	
@@ -254,14 +370,7 @@ public class SizSwipeActionBuilder {
 }
 
 
-//------ Utils
-
-public func setMatchToParent(parent: UIView, child: UIView) {
-	child.leftAnchor.constraint(equalTo: parent.leftAnchor).isActive = true
-	child.rightAnchor.constraint(equalTo: parent.rightAnchor).isActive = true
-	child.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
-	child.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
-}
+//------ Utils ---------------------------------------------------------------------------------------------------------
 
 public func getAppShortVer() -> String {
 	return Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String ?? ""
@@ -269,4 +378,37 @@ public func getAppShortVer() -> String {
 
 public func getAppBuildVer() -> String {
 	return Bundle.main.infoDictionary!["CFBundleVersion"] as? String ?? ""
+}
+
+public class PinchRect {
+	public let rect: CGRect
+	public let center: CGPoint
+	
+	public init(_ pinch: CGRect) {
+		self.rect = pinch
+		self.center = CGPoint(
+			x: Double(pinch.maxX - pinch.minX)/2.0,
+			y: Double(pinch.maxY - pinch.minY)/2.0
+		)
+	}
+	
+	public convenience init(gesture: UIPinchGestureRecognizer, in view: UIView) {
+		let touchPoint1 = gesture.location(ofTouch: 0, in: view)
+		let touchPoint2 = gesture.location(ofTouch: 1, in: view)
+		
+		let minX = min(touchPoint1.x, touchPoint2.x)
+		let maxX = max(touchPoint1.x, touchPoint2.x)
+		let minY = min(touchPoint1.y, touchPoint2.y)
+		let maxY = max(touchPoint1.y, touchPoint2.y)
+
+		self.init( CGRect(x: minX, y: minY, width: maxX-minX, height: maxY-minY) )
+	}
+	
+	public func distanceXY(from: PinchRect) -> (CGFloat,CGFloat) {
+		return (self.center.x - from.center.x, self.center.y - from.center.y)
+	}
+	
+	public func scaleXY(from: PinchRect) -> (CGFloat,CGFloat) {
+		return (self.rect.width / from.rect.width, self.rect.height / from.rect.height)
+	}
 }

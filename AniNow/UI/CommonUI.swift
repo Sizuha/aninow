@@ -12,7 +12,9 @@ import SizUtil
 extension UIViewController {
 	
 	func initStatusBar() {
-		UIApplication.shared.statusBarView?.backgroundColor = Colors.NAVI_BG
+		if #available(iOS 13, *) { return }
+		
+		UIApplication.shared.statusBarView?.backgroundColor = getThemeColor(.navigationBackground)
 	}
 	
 	func createNavigationBar() -> UINavigationBar {
@@ -28,10 +30,51 @@ extension UIViewController {
 	}
 	
 	func initNavigationBarStyle(_ naviBar: UINavigationBar) {
-		naviBar.tintColor = Colors.NAVI_ACTION
-		naviBar.barTintColor = Colors.NAVI_BG
+		naviBar.tintColor = getThemeColor(.navigationAction)
+		naviBar.barTintColor = getThemeColor(.navigationBackground)
 		naviBar.barStyle = .blackOpaque
 		naviBar.isTranslucent = false
+	}
+	
+	enum ColorCategory {
+		case action
+		case navigationAction
+		case navigationBackground
+		case background
+		case touchHandle
+	}
+	
+	func getThemeColor(_ category: ColorCategory) -> UIColor {
+		switch category {
+		case .action: return UIColor.red
+		case .navigationAction: return UIColor.white
+		case .navigationBackground: return UIColor.black
+		case .background:
+			if #available(iOS 13, *) {
+				return UIColor.systemBackground
+			}
+			else {
+				return UIColor.white
+			}
+		case .touchHandle:
+			if #available(iOS 13, *) {
+				return isDarkMode ? UIColor.white : UIColor.black
+			}
+			else {
+				return UIColor.black
+			}
+//		default:
+//			return UIColor.defaultText
+		}
+	}
+
+	func applyThemeTintColor(image: UIImage) -> UIImage {
+		if #available(iOS 13.0, *) {
+			return image.withTintColor(getThemeColor(.touchHandle))
+		}
+		else {
+			return image
+		}
 	}
 
 }
@@ -43,7 +86,7 @@ class CommonUIViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.view.backgroundColor = Colors.WIN_BG
+		self.view.backgroundColor = getThemeColor(.background)
 		
 		initStatusBar()
 	}
