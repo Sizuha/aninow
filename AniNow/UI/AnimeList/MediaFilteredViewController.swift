@@ -19,7 +19,7 @@ class MediaFilteredViewController: AnimeItemsViewController {
 	
 	override func applyFilter(to target: TableQuery) {
 		super.applyFilter(to: target)
-		let _ = target.whereAnd("media=?", mediaFilter)
+		let _ = target.andWhere("media=?", mediaFilter)
 	}
 	
 	override func createNewItem() -> Anime {

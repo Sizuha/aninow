@@ -6,8 +6,9 @@
 //  Copyright © 2019 Sizuha's Atelier. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import SizUtil
+import SizUI
 
 class MediaPickerView: SizPopupPickerView, UIPickerViewDataSource, SizPopupPickerViewDelegate {
 	

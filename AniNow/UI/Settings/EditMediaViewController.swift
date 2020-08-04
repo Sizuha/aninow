@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SizUI
 import SizUtil
 
 class EditMediaViewController: UIViewController, UITextFieldDelegate {
@@ -25,7 +26,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
     
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		menuTable.setMatchTo(parent: view)
+        menuTable.setMatchTo(parent: view)
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {

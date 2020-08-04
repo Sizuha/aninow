@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SizUI
 import SizUtil
 import SQuery
 
@@ -27,7 +28,6 @@ class SettingsViewController: CommonUIViewController {
 		dateTimeFmt = SQuery.newDateTimeFormat()
 		dateTimeFmt.timeZone = TimeZone.current
 
-		initStatusBar()
 		initNavigationBar()
 		initTableView()
 	}
@@ -65,103 +65,114 @@ class SettingsViewController: CommonUIViewController {
 	}
 	
 	private func initNavigationBar() {
-		if let navigationBar = navigationController?.navigationBar {
-			initNavigationBarStyle(navigationBar)
-		}
-		
 		navigationItem.title = Strings.SETTING
+        
+        let bbiDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(closeThis))
+        navigationItem.rightBarButtonItems = [bbiDone]
+        
 	}
+    
+    @objc
+    func closeThis() {
+        self.dismiss(animated: true, completion: nil)
+    }
 	
 	private func initTableView() {
 		menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
-		
+        
 		// Info
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: Strings.INFO,
 			rows: [
 				// Version
-				SizPropertyTableRow(label: "Version")
-					.dataSource { getAppShortVer() + "." + getAppBuildVer() }
+				TextCell(label: "Version", attrs: [
+                    .read { "\(getAppShortVer()).\(getAppBuildVer())" }
+                ])
 			]
 		))
 		
 		// Edit
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: Strings.EDIT,
 			rows: [
 				// Media
-				SizPropertyTableRow(label: "Media")
-					.onSelect { i in
-						self.navigationController?.pushViewController(EditMediaViewController(), animated: true)
-						self.menuTable.deselectRow(at: i, animated: true)
-					}
+                TextCell(label: "Media", attrs: [
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.navigationController?.pushViewController(EditMediaViewController(), animated: true)
+                    }
+                ])
 			]
 		))
 
 		// Backup
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: "\(Strings.BACKUP) (iCloud)",
 			rows: [
 				// Last Backup
-				SizPropertyTableRow(label: Strings.BACKUP)
-					.textColor(self.menuTable.tintColor)
-					.dataSource {
-						return self.backupSateText
-					}
-					.onCreate { c, _ in
-						c.accessoryType = .none
-						self.dispLastBackup = c.detailTextLabel
-					}
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.backup()
-					}
+                TextCell(label: Strings.BACKUP, attrs: [
+                    .read { self.backupSateText },
+                    .created { c, _ in
+                        let cell = TextCell.cellView(c)
+                        cell.valueViewWidth = 220
+                        cell.accessoryType = .none
+                        self.dispLastBackup = cell.detailTextLabel
+                    },
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.confirmBackup()
+                    }
+                ]),
 				
 				// Restore
-				,SizPropertyTableRow(type: .button, label: Strings.RESTORE)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.confirmImportFromBackup()
-					}
+                ButtonCell(label: Strings.RESTORE, attrs: [
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.confirmImportFromBackup()
+                    }
+                ])
 			]
 		))
 		
 		// import/export CSV
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: "CSV",
 			rows: [
 				// Export
-				SizPropertyTableRow(type: .button, label: Strings.EXPORT)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.confirmExport()
-				}
+                ButtonCell(label: Strings.EXPORT, attrs: [
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.confirmExport()
+                    }
+                ]),
 				
 				// Import
-				,SizPropertyTableRow(label: Strings.IMPORT)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.moveToImportUI()
-				}
+                ButtonCell(label: Strings.IMPORT, attrs: [
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.moveToImportUI()
+                    }
+                ])
 			]
 		))
 		
 		// etc
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			rows: [
 				// Clear
-				SizPropertyTableRow(type: .button, label: Strings.DELETE_ALL)
-					.tintColor(.red)
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						self.tryClearAll()
-					}
-					.onCreate { c, _ in
-						if let cell = c as? SizCellForButton {
-							cell.textLabel?.textAlignment = .center
-						}
-				}
+                ButtonCell(label: Strings.DELETE_ALL, attrs: [
+                    .tintColor(.red),
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.tryClearAll()
+                    },
+                    .created { c, _ in
+                        if let cell = c as? SizCellForButton {
+                            cell.textLabel?.textAlignment = .center
+                        }
+                    }
+                ])
 			]
 		))
 		
@@ -203,6 +214,18 @@ class SettingsViewController: CommonUIViewController {
 		let dlg = createAlertDialog(message: Strings.MSG_END_BACKUP)
 		present(dlg, animated: true)
 	}
+    
+    func confirmBackup() {
+        SizAlertBuilder(style: .actionSheet)
+        .setMessage("バックアップしますか？")
+        .addAction(title: Strings.OK) { _ in
+            DispatchQueue.main.async {
+                self.backup()
+            }
+        }
+        .addAction(title: Strings.CANCEL, style: .cancel)
+        .show(parent: self)
+    }
 	
 	func backup() {
 		let now = Date()

@@ -8,6 +8,7 @@
 
 import UIKit
 import SizUtil
+import SizUI
 
 class AnimeItemCell: UITableViewCell, SizViewUpdater {
 	

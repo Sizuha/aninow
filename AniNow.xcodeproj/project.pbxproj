@@ -3,10 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D5C1C0824D978EB00C5B4EC /* SQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5C1C0724D978EB00C5B4EC /* SQuery */; };
+		0D5C1C0B24D978F900C5B4EC /* SizUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5C1C0A24D978F900C5B4EC /* SizUI */; };
+		0D5C1C0E24D9790C00C5B4EC /* SizUtil in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5C1C0D24D9790C00C5B4EC /* SizUtil */; };
 		D51C17EA21D2090600F7CF3D /* AllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17E921D2090600F7CF3D /* AllViewController.swift */; };
 		D51C17EC21D20A6900F7CF3D /* MediaFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17EB21D20A6900F7CF3D /* MediaFilteredViewController.swift */; };
 		D51C17EE21D20B7F00F7CF3D /* RatingFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */; };
@@ -33,15 +36,12 @@
 		D5A24CD321BF5A7400E2F39B /* EditAnimeMemoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CD221BF5A7400E2F39B /* EditAnimeMemoController.swift */; };
 		D5A24CDA21C0C2CC00E2F39B /* AnimeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */; };
 		D5A24CDC21C0CECB00E2F39B /* AnimeItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */; };
-		D5ACFB6E22BC738D00E5C48C /* SQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5ACFB6D22BC738C00E5C48C /* SQuery.framework */; };
-		D5ACFB7422BC77E700E5C48C /* SizUtil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5ACFB7122BC77B600E5C48C /* SizUtil.framework */; };
 		D5AE2E2021B101B300906CC7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E1F21B101B300906CC7 /* AppDelegate.swift */; };
 		D5AE2E2221B101B300906CC7 /* AnimeItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E2121B101B300906CC7 /* AnimeItemsViewController.swift */; };
 		D5AE2E2421B101B300906CC7 /* FinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E2321B101B300906CC7 /* FinishedViewController.swift */; };
 		D5AE2E2C21B101B400906CC7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5AE2E2A21B101B400906CC7 /* LaunchScreen.storyboard */; };
 		D5AE2E3721B101B400906CC7 /* AniNowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E3621B101B400906CC7 /* AniNowTests.swift */; };
 		D5AE2E4221B101B400906CC7 /* AniNowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AE2E4121B101B400906CC7 /* AniNowUITests.swift */; };
-		D5AE2E5121B1030B00906CC7 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D5AE2E5021B1030B00906CC7 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,8 +67,6 @@
 		D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingFilteredViewController.swift; sourceTree = "<group>"; };
 		D51C17F021D2119A00F7CF3D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D51C17F621D4751700F7CF3D /* AnimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeTableView.swift; sourceTree = "<group>"; };
-		D51ED8EC2251DEA3005DEECD /* SQuery.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQuery.framework; path = Lib/SQuery.framework; sourceTree = "<group>"; };
-		D51ED91F2251E30C005DEECD /* SizUtil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SizUtil.framework; path = Lib/SizUtil.framework; sourceTree = "<group>"; };
 		D564AFEF2282C78A00FD983D /* EditMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMediaViewController.swift; sourceTree = "<group>"; };
 		D56BEDFE21C222030070AB45 /* AnimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeViewController.swift; sourceTree = "<group>"; };
 		D56BEE0021C741760070AB45 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -94,8 +92,6 @@
 		D5A24CD221BF5A7400E2F39B /* EditAnimeMemoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAnimeMemoController.swift; sourceTree = "<group>"; };
 		D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeItemCell.swift; sourceTree = "<group>"; };
 		D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnimeItemCell.xib; sourceTree = "<group>"; };
-		D5ACFB6D22BC738C00E5C48C /* SQuery.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQuery.framework; path = Carthage/Build/iOS/SQuery.framework; sourceTree = "<group>"; };
-		D5ACFB7122BC77B600E5C48C /* SizUtil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SizUtil.framework; path = Carthage/Build/iOS/SizUtil.framework; sourceTree = "<group>"; };
 		D5AE2E1C21B101B200906CC7 /* AniNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5AE2E1F21B101B300906CC7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D5AE2E2121B101B300906CC7 /* AnimeItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeItemsViewController.swift; sourceTree = "<group>"; };
@@ -108,7 +104,6 @@
 		D5AE2E3D21B101B400906CC7 /* AniNowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AniNowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5AE2E4121B101B400906CC7 /* AniNowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AniNowUITests.swift; sourceTree = "<group>"; };
 		D5AE2E4321B101B400906CC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D5AE2E5021B1030B00906CC7 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,9 +111,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5AE2E5121B1030B00906CC7 /* libsqlite3.tbd in Frameworks */,
-				D5ACFB6E22BC738D00E5C48C /* SQuery.framework in Frameworks */,
-				D5ACFB7422BC77E700E5C48C /* SizUtil.framework in Frameworks */,
+				0D5C1C0E24D9790C00C5B4EC /* SizUtil in Frameworks */,
+				0D5C1C0824D978EB00C5B4EC /* SQuery in Frameworks */,
+				0D5C1C0B24D978F900C5B4EC /* SizUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +134,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D5C1C0F24D97A7600C5B4EC /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				D5A24CB921B6273500E2F39B /* CommonUI.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		0D5C1C1024D97B3A00C5B4EC /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				D56BEE0221C9D1D00070AB45 /* AnimeDataManager.swift */,
+			);
+			path = Lib;
+			sourceTree = "<group>";
+		};
+		0DF795DB24D98DB40077EB18 /* AnimeCell */ = {
+			isa = PBXGroup;
+			children = (
+				D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */,
+				D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */,
+			);
+			path = AnimeCell;
+			sourceTree = "<group>";
+		};
 		D51C17EF21D2117D00F7CF3D /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -181,7 +201,6 @@
 			children = (
 				D5A24CAA21B123E800E2F39B /* AnimeData.swift */,
 				D585E9D922719BA500CBB318 /* AnimeMedia.swift */,
-				D56BEE0221C9D1D00070AB45 /* AnimeDataManager.swift */,
 				D56BEE0021C741760070AB45 /* Settings.swift */,
 				D5A24CAF21B4E70300E2F39B /* YearMonth.swift */,
 			);
@@ -195,7 +214,6 @@
 				D5A24CBB21B63E6500E2F39B /* resources.swift */,
 				D5A24CC621B65BC200E2F39B /* Localizable.strings */,
 				D5AE2E2A21B101B400906CC7 /* LaunchScreen.storyboard */,
-				D5A24CDB21C0CECB00E2F39B /* AnimeItemCell.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -203,7 +221,7 @@
 		D5A24CB321B522B800E2F39B /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				D5A24CB921B6273500E2F39B /* CommonUI.swift */,
+				0D5C1C0F24D97A7600C5B4EC /* Shared */,
 				D51C17EF21D2117D00F7CF3D /* Home */,
 				D5A24CB421B522CC00E2F39B /* AnimeList */,
 				D579CAFE21C2157600D3E653 /* AnimeView */,
@@ -216,9 +234,9 @@
 		D5A24CB421B522CC00E2F39B /* AnimeList */ = {
 			isa = PBXGroup;
 			children = (
+				0DF795DB24D98DB40077EB18 /* AnimeCell */,
 				D5AE2E2121B101B300906CC7 /* AnimeItemsViewController.swift */,
 				D51C17F621D4751700F7CF3D /* AnimeTableView.swift */,
-				D5A24CD921C0C2CC00E2F39B /* AnimeItemCell.swift */,
 				D51C17E921D2090600F7CF3D /* AllViewController.swift */,
 				D5A24CBF21B649B400E2F39B /* NowViewController.swift */,
 				D5AE2E2321B101B300906CC7 /* FinishedViewController.swift */,
@@ -255,6 +273,7 @@
 				D584DA9A228162A000541158 /* AniNow.entitlements */,
 				D5A24CAC21B4CC1D00E2F39B /* Resources */,
 				D5A24CA921B123D000E2F39B /* Model */,
+				0D5C1C1024D97B3A00C5B4EC /* Lib */,
 				D5A24CB321B522B800E2F39B /* UI */,
 				D5AE2E1F21B101B300906CC7 /* AppDelegate.swift */,
 				D5A24CAD21B4CC3B00E2F39B /* Config.swift */,
@@ -284,11 +303,6 @@
 		D5AE2E4F21B1030B00906CC7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D5ACFB7122BC77B600E5C48C /* SizUtil.framework */,
-				D5ACFB6D22BC738C00E5C48C /* SQuery.framework */,
-				D5AE2E5021B1030B00906CC7 /* libsqlite3.tbd */,
-				D51ED8EC2251DEA3005DEECD /* SQuery.framework */,
-				D51ED91F2251E30C005DEECD /* SizUtil.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -303,13 +317,17 @@
 				D5AE2E1821B101B200906CC7 /* Sources */,
 				D5AE2E1921B101B200906CC7 /* Frameworks */,
 				D5AE2E1A21B101B200906CC7 /* Resources */,
-				D5ACFB7022BC756600E5C48C /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = AniNow;
+			packageProductDependencies = (
+				0D5C1C0724D978EB00C5B4EC /* SQuery */,
+				0D5C1C0A24D978F900C5B4EC /* SizUI */,
+				0D5C1C0D24D9790C00C5B4EC /* SizUtil */,
+			);
 			productName = AniNow;
 			productReference = D5AE2E1C21B101B200906CC7 /* AniNow.app */;
 			productType = "com.apple.product-type.application";
@@ -395,6 +413,11 @@
 				ja,
 			);
 			mainGroup = D5AE2E1321B101B200906CC7;
+			packageReferences = (
+				0D5C1C0624D978EB00C5B4EC /* XCRemoteSwiftPackageReference "squery-swift" */,
+				0D5C1C0924D978F900C5B4EC /* XCRemoteSwiftPackageReference "SizUI-iOS" */,
+				0D5C1C0C24D9790C00C5B4EC /* XCRemoteSwiftPackageReference "SizUtil-iOS" */,
+			);
 			productRefGroup = D5AE2E1D21B101B200906CC7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -433,28 +456,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		D5ACFB7022BC756600E5C48C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/SQuery.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SizUtil.framework",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D5AE2E1821B101B200906CC7 /* Sources */ = {
@@ -596,7 +597,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -652,7 +653,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -669,13 +670,11 @@
 				CODE_SIGN_ENTITLEMENTS = AniNow/AniNow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = R8QQLU625A;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniNow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -695,13 +694,11 @@
 				CODE_SIGN_ENTITLEMENTS = AniNow/AniNow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = R8QQLU625A;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniNow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -836,6 +833,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0D5C1C0624D978EB00C5B4EC /* XCRemoteSwiftPackageReference "squery-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Sizuha/squery-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		0D5C1C0924D978F900C5B4EC /* XCRemoteSwiftPackageReference "SizUI-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Sizuha/SizUI-iOS";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		0D5C1C0C24D9790C00C5B4EC /* XCRemoteSwiftPackageReference "SizUtil-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Sizuha/SizUtil-iOS";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0D5C1C0724D978EB00C5B4EC /* SQuery */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D5C1C0624D978EB00C5B4EC /* XCRemoteSwiftPackageReference "squery-swift" */;
+			productName = SQuery;
+		};
+		0D5C1C0A24D978F900C5B4EC /* SizUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D5C1C0924D978F900C5B4EC /* XCRemoteSwiftPackageReference "SizUI-iOS" */;
+			productName = SizUI;
+		};
+		0D5C1C0D24D9790C00C5B4EC /* SizUtil */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D5C1C0C24D9790C00C5B4EC /* XCRemoteSwiftPackageReference "SizUtil-iOS" */;
+			productName = SizUtil;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D5AE2E1421B101B200906CC7 /* Project object */;
 }

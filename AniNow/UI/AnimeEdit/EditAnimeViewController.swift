@@ -8,6 +8,7 @@
 
 import UIKit
 import SizUtil
+import SizUI
 
 class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
@@ -20,7 +21,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	private var editTableView: SizPropertyTableView!
 	private var sections: [SizPropertyTableSection] = []
 	
-	//--- Edit Items ---
+	// MARK: --- Edit Items ---
 	private var editTitle: UITextField?
 	private var editTitleOther: UITextField?
 	
@@ -42,10 +43,8 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	private let medias = AnimeDataManager.shared.loadMedias()
 	
 	private func applyRatingBarImages(_ ratingBar: FloatRatingView) {
-		let empty = self.applyThemeTintColor(image: Icons.STAR5_EMPTY)
-		let full = self.applyThemeTintColor(image: Icons.STAR5_FILL)
-		ratingBar.emptyImage = empty
-		ratingBar.fullImage = full
+        ratingBar.emptyImage = Icons.STAR5_EMPTY.withTintColor(view.tintColor)
+		ratingBar.fullImage = Icons.STAR5_FILL.withTintColor(view.tintColor)
 	}
 
 	
@@ -96,8 +95,6 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	private func initNavigationBar() {
 		self.navigationBar = self.navigationController?.navigationBar
 		guard self.navigationBar != nil else { return }
-
-		initNavigationBarStyle(self.navigationBar)
 	}
 	
 	private func initPubDatePicker() {
@@ -115,7 +112,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			}
 		}
 		
-		if let window = UIApplication.shared.keyWindow {
+		if let window = getKeyWindow() {
 			window.addSubview(pickerPubDate)
 		}
 		else {
@@ -132,7 +129,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			self.dispMedia?.text = label
 		}
 		
-		if let window = UIApplication.shared.keyWindow {
+		if let window = getKeyWindow() {
 			window.addSubview(pickerMedia)
 		}
 		else {
@@ -141,51 +138,51 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 	
 	private func initTableView() {
-		self.sections.append(SizPropertyTableSection(rows: [
-			// Title
-			SizPropertyTableRow(type: .editText)
-				.dataSource { self.editItem.title }
-				.hint(Strings.ANIME_TITLE)
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForEditText {
-						self.editTitle = cell.textField
-						self.editTitle?.clearButtonMode = .whileEditing
-						cell.maxLength = 200
-						cell.delegate = self
-					}
-				}
-				.onChanged { value in self.editItem.title = value as? String ?? "" }
+		self.sections.append(TableSection(rows: [
+			// MARK: Title
+			EditTextCell(attrs: [
+                .read { self.editItem.title },
+                .hint(Strings.ANIME_TITLE),
+                .created { c, _ in
+                    let cell = EditTextCell.cellView(c)
+                    self.editTitle = cell.textField
+                    self.editTitle?.clearButtonMode = .always
+                    cell.maxLength = 200
+                    cell.delegate = self
+                },
+                .valueChanged { value in self.editItem.title = value as? String ?? "" }
+            ]),
 			
-			// Title Other
-			,SizPropertyTableRow(type: .editText)
-				.dataSource { self.editItem.titleOther }
-				.hint(Strings.ANIME_TITLE_2ND)
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForEditText {
-						self.editTitleOther = cell.textField
-						self.editTitleOther?.clearButtonMode = .whileEditing
-						cell.maxLength = 200
-						cell.delegate = self
-					}
-				}
-				.onChanged { value in self.editItem.titleOther = value as? String ?? "" }
+			// MARK: Title Other
+            EditTextCell(attrs: [
+                .read { self.editItem.titleOther },
+                .hint(Strings.ANIME_TITLE_2ND),
+                .created { c, _ in
+                    let cell = EditTextCell.cellView(c)
+                    self.editTitleOther = cell.textField
+                    self.editTitleOther?.clearButtonMode = .always
+                    cell.maxLength = 200
+                    cell.delegate = self
+                },
+                .valueChanged { value in self.editItem.titleOther = value as? String ?? "" }
+            ]),
 			
-			// URL
-			,SizPropertyTableRow(type: .editText)
-				.dataSource { self.editItem.link }
-				.hint("URL")
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForEditText {
-						self.editUrl = cell.textField
-						self.editUrl?.keyboardType = .URL
-						self.editUrl?.returnKeyType = .done
-						self.editUrl?.clearButtonMode = .whileEditing
-						
-						cell.maxLength = 250
-						cell.delegate = self
-					}
-				}
-				.onChanged { value in self.editItem.link = value as? String ?? "" }
+			// MARK: RL
+			EditTextCell(attrs: [
+				.read { self.editItem.link },
+				.hint("URL"),
+				.created { c, _ in
+					let cell = EditTextCell.cellView(c)
+                    self.editUrl = cell.textField
+                    self.editUrl?.keyboardType = .URL
+                    self.editUrl?.returnKeyType = .done
+                    self.editUrl?.clearButtonMode = .always
+                    
+                    cell.maxLength = 250
+                    cell.delegate = self
+				},
+				.valueChanged { value in self.editItem.link = value as? String ?? "" }
+            ])
 		]))
 		
 		let progressFmt = NumberFormatter()
@@ -195,86 +192,89 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		if self.editItem.total <= 0 { self.editItem.total = 0 }
 		if self.editItem.progress <= 0 { self.editItem.progress = 0 }
 		
-		self.sections.append(SizPropertyTableSection(rows: [
-			// Finished
-			SizPropertyTableRow(type: .onOff, label: Strings.LABEL_FIN)
-				.dataSource { self.editItem.finished }
-				.tintColor(self.getThemeColor(.action))
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForOnOff {
-						self.editFinished = cell.switchCtrl
-						cell.switchCtrl.thumbTintColor = self.isDarkMode ? UIColor.white : UIColor.black
-						cell.switchCtrl.onTintColor = self.getThemeColor(.action)
-					}
-				}
-				.onChanged { value in self.editItem.finished = value as? Bool == true }
+		self.sections.append(TableSection(rows: [
+			// MARK: Finished
+            OnOffCell(label: Strings.LABEL_FIN, attrs: [
+                .read { self.editItem.finished },
+                .created { c, _ in
+                    let cell = OnOffCell.cellView(c)
+                    self.editFinished = cell.switchCtrl
+                    //cell.switchCtrl.thumbTintColor = self.isDarkMode ? .white : .black
+                },
+                .valueChanged { value in self.editItem.finished = value as? Bool == true }
+            ]),
 			
-			// Final Episode
-			,SizPropertyTableRow(type: .editText, label: Strings.FINAL_EP)
-				.dataSource { self.editItem.total > 0 ? String(self.editItem.total) : "" }
-				.hint("00")
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForEditText {
-						self.editTotal = cell.textField
-						self.editTotal?.keyboardType = .numberPad
-						cell.maxLength = 4
-					}
-				}
-				.onChanged { value in
-					self.editItem.total = Int(value as? String ?? "0") ?? 0
-				}
+			// MARK: Final Episode
+            EditTextCell(label: Strings.FINAL_EP, attrs: [
+                .read { self.editItem.total > 0 ? String(self.editItem.total) : "" },
+                .hint("00"),
+                .created { c, _ in
+                    let cell = EditTextCell.cellView(c)
+                    self.editTotal = cell.textField
+                    self.editTotal?.keyboardType = .numberPad
+                    self.editTotal?.clearButtonMode = .always
+                    cell.maxLength = 4
+                },
+                .valueChanged { value in
+                    self.editItem.total = Int(value as? String ?? "0") ?? 0
+                }
+            ]),
 			
-			// Current Episode
-			,SizPropertyTableRow(type: .editText, label: Strings.LABEL_CURR_EP)
-				.dataSource {
-					self.editItem.progress > 0
-						? progressFmt.string(for: self.editItem.progress)
-						: ""
-				}
-				.hint("00")
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForEditText {
-						self.editProgress = cell.textField
-						self.editProgress?.keyboardType = .decimalPad
-						cell.maxLength = 5
-					}
-				}
-				.onChanged { value in
-					self.editItem.progress = Float(value as? String ?? "0") ?? 0
-				}
+			// MARK: Current Episode
+            EditTextCell(label: Strings.LABEL_CURR_EP, attrs: [
+                .read {
+                    self.editItem.progress > 0
+                        ? progressFmt.string(for: self.editItem.progress)
+                        : ""
+                },
+                .hint("00"),
+                .created { c, _ in
+                    let cell = EditTextCell.cellView(c)
+                    self.editProgress = cell.textField
+                    self.editProgress?.keyboardType = .decimalPad
+                    self.editProgress?.clearButtonMode = .always
+                    cell.maxLength = 5
+                },
+                .valueChanged { value in
+                    self.editItem.progress = Float(value as? String ?? "0") ?? 0
+                }
+            ]),
 			
-			// Published Date
-			,SizPropertyTableRow(label: Strings.PUB_DATE)
-				.dataSource { self.editItem.startDate?.toString() ?? Strings.UNKNOWN }
-				.onSelect { i in
-					self.showPubDatePicker()
-					self.editTableView.deselectRow(at: i, animated: false)
-				}
-				.onCreate { c, _ in self.dispPubDate = c.detailTextLabel }
+			// MARK: Published Date
+            TextCell(label: Strings.PUB_DATE, attrs: [
+                .read { self.editItem.startDate?.toString() ?? Strings.UNKNOWN },
+                .selected { i in
+                    self.showPubDatePicker()
+                    self.editTableView.deselectRow(at: i, animated: false)
+                },
+                .created { c, _ in self.dispPubDate = c.detailTextLabel }
+            ]),
 			
-			// Media
-			,SizPropertyTableRow(label: Strings.MEDIA)
-				.dataSource { self.medias[self.editItem.media] }
-				.onSelect { i in
-					self.showChoiceMedia()
-					self.editTableView.deselectRow(at: i, animated: false)
-				}
-				.onCreate { c, _ in self.dispMedia = c.detailTextLabel }
+			// MARK: Media
+            TextCell(label: Strings.MEDIA, attrs: [
+                .read { self.medias[self.editItem.media] },
+                .selected { i in
+                    self.showChoiceMedia()
+                    self.editTableView.deselectRow(at: i, animated: false)
+                },
+                .created { c, _ in self.dispMedia = c.detailTextLabel }
+            ]),
 			
-			// Rating
-			,SizPropertyTableRow(type: .rating, label: Strings.RATING)
-				.dataSource { Double(self.editItem.rating) }
-				.onCreate { c, _ in
-					self.editRating = (c as? SizCellForRating)?.ratingBar
-					self.applyRatingBarImages(self.editRating!)
-				}
-				.onChanged { value in
-					self.editItem.rating = Float(value as? Double ?? 0)
-				}
+			// MARK: Rating
+			RatingCell(label: Strings.RATING, attrs: [
+                .read { Double(self.editItem.rating) },
+                .created { c, _ in
+                    self.editRating = RatingCell.cellView(c).ratingBar
+                    self.applyRatingBarImages(self.editRating!)
+                },
+                .valueChanged { value in
+                    self.editItem.rating = Float(value as? Double ?? 0)
+                }
+            ])
 		]))
 		
-		self.sections.append(SizPropertyTableSection(rows: [
-			// Memo
+		self.sections.append(TableSection(rows: [
+			// MARK: Memo
 			SizPropertyTableRow(type: .multiLine)
 				.onHeight {
 					if let memoView = self.dispMemo {
@@ -301,19 +301,19 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 				}
 		]))
 		
-		if !modeNewItem { // Delete
-			self.sections.append(SizPropertyTableSection(rows: [
-				SizPropertyTableRow(type: .button, label: Strings.REMOVE)
-					.tintColor(.red)
-					.onSelect { i in
-						self.editTableView.deselectRow(at: i, animated: false)
-						self.tryRemove()
-					}
-					.onCreate { c, _ in
-						if let cell = c as? SizCellForButton {
-							cell.textLabel?.textAlignment = .center
-						}
-					}
+		if !modeNewItem { // MARK: Delete
+			self.sections.append(TableSection(rows: [
+				ButtonCell(label: Strings.REMOVE, attrs: [
+                    .tintColor(.red),
+                    .selected { i in
+                        self.editTableView.deselectRow(at: i, animated: false)
+                        self.tryRemove()
+                    },
+                    .created { c, _ in
+                        let cell = ButtonCell.cellView(c)
+                        cell.textLabel?.textAlignment = .center
+                    }
+                ])
 			]))
 		}
 		
@@ -327,7 +327,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		self.editTableView.setMatchTo(parent: self.view)
 	}
 	
-	//------ UITextFieldDelegate
+	// MARK: - UITextFieldDelegate
 	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if textField.returnKeyType == .done {
@@ -347,11 +347,11 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		return true
 	}
 	
-	//------ Body
+	// MARK: - Body
 	
 	@objc func returnBack() {
 		dismissKeyboard()
-		popSelf()
+        dismiss(animated: true, completion: nil)
 	}
 	
 	@objc func trySave() {
@@ -370,7 +370,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 				: AnimeDataManager.shared.updateItem(item)
 			
 			if result {
-				popSelf()
+				dismiss(animated: true, completion: nil)
 			}
 			else {
 				let dlg = createAlertDialog(title: Strings.ADD_NEW, message: Strings.ERR_FAIL_SAVE, buttonText: Strings.OK)

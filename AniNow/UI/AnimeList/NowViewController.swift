@@ -17,7 +17,7 @@ class NowViewController: AnimeItemsViewController {
 	
 	override func applyFilter(to target: TableQuery) {
 		super.applyFilter(to: target)
-		let _ = target.whereAnd("fin=?", false)
+		let _ = target.andWhere("fin=?", false)
 	}
 	
 }

@@ -7,77 +7,8 @@
 //
 
 import UIKit
+import SizUI
 import SizUtil
-
-extension UIViewController {
-	
-	func initStatusBar() {
-		if #available(iOS 13, *) { return }
-		
-		UIApplication.shared.statusBarView?.backgroundColor = getThemeColor(.navigationBackground)
-	}
-	
-	func createNavigationBar() -> UINavigationBar {
-		let naviBar = UINavigationBar(frame: CGRect.init(
-			x: 0,
-			y: UIApplication.shared.statusBarFrame.size.height,
-			width: view.frame.size.width,
-			height: 45
-		))
-		
-		initNavigationBarStyle(naviBar)
-		return naviBar
-	}
-	
-	func initNavigationBarStyle(_ naviBar: UINavigationBar) {
-		naviBar.tintColor = getThemeColor(.navigationAction)
-		naviBar.barTintColor = getThemeColor(.navigationBackground)
-		naviBar.barStyle = .blackOpaque
-		naviBar.isTranslucent = false
-	}
-	
-	enum ColorCategory {
-		case action
-		case navigationAction
-		case navigationBackground
-		case background
-		case touchHandle
-	}
-	
-	func getThemeColor(_ category: ColorCategory) -> UIColor {
-		switch category {
-		case .action: return UIColor.red
-		case .navigationAction: return UIColor.white
-		case .navigationBackground: return UIColor.black
-		case .background:
-			if #available(iOS 13, *) {
-				return UIColor.systemBackground
-			}
-			else {
-				return UIColor.white
-			}
-		case .touchHandle:
-			if #available(iOS 13, *) {
-				return isDarkMode ? UIColor.white : UIColor.black
-			}
-			else {
-				return UIColor.black
-			}
-//		default:
-//			return UIColor.defaultText
-		}
-	}
-
-	func applyThemeTintColor(image: UIImage) -> UIImage {
-		if #available(iOS 13.0, *) {
-			return image.withTintColor(getThemeColor(.touchHandle))
-		}
-		else {
-			return image
-		}
-	}
-
-}
 
 class CommonUIViewController: UIViewController {
 	
@@ -86,15 +17,16 @@ class CommonUIViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.view.backgroundColor = getThemeColor(.background)
-		
-		initStatusBar()
 	}
+    
+    func getKeyWindow() -> UIWindow? {
+        UIApplication.shared.getKeyWindow()
+    }
 
 	func addFadeView() {
 		guard self.fadeView == nil else { return }
 		
-		if let window = UIApplication.shared.keyWindow {
+        if let window = getKeyWindow() {
 			self.fadeView = UIView(frame: window.frame)
 			window.addSubview(self.fadeView!)
 		}
@@ -112,10 +44,10 @@ class CommonUIViewController: UIViewController {
 		self.indicator = UIActivityIndicatorView()
 		self.indicator!.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
 		self.indicator!.center = view.center
-		self.indicator!.style = .whiteLarge
+        self.indicator!.style = UIActivityIndicatorView.Style.large
 		self.indicator!.hidesWhenStopped = true
 		
-		if let window = UIApplication.shared.keyWindow {
+		if let window = getKeyWindow() {
 			window.addSubview(self.indicator!)
 		}
 		else {

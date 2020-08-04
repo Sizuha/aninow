@@ -9,6 +9,7 @@
 import UIKit
 import SQuery
 import SizUtil
+import SizUI
 
 class AnimeItemsViewController:
 	UIViewController,
@@ -38,9 +39,6 @@ class AnimeItemsViewController:
 		super.viewDidLoad()
 		if DEBUG_MODE { NSLog("called: viewDidLoad()") }
 		
-		self.view.backgroundColor = getThemeColor(.background)
-
-		initStatusBar()
 		initNavigationBar()
 		initTableView()
 		initSearchBar()
@@ -71,7 +69,6 @@ class AnimeItemsViewController:
 		guard self.navigationBar != nil else { return }
 		
 		self.navigationController?.delegate = self
-		initNavigationBarStyle(self.navigationBar)
 		
 		self.btnNew = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
 		self.btnSort = UIBarButtonItem(title: Strings.SORT, style: .plain, target: self, action: #selector(showSortOptions))
@@ -88,7 +85,7 @@ class AnimeItemsViewController:
 	
 	private func initSearchBar() {
 		self.searchBar = UISearchBar(frame: CGRect(x: 0, y: -50, width: self.view.frame.width, height: 50))
-		self.searchBar.barTintColor = getThemeColor(.navigationBackground)
+        //self.searchBar.barTintColor = self.navigationBar.backgroundColor!
 		self.view.addSubview(self.searchBar)
 	}
 
@@ -115,7 +112,7 @@ class AnimeItemsViewController:
 		let key = searchKey.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 		if !key.isEmpty {
 			let likeKey = "%%\(key)%%"
-			let _ = target.whereAnd("\(Anime.F_TITLE) LIKE ? OR \(Anime.F_TITLE_OTHER) LIKE ?", likeKey, likeKey)
+			let _ = target.andWhere("\(Anime.F_TITLE) LIKE ? OR \(Anime.F_TITLE_OTHER) LIKE ?", likeKey, likeKey)
 		}
 	}
 	

@@ -8,6 +8,7 @@
 
 import UIKit
 import SQuery
+import SizUI
 import SizUtil
 
 class HomeViewController: CommonUIViewController, UINavigationControllerDelegate {
@@ -27,9 +28,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		initStatusBar()
-		initNavigationBar()
+        initNavigationBar()
 		initTableView()
 	}
 	
@@ -48,10 +47,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	private func initNavigationBar() {
-		if let navigationBar = navigationController?.navigationBar {
-			navigationController?.delegate = self
-			initNavigationBarStyle(navigationBar)
-		}
+		navigationController?.delegate = self
 		
 		btnSettings = UIBarButtonItem(image: Icons.SETTINGS, style: .plain, target: self, action: #selector(showSettings))
 		btnNew = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
@@ -66,49 +62,45 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
 		
 		// Categories
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: Strings.LABEL_ANIME_LIST,
 			rows: [
-				SizPropertyTableRow(label: Strings.ALL_VIEWING)
-					.dataSource { String(self.countOfAll) }
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						let nextView = AllViewController()
-						self.navigationController?.pushViewController(nextView, animated: true)
-					}
-
-				,SizPropertyTableRow(label: Strings.NOW_VIEWING)
-					.dataSource { String(self.countOfNow) }
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						let nextView = NowViewController()
-						self.navigationController?.pushViewController(nextView, animated: true)
-					}
-				
-				,SizPropertyTableRow(label: Strings.END_VIEWING)
-					.dataSource { String(self.countOfFinished) }
-					.onSelect { i in
-						self.menuTable.deselectRow(at: i, animated: true)
-						let nextView = FinishedViewController()
-						self.navigationController?.pushViewController(nextView, animated: true)
-					}
+                TextCell(label: Strings.ALL_VIEWING, attrs: [
+                    .read { "\(self.countOfAll)" },
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        let nextView = AllViewController()
+                        self.navigationController?.pushViewController(nextView, animated: true)
+                    }
+                ]),
+                
+                TextCell(label: Strings.NOW_VIEWING, attrs: [
+                    .read { "\(self.countOfNow)" },
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        let nextView = NowViewController()
+                        self.navigationController?.pushViewController(nextView, animated: true)
+                    }
+                ]),
+                
+                TextCell(label: Strings.END_VIEWING, attrs: [
+                    .read { "\(self.countOfFinished)" },
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        let nextView = FinishedViewController()
+                        self.navigationController?.pushViewController(nextView, animated: true)
+                    }
+                ]),
 			]
 		))
 
-		// filter: Media
-		//let medias = AnimeDataManager.shared.loadMedias().sorted(by: <)
-		
-//		var mediaRows = [SizPropertyTableRow]()
-//		for (code, label) in medias {
-//			mediaRows.append(createMediaFilterMenu(code, label: label))
-//		}
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: Strings.FILTER_MEDIA,
 			rows: [] //mediaRows
 		))
 
 		// filter: Rating
-		menus.append(SizPropertyTableSection(
+		menus.append(TableSection(
 			title: Strings.FILTER_RATING,
 			rows: (0...5).reversed().map { createRatingFilterMenu($0) }
 		))
@@ -172,13 +164,13 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 				let medias = AnimeDataManager.shared.loadMedias()
 				for (code, _) in medias {
 					self.countByMedia[code] = dm.countWithFilter { f in
-						let _ = f.whereAnd("media=?", code)
+						let _ = f.andWhere("media=?", code)
 					}
 				}
 				
 				for rating in 0...5 {
 					self.countByRating[rating] = dm.countWithFilter { f in
-						let _ = f.whereAnd("rating >= ? AND rating < ?", rating, rating+1)
+						let _ = f.andWhere("rating >= ? AND rating < ?", rating, rating+1)
 					}
 				}
 				
@@ -190,12 +182,10 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	@objc func showSettings() {
-		navigationController?.pushViewController(SettingsViewController(), animated: true)
-		
-//		let naviController = UINavigationController()
-//		let vc = SettingsViewController()
-//		naviController.pushViewController(vc, animated: false)
-//		present(naviController, animated: true, completion: nil)
+		let naviController = UINavigationController()
+		let vc = SettingsViewController()
+		naviController.pushViewController(vc, animated: true)
+		present(naviController, animated: true, completion: nil)
 	}
 	
 }

@@ -9,6 +9,7 @@
 
 import UIKit
 import SizUtil
+import SizUI
 
 class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UITableViewDelegate {
 	
@@ -31,9 +32,6 @@ class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UI
 	}
 	
 	private func initNavigationBar() {
-		guard let navigationBar = self.navigationController?.navigationBar else { return }
-		
-		initNavigationBarStyle(navigationBar)		
 		self.navigationItem.title = Strings.IMPORT
 	}
 	

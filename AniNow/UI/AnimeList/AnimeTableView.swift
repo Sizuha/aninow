@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SizUI
 import SizUtil
 
 class AnimeTableView: SizSectionTableView<Anime> {

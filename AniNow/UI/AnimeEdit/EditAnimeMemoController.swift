@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SizUI
 import SizUtil
 
 class EditAnimeMemoController: UIViewController {
@@ -19,7 +20,6 @@ class EditAnimeMemoController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		initStatusBar()
 		initNavigationBar()
 		initTableView()
 	}
@@ -40,8 +40,6 @@ class EditAnimeMemoController: UIViewController {
 	private func initNavigationBar() {
 		self.navigationBar = self.navigationController?.navigationBar
 		guard self.navigationBar != nil else { return }
-		
-		initNavigationBarStyle(self.navigationBar)
 		
 		self.navigationItem.title = Strings.MEMO
 		

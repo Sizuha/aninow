@@ -6,7 +6,8 @@
 //  Copyright © 2019 Sizuha's Atelier. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import SizUI
 import SizUtil
 
 class DatePickerView: SizPopupPickerView, UIPickerViewDataSource, SizPopupPickerViewDelegate {

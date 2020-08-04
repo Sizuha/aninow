@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SizUI
 import SizUtil
 
 class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -27,10 +28,10 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	private var ratingBar: FloatRatingView!
 	private func applyRatingBarImages(_ ratingBar: FloatRatingView) {
-		let empty = self.applyThemeTintColor(image: Icons.STAR5_EMPTY)
-		let full = self.applyThemeTintColor(image: Icons.STAR5_FILL)
-		ratingBar.emptyImage = empty
-		ratingBar.fullImage = full
+		let empty = Icons.STAR5_EMPTY
+		let full = Icons.STAR5_FILL
+        ratingBar.emptyImage = empty.withTintColor(.defaultText)
+		ratingBar.fullImage = full.withTintColor(.defaultText)
 	}
 	
 	convenience init(item: Anime) {
@@ -49,8 +50,6 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		view.backgroundColor = getThemeColor(.background)
-		initStatusBar()
 		initNaviItems()
 		
 		let _ = loadItem()
@@ -69,15 +68,12 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	private func initNaviItems() {
-		self.navigationItem.title = ""
-		
 		let btnEdit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(showEdit))
 		self.navigationItem.rightBarButtonItems = [btnEdit]
 	}
 	
 	private func createHeaderCell() -> UIView {
 		self.headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: HEADER_HEIGHT))
-		self.headerView.backgroundColor = self.getThemeColor(.background)
 		
 		// Title
 		self.txtTitle = UILabel()
@@ -87,9 +83,9 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.txtTitle.numberOfLines = 2
 		self.txtTitle.font = UIFont.preferredFont(forTextStyle: .title2)
 		
-		let tapGes = UITapGestureRecognizer(target: self, action: #selector(openLink))
-		self.txtTitle.addGestureRecognizer(tapGes)
-		self.txtTitle.isUserInteractionEnabled = false
+//		let tapGes = UITapGestureRecognizer(target: self, action: #selector(openLink))
+//		self.txtTitle.addGestureRecognizer(tapGes)
+//		self.txtTitle.isUserInteractionEnabled = false
 		
 		// Sub Title
 		self.txtSubTitle = UILabel()
@@ -112,113 +108,107 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 			popSelf()
 			return
 		}
-		
+		//title = item.title
+        
 		let maxWidth = view.frame.width - 40
 		
 		if self.txtSubTitle != nil {
 			self.txtSubTitle.text = item.titleOther
 			
 			self.txtSubTitle.frame = CGRect(x: 20, y: 40, width: maxWidth, height: 20)
-			//self.txtSubTitle.sizeToFit()
-			//self.txtSubTitle.backgroundColor = .yellow
-			
-//			if self.txtSubTitle.frame.width < maxWidth {
-//				let diffW = view.frame.width - self.txtSubTitle.frame.width
-//				self.txtSubTitle.frame = CGRect(
-//					x: diffW/2, y: 40,
-//					width: self.txtSubTitle.frame.width,
-//					height: self.txtSubTitle.frame.height
-//				)
-//			}
 		}
 		
 		if self.txtTitle != nil {
-			if item.link.isEmpty {
+			//if item.link.isEmpty {
 				self.txtTitle.attributedText = nil
 				self.txtTitle.text = item.title
 				self.txtTitle.isUserInteractionEnabled = false
-			}
+			/*}
 			else {
 				self.txtTitle.text = nil
 				self.txtTitle.attributedText = item.title.asLinkText()
 				self.txtTitle.isUserInteractionEnabled = true
-			}
+			}*/
 			
 			let y = self.txtSubTitle?.frame.maxY ?? 40
 			self.txtTitle.frame = CGRect(x: 20, y: y, width: maxWidth, height: 40)
-			//self.txtTitle.sizeToFit()
-			//self.txtTitle.backgroundColor = .brown
-			
-//			if self.txtTitle.frame.width < maxWidth {
-//				let diffW = view.frame.width - self.txtTitle.frame.width
-//				self.txtTitle.frame = CGRect(
-//					x: diffW/2, y: y,
-//					width: self.txtTitle.frame.width,
-//					height: self.txtTitle.frame.height
-//				)
-//			}
 		}
 	}
 	
 	private func initTableView() {
 		self.tableView = SizPropertyTableView(frame: view.frame, style: .plain)
 		self.tableView.translatesAutoresizingMaskIntoConstraints = false
-		self.tableView.backgroundColor = self.getThemeColor(.background)
 		self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: HEADER_HEIGHT))
-		
-		let section = SizPropertyTableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
+        
+		let section = TableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
 		
 		// Published Date
-		section.rows.append(SizPropertyTableRow(label: Strings.PUB_DATE).dataSource {
-			self.item?.startDate?.toString()
-		})
+        section.rows.append(TextCell(label: Strings.PUB_DATE, attrs: [
+            .read { self.item?.startDate?.toString() }
+        ]))
 		
-		// Final Ep.
-		section.rows.append(SizPropertyTableRow(label: Strings.FINAL_EP).dataSource {
-			let finalEp: Int = (self.item?.total ?? 0) > 0 ? self.item!.total : 0
-			return finalEp > 0 ? "\(finalEp)" : Strings.NONE_VALUE
-		})
+		// MARK: Final Ep.
+		section.rows.append(TextCell(label: Strings.FINAL_EP, attrs: [
+            .read {
+                let finalEp: Int = (self.item?.total ?? 0) > 0 ? self.item!.total : 0
+                return finalEp > 0 ? "\(finalEp)" : Strings.NONE_VALUE
+            }
+        ]))
 		
-		// Current Ep.
+		// MARK: Current Ep.
 		if self.item?.finished != true {
-			section.rows.append(SizPropertyTableRow(type: .stepper, label: Strings.LABEL_CURR_EP)
-				.dataSource {
-					let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
-					return Double(currEp)
-				}
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForStepper {
-						cell.enableConvertIntWhenChanged = true
-						cell.minValue = 0
-						cell.maxValue = 9999
-					}
-				}
-				.onChanged { value in
-					if let value = value as? Double {
-						let _ = AnimeDataManager.shared.updateProgress(id: self.itemID, progress: Float(value))
-					}
-				}
-			)
+			section.rows.append(StepperCell(label: Strings.LABEL_CURR_EP, attrs: [
+                .read {
+                    let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
+                    return Double(currEp)
+                },
+                .created { c, _ in
+                    let cell = StepperCell.cellView(c)
+                    cell.enableConvertIntWhenChanged = true
+                    cell.minValue = 0
+                    cell.maxValue = 9999
+                },
+                .valueChanged { value in
+                    if let value = value as? Double {
+                        let _ = AnimeDataManager.shared.updateProgress(id: self.itemID, progress: Float(value))
+                    }
+                }
+            ]))
 		}
 		
-		// Media
-		section.rows.append(SizPropertyTableRow(label: Strings.MEDIA).dataSource {
-			self.medias[self.item?.media ?? 0]
-		})
+		// MARK: Media
+		section.rows.append(TextCell(label: Strings.MEDIA, attrs: [
+            .read { self.medias[self.item?.media ?? 0] }
+        ]))
 		
-		// Rating
-		section.rows.append(SizPropertyTableRow(type: .rating, label: Strings.RATING)
-			.dataSource { Double(self.item?.rating ?? 0) }
-			.onCreate { c, _ in
-				if let cell = c as? SizCellForRating {
-					self.applyRatingBarImages(cell.ratingBar)
-					cell.ratingBar.isUserInteractionEnabled = false
-					self.ratingBar = cell.ratingBar
-				}
-			}
-		)
+        // MARK: URL
+        if let url = item?.link, !url.isEmpty {
+            section.rows.append(TextCell(label: "URL", attrs: [
+                .read { self.item?.link },
+                .created { c, _ in
+                    let cell = TextCell.cellView(c)
+                    cell.detailTextLabel?.textColor = .link
+                    cell.accessoryType = .detailButton
+                },
+                .selected { i in
+                    self.tableView.deselectRow(at: i, animated: true)
+                    self.openLink()
+                }
+            ]))
+        }
+        
+		// MARK: Rating
+		section.rows.append(RatingCell(label: Strings.RATING, attrs: [
+            .read { Double(self.item?.rating ?? 0) },
+            .created { c, _ in
+                let cell = RatingCell.cellView(c)
+                self.applyRatingBarImages(cell.ratingBar)
+                cell.ratingBar.isUserInteractionEnabled = false
+                self.ratingBar = cell.ratingBar
+            }
+        ]))
 		
-		// Memo
+		// MARK: Memo
 		section.rows.append(SizPropertyTableRow(type: .multiLine)
 			.onHeight {
 				if let memoView = self.dispMemo {
