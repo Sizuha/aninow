@@ -182,10 +182,9 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	@objc func showSettings() {
-		let naviController = UINavigationController()
-		let vc = SettingsViewController()
-		naviController.pushViewController(vc, animated: true)
-		present(naviController, animated: true, completion: nil)
+        SettingsViewController.presentModal(from: self) {
+            self.menuTable.reloadData()
+        }
 	}
 	
 }

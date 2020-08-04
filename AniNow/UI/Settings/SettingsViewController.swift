@@ -12,6 +12,16 @@ import SizUtil
 import SQuery
 
 class SettingsViewController: CommonUIViewController {
+    
+    static func presentModal(from: UIViewController, onDismiss: @escaping ()->Void) {
+        let vc = SettingsViewController()
+        vc.onDismiss = onDismiss
+        
+        let naviController = UINavigationController()
+        naviController.pushViewController(vc, animated: false)
+        
+        from.present(naviController, animated: true, completion: nil)
+    }
 	
 	private var menuTable: SizPropertyTableView!
 	private var menus = [SizPropertyTableSection]()
@@ -20,6 +30,8 @@ class SettingsViewController: CommonUIViewController {
 	private var dateTimeFmt: DateFormatter!
 	
 	private var backupSateText: String = ""
+    
+    private var onDismiss: (()->Void)? = nil
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -33,6 +45,8 @@ class SettingsViewController: CommonUIViewController {
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
 		dispLastBackup?.text = backupSateText
 		Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { timer in
 			var result = AnimeDataManager.shared.syncBackupData()
@@ -63,6 +77,11 @@ class SettingsViewController: CommonUIViewController {
 		super.viewWillLayoutSubviews()
 		self.menuTable.setMatchTo(parent: self.view)
 	}
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        onDismiss?()
+    }
 	
 	private func initNavigationBar() {
 		navigationItem.title = Strings.SETTING
@@ -118,6 +137,7 @@ class SettingsViewController: CommonUIViewController {
                         cell.valueViewWidth = 220
                         cell.accessoryType = .none
                         self.dispLastBackup = cell.detailTextLabel
+                        cell.textLabel?.textColor = self.view.tintColor
                     },
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
@@ -217,14 +237,14 @@ class SettingsViewController: CommonUIViewController {
     
     func confirmBackup() {
         SizAlertBuilder(style: .actionSheet)
-        .setMessage("バックアップしますか？")
-        .addAction(title: Strings.OK) { _ in
-            DispatchQueue.main.async {
-                self.backup()
+            .setMessage(Strings.MSG_CONFIRM_BACKUP)
+            .addAction(title: Strings.OK) { _ in
+                DispatchQueue.main.async {
+                    self.backup()
+                }
             }
-        }
-        .addAction(title: Strings.CANCEL, style: .cancel)
-        .show(parent: self)
+            .addAction(title: Strings.CANCEL, style: .cancel)
+            .show(parent: self)
     }
 	
 	func backup() {

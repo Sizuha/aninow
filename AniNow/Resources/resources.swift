@@ -84,6 +84,7 @@ public class Strings {
 	static var MSG_END_EXPORT: String { return "msg_end_export".localized() }
 	static var MSG_CONFIRM_IMPORT: String { return "msg_confirm_import".localized() }
 	static var MSG_CONFIRM_RESTORE: String { return "msg_confirm_restore".localized() }
+    static var MSG_CONFIRM_BACKUP: String { return "msg_confirm_backup".localized() }
 	static var FMT_END_IMPORT: String { return "fmt_end_import".localized() }
 	static var MSG_NO_BACKUP: String { return "msg_no_backup".localized() }
 	static var MSG_NOW_LOADING: String { return "msg_now_loading".localized() }

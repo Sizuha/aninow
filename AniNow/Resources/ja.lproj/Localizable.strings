@@ -68,6 +68,7 @@
 "msg_confirm_remove"="本当に削除しますか？";
 "msg_confirm_remove_all"="全てのデータを削除します。\nよろしいでしょうか？";
 "msg_confirm_export"="CSV形式で書き出します";
+"msg_confirm_backup"="バックアップしますか？";
 "msg_end_backup"="バックアップを完了しました";
 "msg_end_export"="CSVファイルで書き出しを完了しました";
 "msg_confirm_import"="このファイルの内容を読み込みますか？";

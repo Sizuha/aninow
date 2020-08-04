@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	private func initDB() {
-		setEnableSQueryDebug(/*DEBUG_MODE*/false)
+		setEnableSQueryDebug(DEBUG_MODE)
 
 		// Create: App Support Dirctory (for DB storage)
 		let path = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!

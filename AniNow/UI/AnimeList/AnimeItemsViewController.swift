@@ -37,6 +37,8 @@ class AnimeItemsViewController:
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        
 		if DEBUG_MODE { NSLog("called: viewDidLoad()") }
 		
 		initNavigationBar()
@@ -85,7 +87,7 @@ class AnimeItemsViewController:
 	
 	private func initSearchBar() {
 		self.searchBar = UISearchBar(frame: CGRect(x: 0, y: -50, width: self.view.frame.width, height: 50))
-        //self.searchBar.barTintColor = self.navigationBar.backgroundColor!
+        self.searchBar.barTintColor = .secondarySystemBackground
 		self.view.addSubview(self.searchBar)
 	}
 
@@ -254,8 +256,10 @@ class AnimeItemsViewController:
 	}
 	
 	private func showSearchBar() {
+        let toY = navigationBar.frame.maxY
+        
 		UIView.animate(withDuration: 0.3, animations: {
-			self.searchBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
+			self.searchBar.frame = CGRect(x: 0, y: toY, width: self.view.frame.width, height: 50)
 		}, completion: { fin in
 			if fin {
 				self.searchBar.text = nil
@@ -263,6 +267,7 @@ class AnimeItemsViewController:
 				self.searchBar.becomeFirstResponder()
 				self.animeTableView.tableFooterView?.frame =
 					CGRect(x: 0, y: 0, width: 0, height: self.view.frame.height/2.0)
+                self.animeTableView.reloadData()
 			}
 		})
 	}

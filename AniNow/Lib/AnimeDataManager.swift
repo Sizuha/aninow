@@ -56,9 +56,13 @@ class AnimeDataManager {
             return
         }
         defer { table.close() }
-        let _ = table
+        let isOk = table
             .values([AnimeMedia.F_IDX: idx, AnimeMedia.F_LABEL: label])
             .insertOrUpdate()
+        
+        if DEBUG_MODE {
+            print("isOk => \(isOk ? "O" : "X")")
+        }
     }
     
     func deleteMedia(_ idx: Int) {

@@ -47,25 +47,23 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 		
 		var rows = [SizPropertyTableRow]()
 		for i in 1...10 {
-			let row = SizPropertyTableRow(type: .editText, label: "\(i)")
-				.hint(Strings.NOT_USED)
-				.dataSource {
-					return self.editItems[i] ?? ""
-				}
-				.onCreate { c, i in
-					if let cell = c as? SizCellForEditText {
-						cell.maxLength = 10
-						cell.delegate = self
-						cell.textField.tag = i.row
-						//cell.textField.clearButtonMode = .whileEditing
-					}
-				}
-				.onChanged { value in
-					self.editItems[i] = (value as? String) ?? ""
-				}
+			let row = EditTextCell(label: "\(i)", attrs: [
+                .hint(Strings.NOT_USED),
+                .read { self.editItems[i] ?? "" },
+                .created { c, i in
+                    let cell = EditTextCell.cellView(c)
+                    cell.maxLength = 10
+                    cell.delegate = self
+                    cell.textField.tag = i.row
+                    cell.textField.clearButtonMode = .always
+                },
+                .valueChanged { value in
+                    self.editItems[i] = (value as? String) ?? ""
+                }
+            ])
 			rows.append(row)
 		}
-		menus.append(SizPropertyTableSection(rows: rows))
+		menus.append(TableSection(rows: rows))
 		
 		menuTable.setDataSource(menus)
 		menuTable.onDeleteItem = { i in
@@ -92,7 +90,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	
-	//--- UITextFieldDelegate ---
+	// MARK: --- UITextFieldDelegate ---
 	
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 		let row = textField.tag

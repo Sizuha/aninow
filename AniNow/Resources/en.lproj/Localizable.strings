@@ -68,6 +68,7 @@
 "msg_confirm_remove"="Do you really want to delete this?";
 "msg_confirm_remove_all"="Delete all data.\nAre you sure?";
 "msg_confirm_export"="Do you want to export the contents?";
+"msg_confirm_backup"="Do you want to backup?";
 "msg_end_backup"="Backup completed";
 "msg_end_export"="Export completed";
 "msg_confirm_import"="Do you want to read the contents of this file?";
