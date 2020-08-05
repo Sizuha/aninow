@@ -33,6 +33,8 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         ratingBar.emptyImage = empty.withTintColor(.defaultText)
 		ratingBar.fullImage = full.withTintColor(.defaultText)
 	}
+    
+    private var stepperEp: UIStepper! = nil
 	
 	convenience init(item: Anime) {
 		self.init(id: item.id)
@@ -105,8 +107,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	private func updateHeaderInfo() {
 		guard let item = self.item else {
-			popSelf()
-			return
+			fatalError()
 		}
 		//title = item.title
         
@@ -156,26 +157,26 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         ]))
 		
 		// MARK: Current Ep.
-		if self.item?.finished != true {
-			section.rows.append(StepperCell(label: Strings.LABEL_CURR_EP, attrs: [
-                .read {
-                    let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
-                    return Double(currEp)
-                },
-                .created { c, _ in
-                    let cell = StepperCell.cellView(c)
-                    cell.enableConvertIntWhenChanged = true
-                    cell.minValue = 0
-                    cell.maxValue = 9999
-                },
-                .valueChanged { value in
-                    if let value = value as? Double {
-                        let _ = AnimeDataManager.shared.updateProgress(id: self.itemID, progress: Float(value))
-                    }
+        section.rows.append(StepperCell(label: Strings.LABEL_CURR_EP, attrs: [
+            .read {
+                let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
+                return Double(currEp)
+            },
+            .created { c, _ in
+                let cell = StepperCell.cellView(c)
+                cell.enableConvertIntWhenChanged = true
+                cell.minValue = 0
+                cell.maxValue = 9999
+                cell.stepper.isHidden = self.item?.finished == true
+                self.stepperEp = cell.stepper
+            },
+            .valueChanged { value in
+                if let value = value as? Double {
+                    let _ = AnimeDataManager.shared.updateProgress(id: self.itemID, progress: Float(value))
                 }
-            ]))
-		}
-		
+            }
+        ]))
+
 		// MARK: Media
 		section.rows.append(TextCell(label: Strings.MEDIA, attrs: [
             .read { self.medias[self.item?.media ?? 0] }
@@ -232,7 +233,9 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	@objc func showEdit() {
-		openEditAnimePage(self, item: item)
+        EditAnimeViewController.presentSheet(from: self, item: self.item) {
+            self.refresh()
+        }
 	}
 	
 	@objc func openLink() {
@@ -250,9 +253,12 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	func refresh() {
+        updateHeaderInfo()
 		if loadItem() {
-			self.tableView.reloadData()
+			tableView.reloadData()
 		}
+        
+        stepperEp?.isHidden = item?.finished == true
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

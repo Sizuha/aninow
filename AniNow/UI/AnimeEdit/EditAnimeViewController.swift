@@ -12,7 +12,19 @@ import SizUI
 
 class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
+    static func presentSheet(from: UIViewController, item: Anime? = nil, onDismiss: @escaping ()->Void) {
+        let editNaviController = UINavigationController()
+        
+        let editView = EditAnimeViewController()
+        editView.onDismiss = onDismiss
+        if let item = item { editView.setItem(item) }
+        
+        editNaviController.pushViewController(editView, animated: false)
+        from.present(editNaviController, animated: true, completion: nil)
+    }
+    
 	private var navigationBar: UINavigationBar!
+    private var onDismiss: (()->Void)? = nil
 	
 	private var modeNewItem = false
 	
@@ -79,6 +91,11 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		super.viewWillLayoutSubviews()
 		initTableViewPositions()
 	}
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        onDismiss?()
+    }
 	
 	private func initNaviItems() {
 		self.navigationItem.title = title

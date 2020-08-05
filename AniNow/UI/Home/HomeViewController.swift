@@ -143,7 +143,9 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 
 	@objc func addNewItem() {
-		openEditAnimePage(self, item: Anime())
+        EditAnimeViewController.presentSheet(from: self, item: Anime()) {
+            self.refresh()
+        }
 	}
 	
 	func refresh() {
@@ -182,8 +184,9 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	@objc func showSettings() {
-        SettingsViewController.presentModal(from: self) {
-            self.menuTable.reloadData()
+        SettingsViewController.presentSheet(from: self) {
+            print("Settings onDismiss")
+            self.refresh()
         }
 	}
 	

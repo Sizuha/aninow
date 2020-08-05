@@ -13,7 +13,7 @@ import SQuery
 
 class SettingsViewController: CommonUIViewController {
     
-    static func presentModal(from: UIViewController, onDismiss: @escaping ()->Void) {
+    static func presentSheet(from: UIViewController, onDismiss: @escaping ()->Void) {
         let vc = SettingsViewController()
         vc.onDismiss = onDismiss
         

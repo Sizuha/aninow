@@ -49,14 +49,14 @@ class AnimeItemsViewController:
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		
-		self.animeTableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-		self.animeTableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-		self.animeTableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor).isActive = true
-		self.animeTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-		//setMatchToParent(parent: self.view, child: self.animeTableView)
+		animeTableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+		animeTableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+		animeTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
+		animeTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+		//setMatchToParent(parent: view, child: animeTableView)
 		
-		self.emptyView.centerXAnchor.constraint(equalTo: self.animeTableView.centerXAnchor).isActive = true
-		self.emptyView.centerYAnchor.constraint(equalTo: self.animeTableView.centerYAnchor).isActive = true
+		emptyView.centerXAnchor.constraint(equalTo: animeTableView.centerXAnchor).isActive = true
+		emptyView.centerYAnchor.constraint(equalTo: animeTableView.centerYAnchor).isActive = true
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -169,7 +169,9 @@ class AnimeItemsViewController:
 
 	@objc func addNewItem() {
 		let item = createNewItem()
-		openEditAnimePage(self, item: item)
+        EditAnimeViewController.presentSheet(from: self, item: item) {
+            self.reloadItems()
+        }
 	}
 	
 	@objc func showSortOptions() {

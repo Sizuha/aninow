@@ -58,10 +58,11 @@ class AnimeDataManager {
         defer { table.close() }
         let isOk = table
             .values([AnimeMedia.F_IDX: idx, AnimeMedia.F_LABEL: label])
-            .insertOrUpdate()
+            .keys(AnimeMedia.F_IDX)
+            .updateOrInsert()
         
         if DEBUG_MODE {
-            print("isOk => \(isOk ? "O" : "X")")
+            print("write \(idx): \(label) => \(isOk ? "O" : "X")")
         }
     }
     

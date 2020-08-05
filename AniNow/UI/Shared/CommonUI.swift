@@ -101,24 +101,13 @@ func createEmptyView() -> UILabel {
 	let emptyView = UILabel()
 	emptyView.text = Strings.EMPTY_ITEMS
 	emptyView.textAlignment = .center
-	emptyView.textColor = .placeholderGray
+	emptyView.textColor = .secondaryLabel
 	emptyView.font = UIFont.systemFont(ofSize: 24.0)
 	emptyView.isHidden = true
 	//emptyView.backgroundColor = .blue
 	emptyView.translatesAutoresizingMaskIntoConstraints = false
 	
 	return emptyView
-}
-
-func openEditAnimePage(_ viewController: UIViewController, item: Anime? = nil) {
-	let editNaviController = UINavigationController()
-	let editView = EditAnimeViewController()
-	if let item = item {
-		editView.setItem(item)
-	}
-	editNaviController.pushViewController(editView, animated: false)
-	
-	viewController.present(editNaviController, animated: true, completion: nil)
 }
 
 func getRatingToStarText(_ rating: Int) -> String {
