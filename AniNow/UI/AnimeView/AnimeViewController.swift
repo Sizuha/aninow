@@ -85,10 +85,6 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.txtTitle.numberOfLines = 2
 		self.txtTitle.font = UIFont.preferredFont(forTextStyle: .title2)
 		
-//		let tapGes = UITapGestureRecognizer(target: self, action: #selector(openLink))
-//		self.txtTitle.addGestureRecognizer(tapGes)
-//		self.txtTitle.isUserInteractionEnabled = false
-		
 		// Sub Title
 		self.txtSubTitle = UILabel()
 		self.txtSubTitle.textAlignment = .center
@@ -120,16 +116,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		}
 		
 		if self.txtTitle != nil {
-			//if item.link.isEmpty {
-				self.txtTitle.attributedText = nil
-				self.txtTitle.text = item.title
-				self.txtTitle.isUserInteractionEnabled = false
-			/*}
-			else {
-				self.txtTitle.text = nil
-				self.txtTitle.attributedText = item.title.asLinkText()
-				self.txtTitle.isUserInteractionEnabled = true
-			}*/
+            self.txtTitle.text = item.title
 			
 			let y = self.txtSubTitle?.frame.maxY ?? 40
 			self.txtTitle.frame = CGRect(x: 20, y: y, width: maxWidth, height: 40)
@@ -148,7 +135,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		view.addSubview(self.tableView)
 	}
     
-    private func recreateSection() {
+    private func recreateSections() {
         let section = createSections()
         self.sections.removeAll()
         self.sections.append(section)
@@ -266,9 +253,8 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	func refresh() {
-        updateHeaderInfo()
 		if loadItem() {
-            recreateSection()
+            recreateSections()
 			tableView.reloadData()
 		}
         
@@ -280,7 +266,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		applyRatingBarImages(ratingBar)
 	}
 	
-	//------ TableView Delegate
+	// MARK: - TableView Delegate
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
