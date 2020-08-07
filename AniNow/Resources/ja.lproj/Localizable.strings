@@ -83,3 +83,6 @@
 "fmt_end_import"="%d件のデータを読み込みました！";
 
 "backup_csv_header"="タイトル,サブタイトル,Media(コード),開始日,進行（話）,最終話,完了,評価,メモ,Link,Media(テキスト)";
+
+"backup_from_oldver"="旧バージョンのデータから復元";
+"msg_backup_from_oldver"="旧バージョン（v1.4.x以下）のライブラリーからデータを復元します。復元後、旧バージョンのライブラリーは消えます。";

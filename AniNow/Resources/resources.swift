@@ -93,4 +93,7 @@ public class Strings {
 	static var FMT_YEAR: String { return "fmt_year".localized() }
 	static var FMT_MONTH: String { return "fmt_month".localized() }
 	static var FMT_YEAR_MONTH: String { return "fmt_year_month".localized() }
+    
+    static var BACKUP_FROM_OLDVER: String { return "backup_from_oldver".localized() }
+    static var MSG_BACKUP_FROM_OLDVER: String { return "msg_backup_from_oldver".localized() }
 }

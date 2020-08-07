@@ -14,6 +14,15 @@ protocol AnimeListFilter {
     func applyFilter(to target: TableQuery)
 }
 
+func getOldDBDir() -> URL {
+    FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+}
+
+func getDBDir() -> URL {
+    //getOldDBDir()
+    FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+}
+
 class AnimeDataManager {
     
     private let db: SQuery
@@ -24,7 +33,7 @@ class AnimeDataManager {
     
     private static var sharedInstance: AnimeDataManager? = nil
     static var shared: AnimeDataManager {
-        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let path = getDBDir()
         return sharedInstance ?? AnimeDataManager(source: path.appendingPathComponent(USER_DB_FILENAME, isDirectory: false))
     }
     
@@ -41,7 +50,7 @@ class AnimeDataManager {
     
     private func insertMedia(_ idx: Int, _ label: String) {
         guard let table = db.from(AnimeMedia.tableName) else {
-            assert(false)
+            //assert(false)
             return
         }
         defer { table.close() }
@@ -52,7 +61,7 @@ class AnimeDataManager {
     
     func updateMedia(_ idx: Int, _ label: String) {
         guard let table = db.from(AnimeMedia.tableName) else {
-            assert(false)
+            //assert(false)
             return
         }
         defer { table.close() }
@@ -68,7 +77,7 @@ class AnimeDataManager {
     
     func deleteMedia(_ idx: Int) {
         guard let table = db.from(AnimeMedia.tableName) else {
-            assert(false)
+            //assert(false)
             return
         }
 
@@ -82,7 +91,7 @@ class AnimeDataManager {
         var result = [Int:String]()
         
         guard let table = db.from(AnimeMedia.tableName) else {
-            assert(false)
+            //assert(false)
             return result
         }
 
@@ -310,9 +319,7 @@ class AnimeDataManager {
     
     func backup() -> Bool {
         guard let iCloudUrl = iCloudBackupUrl else { return false }
-        guard let appDocUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return false
-        }
+        let appDocUrl = getDBDir()
 
         let fromUrl = appDocUrl.appendingPathComponent(USER_DB_FILENAME)
         let toUrl = iCloudUrl.appendingPathComponent(BACKUP_DB_FILENAME)
@@ -320,19 +327,24 @@ class AnimeDataManager {
         return copyDbFile(from: fromUrl, to: toUrl)
     }
     
-    func restore() -> Bool {
-        guard let fromUrl = iCloudBackupUrl?.appendingPathComponent(BACKUP_DB_FILENAME) else {
-            return false
-        }
-        guard syncBackupData() else {
-            return false
-        }
-        guard let appDocUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+    func restore(fromOldDB: Bool = false) -> Bool {
+        guard let fromUrl = fromOldDB
+            ? getOldDBDir().appendingPathComponent(USER_DB_FILENAME, isDirectory: false)
+            : iCloudBackupUrl?.appendingPathComponent(BACKUP_DB_FILENAME)
+        else {
             return false
         }
         
-        let toUrl = appDocUrl.appendingPathComponent(USER_DB_FILENAME)
-        return copyDbFile(from: fromUrl, to: toUrl)
+        if !fromOldDB {
+            guard syncBackupData() else { return false }
+        }
+        
+        let toUrl = getDBDir().appendingPathComponent(USER_DB_FILENAME)
+        if copyDbFile(from: fromUrl, to: toUrl) {
+            try? FileManager.default.removeItem(at: fromUrl)
+            return true
+        }
+        return false
     }
     
 }

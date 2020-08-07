@@ -126,10 +126,10 @@ class SettingsViewController: CommonUIViewController {
 		))
 
 		// Backup
-		menus.append(TableSection(
-			title: "\(Strings.BACKUP) (iCloud)",
-			rows: [
-				// Last Backup
+        let secBackup = TableSection(
+            title: "\(Strings.BACKUP) (iCloud)",
+            rows: [
+                // Last Backup
                 TextCell(label: Strings.BACKUP, attrs: [
                     .read { self.backupSateText },
                     .created { c, _ in
@@ -144,16 +144,30 @@ class SettingsViewController: CommonUIViewController {
                         self.confirmBackup()
                     }
                 ]),
-				
-				// Restore
+                
+                // Restore
                 ButtonCell(label: Strings.RESTORE, attrs: [
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.confirmImportFromBackup()
                     }
                 ])
-			]
-		))
+            ]
+        )
+        let oldDbUrl = getOldDBDir().appendingPathComponent(USER_DB_FILENAME, isDirectory: false)
+        if FileManager.default.fileExists(atPath: oldDbUrl.path) {
+            secBackup.rows.append(
+                // Restore from OldVer(1.4.x)
+                ButtonCell(label: Strings.BACKUP_FROM_OLDVER, attrs: [
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.confirmImportFromOldAppData()
+                    },
+                    .tintColor(.red)
+                ])
+            )
+        }
+		menus.append(secBackup)
 		
 		// import/export CSV
 		menus.append(TableSection(
@@ -188,9 +202,8 @@ class SettingsViewController: CommonUIViewController {
                         self.tryClearAll()
                     },
                     .created { c, _ in
-                        if let cell = c as? SizCellForButton {
-                            cell.textLabel?.textAlignment = .center
-                        }
+                        let cell = ButtonCell.cellView(c)
+                        cell.textLabel?.textAlignment = .center
                     }
                 ])
 			]
@@ -277,7 +290,7 @@ class SettingsViewController: CommonUIViewController {
 					if fin {
 						self.startNowLoading()
 						DispatchQueue.main.async {
-							self.restoreFromBackup()
+							self.restoreFromBackup(false)
 						}
 					}
 				}
@@ -285,9 +298,26 @@ class SettingsViewController: CommonUIViewController {
 			.addAction(title: Strings.CANCEL, style: .cancel)
 			.show(parent: self)
 	}
-	
-	func restoreFromBackup() {
-		let result = AnimeDataManager.shared.restore()
+    
+    func confirmImportFromOldAppData() {
+        SizAlertBuilder(style: .actionSheet)
+            .setMessage(Strings.MSG_BACKUP_FROM_OLDVER)
+            .addAction(title: Strings.RESTORE, style: .destructive) { _ in
+                self.fadeOut { fin in
+                    if fin {
+                        self.startNowLoading()
+                        DispatchQueue.main.async {
+                            self.restoreFromBackup(true)
+                        }
+                    }
+                }
+            }
+            .addAction(title: Strings.CANCEL, style: .cancel)
+            .show(parent: self)
+    }
+
+    func restoreFromBackup(_ fromOldDB: Bool) {
+		let result = AnimeDataManager.shared.restore(fromOldDB: fromOldDB)
 		
 		stopNowLoading()
 		fadeIn()
@@ -302,7 +332,9 @@ class SettingsViewController: CommonUIViewController {
 		
 		SizAlertBuilder()
 			.setMessage(Strings.MSG_END_RESTORE)
-			.addAction(title: Strings.OK)
+            .addAction(title: Strings.OK) { _ in
+                self.closeThis()
+            }
 			.show(parent: self)
 	}
 	

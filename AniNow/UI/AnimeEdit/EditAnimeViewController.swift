@@ -184,13 +184,14 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .valueChanged { value in self.editItem.titleOther = value as? String ?? "" }
             ]),
 			
-			// MARK: RL
+			// MARK: URL
 			EditTextCell(attrs: [
 				.read { self.editItem.link },
 				.hint("URL"),
 				.created { c, _ in
 					let cell = EditTextCell.cellView(c)
                     self.editUrl = cell.textField
+                    self.editUrl?.autocapitalizationType = .none
                     self.editUrl?.keyboardType = .URL
                     self.editUrl?.returnKeyType = .done
                     self.editUrl?.clearButtonMode = .always

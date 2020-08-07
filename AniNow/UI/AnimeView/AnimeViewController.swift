@@ -141,22 +141,37 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.tableView.translatesAutoresizingMaskIntoConstraints = false
 		self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: HEADER_HEIGHT))
         
-		let section = TableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
-		
-		// Published Date
+		let section = createSections()
+		self.sections.append(section)
+		self.tableView.setDataSource(self.sections)
+        
+		view.addSubview(self.tableView)
+	}
+    
+    private func recreateSection() {
+        let section = createSections()
+        self.sections.removeAll()
+        self.sections.append(section)
+        self.tableView.setDataSource(self.sections)
+    }
+    
+    private func createSections() -> TableSection {
+        let section = TableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
+        
+        // Published Date
         section.rows.append(TextCell(label: Strings.PUB_DATE, attrs: [
             .read { self.item?.startDate?.toString() }
         ]))
-		
-		// MARK: Final Ep.
-		section.rows.append(TextCell(label: Strings.FINAL_EP, attrs: [
+        
+        // MARK: Final Ep.
+        section.rows.append(TextCell(label: Strings.FINAL_EP, attrs: [
             .read {
                 let finalEp: Int = (self.item?.total ?? 0) > 0 ? self.item!.total : 0
                 return finalEp > 0 ? "\(finalEp)" : Strings.NONE_VALUE
             }
         ]))
-		
-		// MARK: Current Ep.
+        
+        // MARK: Current Ep.
         section.rows.append(StepperCell(label: Strings.LABEL_CURR_EP, attrs: [
             .read {
                 let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
@@ -177,11 +192,11 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         ]))
 
-		// MARK: Media
-		section.rows.append(TextCell(label: Strings.MEDIA, attrs: [
+        // MARK: Media
+        section.rows.append(TextCell(label: Strings.MEDIA, attrs: [
             .read { self.medias[self.item?.media ?? 0] }
         ]))
-		
+        
         // MARK: URL
         if let url = item?.link, !url.isEmpty {
             section.rows.append(TextCell(label: "URL", attrs: [
@@ -198,8 +213,8 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
             ]))
         }
         
-		// MARK: Rating
-		section.rows.append(RatingCell(label: Strings.RATING, attrs: [
+        // MARK: Rating
+        section.rows.append(RatingCell(label: Strings.RATING, attrs: [
             .read { Double(self.item?.rating ?? 0) },
             .created { c, _ in
                 let cell = RatingCell.cellView(c)
@@ -208,29 +223,27 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
                 self.ratingBar = cell.ratingBar
             }
         ]))
-		
-		// MARK: Memo
-		section.rows.append(SizPropertyTableRow(type: .multiLine)
-			.onHeight {
-				if let memoView = self.dispMemo {
-					if memoView.text.isEmpty { return DEFAULT_HEIGHT }
-					memoView.sizeToFit()
-					return memoView.frame.height + SizCellForMultiLine.paddingVertical*2
-				}
-				return DEFAULT_HEIGHT
-			}
-			.dataSource { self.item?.memo }
-			.hint(Strings.EMPTY_MEMO)
-			.onCreate { c, _ in
-				if let cell = c as? SizCellForMultiLine {
-					self.dispMemo = cell.textView
-				}
-		})
-		
-		self.sections.append(section)
-		self.tableView.setDataSource(self.sections)
-		view.addSubview(self.tableView)
-	}
+        
+        // MARK: Memo
+        section.rows.append(SizPropertyTableRow(type: .multiLine)
+            .onHeight {
+                if let memoView = self.dispMemo {
+                    if memoView.text.isEmpty { return DEFAULT_HEIGHT }
+                    memoView.sizeToFit()
+                    return memoView.frame.height + SizCellForMultiLine.paddingVertical*2
+                }
+                return DEFAULT_HEIGHT
+            }
+            .dataSource { self.item?.memo }
+            .hint(Strings.EMPTY_MEMO)
+            .onCreate { c, _ in
+                if let cell = c as? SizCellForMultiLine {
+                    self.dispMemo = cell.textView
+                }
+        })
+        
+        return section
+    }
 	
 	@objc func showEdit() {
         EditAnimeViewController.presentSheet(from: self, item: self.item) {
@@ -255,6 +268,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func refresh() {
         updateHeaderInfo()
 		if loadItem() {
+            recreateSection()
 			tableView.reloadData()
 		}
         

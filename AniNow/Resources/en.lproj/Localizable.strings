@@ -83,3 +83,6 @@
 "fmt_end_import"="Loading is complete! (%d items)";
 
 "backup_csv_header"="Title,Sub title,Media(Code),Published,Current Ep.,Final Ep.,Finished,Rating,Memo,Link,Medua(Text)";
+
+"backup_from_oldver"="Restore from Old ver. DB";
+"msg_backup_from_oldver"="Convert to Old version(1.5.10 ealry) DB. And, remove Old ver. DB.";
