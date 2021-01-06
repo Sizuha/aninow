@@ -12,6 +12,7 @@ public class Icons {
 	static let STAR5_EMPTY = UIImage(named: "star5_empty")!
 	static let STAR5_FILL = UIImage(named: "star5_fill")!
 	static let SETTINGS = UIImage(named: "setting")!
+    static let SORT = UIImage(named: "sort")!
 }
 
 public class Strings {

@@ -53,7 +53,6 @@ class AnimeItemsViewController:
 		animeTableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
 		animeTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
 		animeTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-		//setMatchToParent(parent: view, child: animeTableView)
 		
 		emptyView.centerXAnchor.constraint(equalTo: animeTableView.centerXAnchor).isActive = true
 		emptyView.centerYAnchor.constraint(equalTo: animeTableView.centerYAnchor).isActive = true
@@ -73,7 +72,7 @@ class AnimeItemsViewController:
 		self.navigationController?.delegate = self
 		
 		self.btnNew = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
-		self.btnSort = UIBarButtonItem(title: Strings.SORT, style: .plain, target: self, action: #selector(showSortOptions))
+        self.btnSort = UIBarButtonItem(image: Icons.SORT, style: .plain, target: self, action: #selector(showSortOptions))
 		self.btnBeginEditMode = UIBarButtonItem(title: Strings.SELECT, style: .plain, target: self, action: #selector(beginEditMode))
 		self.btnEndEditMode = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(endEditMode))
 		self.btnSearch = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(toggleSearchUI))
@@ -81,8 +80,8 @@ class AnimeItemsViewController:
 		let naviItem = self.navigationItem
 		naviItem.title = getTitle()
 		naviItem.leftItemsSupplementBackButton = true
-		naviItem.leftBarButtonItems = [self.btnSort]
-		naviItem.rightBarButtonItems = [self.btnNew, self.btnSearch]
+		naviItem.leftBarButtonItems = [self.btnSort, self.btnSearch]
+		naviItem.rightBarButtonItems = [self.btnNew]
 	}
 	
 	private func initSearchBar() {

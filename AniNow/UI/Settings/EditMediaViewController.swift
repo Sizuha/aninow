@@ -90,7 +90,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	
-	// MARK: --- UITextFieldDelegate ---
+	// MARK: - UITextFieldDelegate
 	
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 		let row = textField.tag

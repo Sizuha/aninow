@@ -163,7 +163,6 @@
 			isa = PBXGroup;
 			children = (
 				D51C17F021D2119A00F7CF3D /* HomeViewController.swift */,
-				D56BEE0421C9DBD20070AB45 /* ImportCsvViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -191,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				D585E9E02271B99200CBB318 /* SettingsViewController.swift */,
+				D56BEE0421C9DBD20070AB45 /* ImportCsvViewController.swift */,
 				D564AFEF2282C78A00FD983D /* EditMediaViewController.swift */,
 			);
 			path = Settings;
@@ -670,7 +670,7 @@
 				CODE_SIGN_ENTITLEMENTS = AniNow/AniNow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = R8QQLU625A;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniNow/Info.plist;
@@ -679,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kishe.sizuha.AniNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -695,7 +695,7 @@
 				CODE_SIGN_ENTITLEMENTS = AniNow/AniNow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = R8QQLU625A;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniNow/Info.plist;
@@ -704,7 +704,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kishe.sizuha.AniNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

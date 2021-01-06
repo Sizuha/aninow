@@ -100,7 +100,7 @@ class SettingsViewController: CommonUIViewController {
 		menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
         
-		// Info
+		// MARK: Info
 		menus.append(TableSection(
 			title: Strings.INFO,
 			rows: [
@@ -111,7 +111,7 @@ class SettingsViewController: CommonUIViewController {
 			]
 		))
 		
-		// Edit
+		// MARK: Edit
 		menus.append(TableSection(
 			title: Strings.EDIT,
 			rows: [
@@ -125,7 +125,7 @@ class SettingsViewController: CommonUIViewController {
 			]
 		))
 
-		// Backup
+		// MARK: Backup (iCloud)
         let secBackup = TableSection(
             title: "\(Strings.BACKUP) (iCloud)",
             rows: [
@@ -169,9 +169,9 @@ class SettingsViewController: CommonUIViewController {
         }
 		menus.append(secBackup)
 		
-		// import/export CSV
+		// MARK: import/export CSV
 		menus.append(TableSection(
-			title: "CSV",
+			title: "\(Strings.BACKUP) (CSV)",
 			rows: [
 				// Export
                 ButtonCell(label: Strings.EXPORT, attrs: [
@@ -191,7 +191,7 @@ class SettingsViewController: CommonUIViewController {
 			]
 		))
 		
-		// etc
+		// MARK: etc
 		menus.append(TableSection(
 			rows: [
 				// Clear
@@ -244,7 +244,7 @@ class SettingsViewController: CommonUIViewController {
 		stopNowLoading()
 		fadeIn()
 		
-		let dlg = createAlertDialog(message: Strings.MSG_END_BACKUP)
+        let dlg = createAlertDialog(title: "\(Strings.BACKUP) (CSV)", message: Strings.MSG_END_EXPORT)
 		present(dlg, animated: true)
 	}
     

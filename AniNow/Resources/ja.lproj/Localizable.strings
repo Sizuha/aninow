@@ -70,7 +70,7 @@
 "msg_confirm_export"="CSV形式で書き出します";
 "msg_confirm_backup"="バックアップしますか？";
 "msg_end_backup"="バックアップを完了しました";
-"msg_end_export"="CSVファイルで書き出しを完了しました";
+"msg_end_export"="\nCSVファイルで書き出しを\n完了しました。\n\n「ファイル」アプリから\n「このiPhone内」→「AniNow」で\n確認できます。";
 "msg_confirm_import"="このファイルの内容を読み込みますか？";
 "msg_confirm_restore"="最後にバックアップした状態に戻します。この作業は後戻りできません。宜しいですか？";
 "msg_no_backup"="バックアップがありません";
@@ -83,6 +83,5 @@
 "fmt_end_import"="%d件のデータを読み込みました！";
 
 "backup_csv_header"="タイトル,サブタイトル,Media(コード),開始日,進行（話）,最終話,完了,評価,メモ,Link,Media(テキスト)";
-
 "backup_from_oldver"="旧バージョンのデータから復元";
 "msg_backup_from_oldver"="旧バージョン（v1.4.x以下）のライブラリーからデータを復元します。復元後、旧バージョンのライブラリーは消えます。";

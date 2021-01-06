@@ -155,18 +155,24 @@ class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UI
 		let item = self.files[indexPath.row]
 		return SizSwipeActionBuilder()
 			.addAction(title: Strings.REMOVE, style: .destructive) { action, view, handler in
-				do {
-					try FileManager.default.removeItem(atPath: "\(SizPath.appDocument)/\(item.filename)")
-					handler(true)
-					
-					//self.filesView.beginUpdates()
-					self.files.remove(at: indexPath.row)
-					//self.filesView.endUpdates()
-					self.filesView.reloadData()
-				}
-				catch {
-					handler(false)
-				}
+                SizAlertBuilder()
+                    .setMessage(Strings.MSG_CONFIRM_REMOVE)
+                    .addAction(title: Strings.OK, style: .destructive) { _ in
+                        do {
+                            try FileManager.default.removeItem(atPath: "\(SizPath.appDocument)/\(item.filename)")
+                            handler(true)
+                            
+                            self.files.remove(at: indexPath.row)
+                            self.filesView.reloadData()
+                        }
+                        catch {
+                            handler(false)
+                        }
+                    }
+                    .addAction(title: Strings.CANCEL, style: .cancel) { _ in
+                        handler(true)
+                    }
+                    .show(parent: self)
 			}
 			.createConfig(enableFullSwipe: false)
 	}
