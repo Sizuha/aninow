@@ -143,7 +143,10 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 
 	@objc func addNewItem() {
-        EditAnimeViewController.presentSheet(from: self, item: Anime()) {
+        let newItem = Anime()
+        newItem.startDate = YearMonth(from: Date())
+        
+        EditAnimeViewController.presentSheet(from: self, item: newItem) {
             self.refresh()
         }
 	}

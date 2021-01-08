@@ -14,6 +14,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
     static func presentSheet(from: UIViewController, item: Anime? = nil, onDismiss: @escaping ()->Void) {
         let editNaviController = UINavigationController()
+        editNaviController.setDisablePullDownDismiss()
         
         let editView = EditAnimeViewController()
         editView.onDismiss = onDismiss
@@ -216,8 +217,14 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .read { self.editItem.finished },
                 .created { c, _ in
                     let cell = OnOffCell.cellView(c)
+                    cell.switchCtrl.isUserInteractionEnabled = false
                     self.editFinished = cell.switchCtrl
                     //cell.switchCtrl.thumbTintColor = self.isDarkMode ? .white : .black
+                },
+                .selected { i in
+                    self.editTableView.deselectRow(at: i, animated: true)
+                    self.editItem.finished.toggle()
+                    self.editFinished?.setOn(self.editItem.finished, animated: true)
                 },
                 .valueChanged { value in self.editItem.finished = value as? Bool == true }
             ]),
@@ -283,11 +290,16 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .read { Double(self.editItem.rating) },
                 .created { c, _ in
                     self.editRating = RatingCell.cellView(c).ratingBar
+                    self.editRating?.editable = false
                     self.applyRatingBarImages(self.editRating!)
                 },
-                .valueChanged { value in
+                .selected { i in
+                    self.editTableView.deselectRow(at: i, animated: true)
+                    self.showRatingSelection()
+                },
+                /*.valueChanged { value in
                     self.editItem.rating = Float(value as? Double ?? 0)
-                }
+                }*/
             ])
 		]))
 		
@@ -344,6 +356,23 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	private func initTableViewPositions() {
 		self.editTableView.setMatchTo(parent: self.view)
 	}
+    
+    func showRatingSelection() {
+        SizAlertBuilder(title: Strings.RATING, style: .actionSheet)
+            .addAction(title: "☆☆☆☆☆", style: .default) { _ in self.changeRating(0) }
+            .addAction(title: "★☆☆☆☆", style: .default) { _ in self.changeRating(1) }
+            .addAction(title: "★★☆☆☆", style: .default) { _ in self.changeRating(2) }
+            .addAction(title: "★★★☆☆", style: .default) { _ in self.changeRating(3) }
+            .addAction(title: "★★★★☆", style: .default) { _ in self.changeRating(4) }
+            .addAction(title: "★★★★★", style: .default) { _ in self.changeRating(5) }
+            .addAction(title: Strings.CANCEL, style: .cancel)
+            .show(parent: self)
+    }
+    
+    func changeRating(_ rating: Float) {
+        self.editRating?.rating = Double(rating)
+        self.editItem.rating = rating
+    }
 	
 	// MARK: - UITextFieldDelegate
 	

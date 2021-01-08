@@ -15,6 +15,7 @@ class SettingsViewController: CommonUIViewController {
     
     static func presentSheet(from: UIViewController, onDismiss: @escaping ()->Void) {
         let vc = SettingsViewController()
+        //vc.setDisablePullDownDismiss()
         vc.onDismiss = onDismiss
         
         let naviController = UINavigationController()
@@ -86,8 +87,8 @@ class SettingsViewController: CommonUIViewController {
 	private func initNavigationBar() {
 		navigationItem.title = Strings.SETTING
         
-        let bbiDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(closeThis))
-        navigationItem.rightBarButtonItems = [bbiDone]
+        let bbiClose = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(closeThis))
+        navigationItem.leftBarButtonItems = [bbiClose]
         
 	}
     
