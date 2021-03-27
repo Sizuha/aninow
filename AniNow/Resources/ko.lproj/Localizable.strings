@@ -60,6 +60,8 @@
 
 "err_fail_remove"="삭제할 수 없습니다！";
 "err_fail_save"="저장하지 못했습니다!";
+"err_when_save"="등록 오류";
+"err_empty_title"="제목이 비어있습니다.";
 
 "delete_all"="모든 데이터를 지움";
 "clear_and_import"="기존 데이터를 지우고, 이 파일의 내용으로 채움";

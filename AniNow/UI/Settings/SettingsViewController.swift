@@ -112,7 +112,7 @@ class SettingsViewController: CommonUIViewController {
 			]
 		))
 		
-		// MARK: Edit
+		// MARK: Edit Media
 		menus.append(TableSection(
 			title: Strings.EDIT,
 			rows: [
@@ -183,7 +183,7 @@ class SettingsViewController: CommonUIViewController {
                 ]),
 				
 				// Import
-                ButtonCell(label: Strings.IMPORT, attrs: [
+                TextCell(label: Strings.IMPORT, attrs: [
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.moveToImportUI()

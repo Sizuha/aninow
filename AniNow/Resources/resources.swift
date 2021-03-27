@@ -73,6 +73,8 @@ public class Strings {
 	
 	static var ERR_FAIL_REMOVE: String { return "err_fail_remove".localized() }
 	static var ERR_FAIL_SAVE: String { return "err_fail_save".localized() }
+    static var ERR_WHEN_SAVE: String { return "err_when_save".localized() }
+    static var ERR_EMPTY_TITLE: String { return "err_empty_title".localized() }
 	
 	static var DELETE_ALL: String { return "delete_all".localized() }
 	static var CLEAR_AND_IMPORT: String { return "clear_and_import".localized() }

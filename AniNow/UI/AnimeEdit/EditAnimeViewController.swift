@@ -350,6 +350,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		self.editTableView = SizPropertyTableView(frame: .zero, style: .grouped)
 		self.editTableView.translatesAutoresizingMaskIntoConstraints = false
 		self.editTableView.setDataSource(sections)
+        self.editTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 300))
 		self.view.addSubview(self.editTableView)
 	}
 	
@@ -452,34 +453,34 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 	
 	private func applyEditData() {
-		self.editItem.title = (self.editTitle?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-		self.editItem.titleOther = (self.editTitleOther?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+		editItem.title = (editTitle?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+		editItem.titleOther = (editTitleOther?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 		
-		self.editItem.total = Int(self.editTotal?.text ?? "") ?? 0
-		if self.editItem.total < 0 { self.editItem.total = 0 }
+        editItem.total = Int(editTotal?.text ?? "") ?? 0
+		if editItem.total < 0 { editItem.total = 0 }
 		
-		self.editItem.progress = Float(self.editProgress?.text ?? "") ?? 0.0
-		if self.editItem.progress < 0 { self.editItem.progress = 0.0 }
+		editItem.progress = Float(editProgress?.text ?? "") ?? 0.0
+		if editItem.progress < 0 { editItem.progress = 0.0 }
 		
-		self.editItem.finished = self.editFinished?.isOn == true
+		editItem.finished = editFinished?.isOn == true
 		
-		self.editItem.link = (editUrl?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-		if !self.editItem.link.isEmpty && !self.editItem.link.starts(with: "http") {
-			self.editItem.link = "http://\(self.editItem.link)"
+		editItem.link = (editUrl?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+		if !editItem.link.isEmpty && !editItem.link.starts(with: "http") {
+			editItem.link = "http://\(editItem.link)"
 		}
 		
-		self.editItem.rating = Float(self.editRating?.rating ?? 0)
+		editItem.rating = Float(editRating?.rating ?? 0)
 	}
 	
 	private func checkValidateData() -> Bool {
 		var valid = true
 		
-		if self.editItem.title.isEmpty {
+		if editItem.title.isEmpty {
 			valid = false
 			
 			let dlg = createAlertDialog(
-				title: "登録エラー",
-				message: "タイトルが空です",
+                title: Strings.ERR_WHEN_SAVE,
+                message: Strings.ERR_EMPTY_TITLE,
 				buttonText: Strings.OK) { _ in self.editTitle?.becomeFirstResponder() }
 			present(dlg, animated: true)
 		}

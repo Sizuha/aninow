@@ -60,6 +60,8 @@
 
 "err_fail_remove"="Remove failed!";
 "err_fail_save"="Save failed!";
+"err_when_save"="Error";
+"err_empty_title"="Title is empty";
 
 "delete_all"="Delete All Data";
 "clear_and_import"="Add the contents of this file after Delete All";

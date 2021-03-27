@@ -14,14 +14,16 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 
 	private var menuTable: ActionPropertyTableView!
 	private var menus = [SizPropertyTableSection]()
-	
 	private var editItems = [Int:String]()
+    private var bbiHideKeyboard: UIBarButtonItem!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
 		title = "\(Strings.EDIT): Media"
 		initTableView()
+        
+        bbiHideKeyboard = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(hideKeyboard))
     }
     
 	override func viewWillLayoutSubviews() {
@@ -56,6 +58,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
                     cell.delegate = self
                     cell.textField.tag = i.row
                     cell.textField.clearButtonMode = .always
+                    cell.textField.returnKeyType = .done
                 },
                 .valueChanged { value in
                     self.editItems[i] = (value as? String) ?? ""
@@ -89,15 +92,31 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 	
+    @objc
+    func hideKeyboard() {
+        dismissKeyboard()
+        navigationItem.rightBarButtonItems = []
+    }
 	
 	// MARK: - UITextFieldDelegate
 	
 	func textFieldDidBeginEditing(_ textField: UITextField) {
+        navigationItem.rightBarButtonItems = [bbiHideKeyboard]
+        
 		let row = textField.tag
 		if row >= 7 {
 			menuTable.scrollToRow(at: IndexPath(row: row, section: 0), at: .middle, animated: true)
 		}
-
 	}
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        navigationItem.rightBarButtonItems = []
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        navigationItem.rightBarButtonItems = []
+        return true
+    }
 	
 }

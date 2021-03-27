@@ -60,6 +60,8 @@
 
 "err_fail_remove"="削除出来ませんでした！";
 "err_fail_save"="保存出来ませんでした！";
+"err_when_save"="登録エラー";
+"err_empty_title"="タイトルが空です";
 
 "delete_all"="全てのデータを削除する";
 "clear_and_import"="既存のデータを削除し、このファイルの内容を追加する";
