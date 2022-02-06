@@ -43,6 +43,8 @@ class SettingsViewController: CommonUIViewController {
 
 		initNavigationBar()
 		initTableView()
+        
+        setDisablePullDownDismiss()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +109,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Version
 				TextCell(label: "Version", attrs: [
-                    .read { "\(getAppShortVer()).\(getAppBuildVer())" }
+                    .read { "\(SizApplication.shortVersion).\(SizApplication.buildVersion)" }
                 ])
 			]
 		))

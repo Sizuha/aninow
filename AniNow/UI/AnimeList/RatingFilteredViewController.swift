@@ -19,7 +19,7 @@ class RatingFilteredViewController: AnimeItemsViewController {
 	
 	override func applyFilter(to target: TableQuery) {
 		super.applyFilter(to: target)
-		let _ = target.andWhere("rating >= ? AND rating < ?", self.rating, self.rating + 1)
+		let _ = target.andWhere("\(Anime.F_RATING) >= ? AND \(Anime.F_RATING) < ?", self.rating, self.rating + 1)
 	}
 	
 	override func createNewItem() -> Anime {

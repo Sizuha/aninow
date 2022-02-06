@@ -50,9 +50,9 @@ class DatePickerView: SizPopupPickerView, UIPickerViewDataSource, SizPopupPicker
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	//------ SizPopupPickerViewDelegate
+	// MARK: - SizPopupPickerViewDelegate
 	
-	func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
+    func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
 		onSelected?(numbers)
 	}
 	

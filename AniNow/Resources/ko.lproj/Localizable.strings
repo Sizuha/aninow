@@ -29,7 +29,7 @@
 "setting"="설정";
 "select"="선택";
 "all_view"="전체";
-"now_view"="진행중";
+"now_view"="시청중";
 "anime_title"="제목";
 "anime_title_2nd"="부제목";
 "media"="매체";
@@ -45,12 +45,12 @@
 
 "label_fin"="감상완료";
 "final_ep"="최종화";
-"label_progress"="진행（화）";
+"label_progress"="시청（화）";
 "pub_date"="시작일";
 "rating"="평가";
 
 "info"="정보";
-"count_now"="진행준인 작품수";
+"count_now"="시청중인 작품수";
 "count_finished"="완료된 작품수";
 "backup"="백업";
 "restore"="복구";
@@ -84,7 +84,7 @@
 "fmt_year_month"="%4d년 %d월";
 "fmt_end_import"="%d개의 데이터를 읽어 들였습니다.";
 
-"backup_csv_header"="제목,부제목,매체코드,시작일,진행（화）,최종화,완료,평가,메모,URL,매체";
+"backup_csv_header"="제목,부제목,매체코드,시작일,시청（화）,최종화,완료,평가,메모,URL,매체";
 
 "backup_from_oldver"="옛버전（1.4.x以下）DB부터 복원";
 "msg_backup_from_oldver"="옛버전（v1.4.x以下）데이터가 남아있는 경우, 엿버전 데이터를 신버전 데이터로 복원시킵니다. 단, 복원후에 옛버전 데이터는 삭제됩니다.";

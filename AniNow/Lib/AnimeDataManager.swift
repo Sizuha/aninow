@@ -251,6 +251,25 @@ class AnimeDataManager {
         defer { anime.close() }
         let _ = anime.delete()
     }
+    
+    func getYears() -> [Int] {
+        guard let anime = db.from(Anime.tableName) else { return [] }
+        defer { anime.close() }
+        
+        let cur = anime
+            .columns("\(Anime.F_START_DATE)/100")
+            .orderBy(Anime.F_START_DATE, desc: false)
+            .distnict()
+            .select()
+        
+        var result: [Int] = []
+        cur.forEachColumn { cur, i in
+            guard i == 0, let year = cur.getInt(i) else { return }
+            result.append(year)
+        }
+        
+        return result
+    }
 
     //MARK: - import/export CSV
     

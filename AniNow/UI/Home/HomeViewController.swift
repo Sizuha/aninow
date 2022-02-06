@@ -25,6 +25,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	private var countOfFinished: Int = 0
 	private var countByMedia = [Int:Int]()
 	private var countByRating = [Int:Int]()
+    private var countByYear = [Int:Int]()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -61,7 +62,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		menuTable = SizPropertyTableView(frame: .zero, style: .grouped)
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
 		
-		// Categories
+		// MARK: Categories
 		menus.append(TableSection(
 			title: Strings.LABEL_ANIME_LIST,
 			rows: [
@@ -99,12 +100,24 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			rows: [] //mediaRows
 		))
 
-		// filter: Rating
+		// MARK: filter: Rating
 		menus.append(TableSection(
 			title: Strings.FILTER_RATING,
 			rows: (0...5).reversed().map { createRatingFilterMenu($0) }
 		))
-		
+        
+        // TODO まだ悩む。画面に戻るたびに更新しなけらばならない！
+        // MARK: filter: Year
+        /*var yearsRows: [SizPropertyTableRow] = []
+        var years = AnimeDataManager.shared.getYears()
+        
+        if years.isEmpty == false {
+            menus.append(TableSection(
+                title: "西暦別",
+                rows: yearsRows
+            ))
+        }*/
+
 		menuTable.setDataSource(menus)
 		view.addSubview(menuTable)
 	}
@@ -120,7 +133,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	private func createMediaFilterMenu(_ media: Int, label: String) -> SizPropertyTableRow{
-		return SizPropertyTableRow(label: label)
+		SizPropertyTableRow(label: label)
 			.dataSource { String(self.countByMedia[media] ?? 0) }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
@@ -132,7 +145,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	private func createRatingFilterMenu(_ rating: Int) -> SizPropertyTableRow{
-		return SizPropertyTableRow(label: getRatingToStarText(rating))
+		SizPropertyTableRow(label: getRatingToStarText(rating))
 			.dataSource { String(self.countByRating[rating] ?? 0) }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
@@ -141,6 +154,18 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 				self.navigationController?.pushViewController(nextView, animated: true)
 			}
 	}
+    
+    private func createYearFilterMenu(_ year: Int) -> SizPropertyTableRow{
+        let label = year == 0 ? Strings.UNKNOWN : String(format: Strings.FMT_YEAR, year)
+        return SizPropertyTableRow(label: label)
+            .dataSource { String(self.countByRating[0] ?? 0) }
+            .onSelect { i in
+                self.menuTable.deselectRow(at: i, animated: true)
+                let nextView = YearFilteredViewController()
+                nextView.year = year
+                self.navigationController?.pushViewController(nextView, animated: true)
+            }
+    }
 
 	@objc func addNewItem() {
         let newItem = Anime()
