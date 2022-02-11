@@ -29,17 +29,18 @@ class SettingsViewController: CommonUIViewController {
 	
 	private var dispLastBackup: UILabel?
 	private var dateTimeFmt: DateFormatter!
-	
-	private var backupSateText: String = ""
+    private var backupSateText = ""
+
+    private var dispAutoBackup: UILabel?
     
     private var onDismiss: (()->Void)? = nil
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		backupSateText = Strings.MSG_NOW_LOADING
+        self.backupSateText = Strings.MSG_NOW_LOADING
 		
-		dateTimeFmt = SQuery.newDateTimeFormat()
-		dateTimeFmt.timeZone = TimeZone.current
+        self.dateTimeFmt = SQuery.newDateTimeFormat()
+        self.dateTimeFmt.timeZone = TimeZone.current
 
 		initNavigationBar()
 		initTableView()
@@ -145,6 +146,20 @@ class SettingsViewController: CommonUIViewController {
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.confirmBackup()
+                    }
+                ]),
+                
+                // Auto Backup
+                TextCell(label: Strings.BACKUP_AUTO, attrs: [
+                    .read { Settings.shared.autoBackupMode.toString() },
+                    .created { c, _ in
+                        let cell = TextCell.cellView(c)
+                        cell.valueViewWidth = 220
+                        self.dispAutoBackup = cell.detailTextLabel
+                    },
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.showAutoBackupOptions()
                     }
                 ]),
                 
@@ -317,6 +332,26 @@ class SettingsViewController: CommonUIViewController {
             }
             .addAction(title: Strings.CANCEL, style: .cancel)
             .show(parent: self)
+    }
+    
+    /// 自動バックアップのOptionメニューを表示
+    func showAutoBackupOptions() {
+        let texts = AUTO_BACKUP_OPTIONS.map { $0.toString() }
+        let curr: Int? = AUTO_BACKUP_OPTIONS.firstIndex(of: Settings.shared.autoBackupMode)
+        
+        ItemSelector.present(
+            from: self.navigationController!,
+            title: Strings.BACKUP_AUTO,
+            items: texts,
+            selected: curr
+        ) { index in
+            Settings.shared.autoBackupMode = AUTO_BACKUP_OPTIONS[at: index] ?? Settings.shared.autoBackupMode
+            self.refreshAutoBackupState()
+        }
+    }
+    
+    func refreshAutoBackupState() {
+        self.dispAutoBackup?.text = Settings.shared.autoBackupMode.toString()
     }
 
     func restoreFromBackup(_ fromOldDB: Bool) {

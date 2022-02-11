@@ -205,6 +205,9 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 				}
 				
 				self.menuTable.reloadData()
+                
+                excuteAutoBackup_ifNeed()
+                
 				self.stopNowLoading()
 				self.fadeIn()
 			}

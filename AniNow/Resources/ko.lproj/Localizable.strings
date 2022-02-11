@@ -53,10 +53,17 @@
 "count_now"="시청중인 작품수";
 "count_finished"="완료된 작품수";
 "backup"="백업";
+"backup_auto"="자동 백업";
 "restore"="복구";
 "import"="읽어오기";
-"export"="백업";
+"export"="내보내기";
 "last_backup"="최근 백업";
+
+// Auto Backup Options
+"auto_backup_monthly"="약 1개월마다";
+"auto_backup_weekly"="약 1주일마다";
+"auto_backup_daily"="거의 매일";
+"auto_backup_none"="하지않음";
 
 "err_fail_remove"="삭제할 수 없습니다！";
 "err_fail_save"="저장하지 못했습니다!";

@@ -53,10 +53,17 @@
 "count_now"="視聴中の作品数";
 "count_finished"="完了した作品数";
 "backup"="バックアップ";
+"backup_auto"="自動バックアップ";
 "restore"="復元";
 "import"="読み込む";
 "export"="書き出す";
 "last_backup"="最近のバックアップ";
+
+// Auto Backup Options
+"auto_backup_monthly"="役１ヶ月";
+"auto_backup_weekly"="役１週";
+"auto_backup_daily"="ほぼ毎日";
+"auto_backup_none"="無し";
 
 "err_fail_remove"="削除出来ませんでした！";
 "err_fail_save"="保存出来ませんでした！";
