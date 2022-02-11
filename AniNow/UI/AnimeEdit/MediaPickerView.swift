@@ -26,10 +26,10 @@ class MediaPickerView: SizPopupPickerView, UIPickerViewDataSource, SizPopupPicke
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	//------ SizPopupPickerViewDelegate
+	// MARK: - SizPopupPickerViewDelegate
 	
-	func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
-		onSelected?(numbers[0])
+    func pickerView(_ pickerView: UIPickerView, didSelect rows: [Int]) {
+		onSelected?(rows[0])
 	}
 	
 	func numberOfComponents(in pickerView: UIPickerView) -> Int {
