@@ -43,23 +43,16 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	private var editProgress: UITextField?
 	private var dispPubDate: UILabel?
 	private var dispMedia: UILabel?
-	private var editRating: FloatRatingView?
+	private var dispRating: UILabel?
 	
 	private var editUrl: UITextField?
-	private var dispMemo: UITextView?
-	private var dispMemoHint: UILabel?
-	private var cellMemo: SizCellForMultiLine?
+    private var dispMemo = UILabel(frame: .zero) // 計算用
+	private var cellMemo: SizCellForText?
 	
 	private var pickerPubDate: DatePickerView!
 	private var pickerMedia: MediaPickerView!
 	
 	private let medias = AnimeDataManager.shared.loadMedias()
-	
-	private func applyRatingBarImages(_ ratingBar: FloatRatingView) {
-        ratingBar.emptyImage = Icons.STAR5_EMPTY.withTintColor(view.tintColor)
-		ratingBar.fullImage = Icons.STAR5_FILL.withTintColor(view.tintColor)
-	}
-
 	
 	func setItem(_ item: Anime) {
 		self.editItem = item
@@ -80,7 +73,14 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			title = Strings.EDIT
 			self.editItem = AnimeDataManager.shared.loadDetail(id: self.editItem!.id)!
 		}
-		
+        
+        let text = self.editItem.memo.isEmpty ? Strings.EMPTY_MEMO : self.editItem.memo
+        self.dispMemo.text = text
+        self.dispMemo.textAlignment = .left
+        self.dispMemo.font = .systemFont(ofSize: 16)
+        self.dispMemo.numberOfLines = 0
+        self.dispMemo.lineBreakMode = .byWordWrapping
+
 		initPubDatePicker()
 		initMedaiPicker()
 		
@@ -236,6 +236,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
                     self.editTotal = cell.textField
+                    self.editTotal?.delegate = self
                     self.editTotal?.keyboardType = .numberPad
                     self.editTotal?.clearButtonMode = .always
                     cell.maxLength = 4
@@ -256,6 +257,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
                     self.editProgress = cell.textField
+                    self.editProgress?.delegate = self
                     self.editProgress?.keyboardType = .decimalPad
                     self.editProgress?.clearButtonMode = .always
                     cell.maxLength = 5
@@ -286,49 +288,57 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
             ]),
 			
 			// MARK: Rating
-			RatingCell(label: Strings.RATING, attrs: [
-                .read { Double(self.editItem.rating) },
+			TextCell(label: Strings.RATING, attrs: [
+                .read { getRatingToStarText(Int(self.editItem.rating), fillEmpty: true) },
                 .created { c, _ in
-                    self.editRating = RatingCell.cellView(c).ratingBar
-                    self.editRating?.editable = false
-                    self.applyRatingBarImages(self.editRating!)
+                    let cell = TextCell.cellView(c)
+                    cell.valueLabel?.font = .systemFont(ofSize: 30)
+                    cell.valueLabel?.textColor = cell.valueLabel?.tintColor
+                    self.dispRating = cell.valueLabel
                 },
                 .selected { i in
                     self.editTableView.deselectRow(at: i, animated: true)
                     self.showRatingSelection()
                 },
-                /*.valueChanged { value in
-                    self.editItem.rating = Float(value as? Double ?? 0)
-                }*/
             ])
 		]))
 		
 		self.sections.append(TableSection(rows: [
 			// MARK: Memo
-			SizPropertyTableRow(type: .multiLine)
-				.onHeight {
-					if let memoView = self.dispMemo {
-						if memoView.text.isEmpty {
-							return DEFAULT_HEIGHT
-						}
-						memoView.sizeToFit()
-						return memoView.frame.height + SizCellForMultiLine.paddingVertical*2
-					}
-					return DEFAULT_HEIGHT
-				}
-				.dataSource { self.editItem.memo }
-				.hint(Strings.MEMO)
-				.onSelect { i in
-					self.showEditMemo()
-					self.editTableView.deselectRow(at: i, animated: true)
-				}
-				.onCreate { c, _ in
-					if let cell = c as? SizCellForMultiLine {
-						self.cellMemo = cell
-						self.dispMemo = cell.textView
-						self.dispMemoHint = cell.placeholderView						
-					}
-				}
+            TextCell(label: "", attrs: [
+                .labelColor(.inputText),
+                .created { c, i in
+                    let cell = TextCell.cellView(c)
+                    cell.valueViewWidth = FILL_WIDTH
+                    
+                    self.cellMemo = cell
+                    cell.valueLabel.textAlignment = .left
+                    cell.valueLabel.font = .systemFont(ofSize: 16)
+                    cell.valueLabel.numberOfLines = 0
+                    cell.valueLabel.lineBreakMode = .byWordWrapping
+                    //cell.valueLabel.backgroundColor = .yellow
+                },
+                .height {
+                    self.dispMemo.frame = CGRect(x: 0, y: 0, width: self.view.frame.width - 60, height: 0)
+                    self.dispMemo.sizeToFit()
+                    let height = self.dispMemo.frame.height + SizCellForMultiLine.paddingVertical*2
+                    return max(height, DEFAULT_HEIGHT)
+                },
+                .read {
+                    let text = self.editItem.memo.isEmpty ? Strings.EMPTY_MEMO : self.editItem.memo
+                    self.dispMemo.text = text
+                    return text
+                },
+                .willDisplay { c, i in
+                    let cell = TextCell.cellView(c)
+                    cell.valueLabel.frame = CGRect(x: 20, y: 10, width: self.view.frame.width - 60, height: 0)
+                    cell.valueLabel.sizeToFit()
+                },
+                .selected { i in
+                    self.editTableView.deselectRow(at: i, animated: true)
+                    self.showEditMemo()
+                },
+            ])
 		]))
 		
 		if !modeNewItem { // MARK: Delete
@@ -341,7 +351,14 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                     },
                     .created { c, _ in
                         let cell = ButtonCell.cellView(c)
-                        cell.textLabel?.textAlignment = .center
+                        if #available(iOS 14, *) {
+                            var content = cell.contentConfiguration as! UIListContentConfiguration
+                            content.textProperties.alignment = .center
+                            cell.contentConfiguration = content
+                        }
+                        else {
+                            cell.textLabel?.textAlignment = .center
+                        }
                     }
                 ])
 			]))
@@ -370,12 +387,27 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
             .show(parent: self)
     }
     
-    func changeRating(_ rating: Float) {
-        self.editRating?.rating = Double(rating)
-        self.editItem.rating = rating
+    func changeRating(_ rating: Int) {
+        self.dispRating?.text = getRatingToStarText(rating, fillEmpty: true)
+        self.editItem.rating = Float(rating)
     }
 	
 	// MARK: - UITextFieldDelegate
+    
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        let btnEndEdit = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(endEdit))
+//        self.navigationItem.rightBarButtonItems = [btnEndEdit]
+//    }
+//
+//    @objc
+//    func endEdit() {
+//        dismissKeyboard()
+//    }
+    
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        let btnSave = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(trySave))
+//        self.navigationItem.rightBarButtonItems = [btnSave]
+//    }
 	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if textField.returnKeyType == .done {
@@ -440,7 +472,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	func remove() {
 		if let item = editItem {
 			if AnimeDataManager.shared.removeItem(id: item.id) {
-				popSelf()
+                returnBack()
 			}
 			else {
 				let dlg = createAlertDialog(title: Strings.REMOVE, message: Strings.ERR_FAIL_REMOVE, buttonText: Strings.OK)
@@ -468,8 +500,6 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		if !editItem.link.isEmpty && !editItem.link.starts(with: "http") {
 			editItem.link = "http://\(editItem.link)"
 		}
-		
-		editItem.rating = Float(editRating?.rating ?? 0)
 	}
 	
 	private func checkValidateData() -> Bool {
@@ -539,19 +569,13 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 	
 	private func onMemoChanged(_ text: String) {
-		self.editTableView.beginUpdates()
-		
-		self.dispMemo?.text = text
+		self.dispMemo.text = text
 		self.editItem.memo = text
-		self.dispMemoHint?.isHidden = !text.isEmpty
-		
-		self.editTableView.endUpdates()
-		self.cellMemo?.refreshViews()
+        self.editTableView.reloadData()
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		guard let ratingBar = self.editRating else { return }
-		applyRatingBarImages(ratingBar)
+        // nothing
 	}
 	
 }

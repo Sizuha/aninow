@@ -60,8 +60,8 @@
 "last_backup"="最近のバックアップ";
 
 // Auto Backup Options
-"auto_backup_monthly"="役１ヶ月";
-"auto_backup_weekly"="役１週";
+"auto_backup_monthly"="約１ヶ月";
+"auto_backup_weekly"="約１週";
 "auto_backup_daily"="ほぼ毎日";
 "auto_backup_none"="無し";
 
@@ -81,7 +81,7 @@
 "msg_end_backup"="バックアップを完了しました";
 "msg_end_export"="\nCSVファイルで書き出しを\n完了しました。\n\n「ファイル」アプリから\n「このiPhone内」→「AniNow」で\n確認できます。";
 "msg_confirm_import"="このファイルの内容を読み込みますか？";
-"msg_confirm_restore"="最後にバックアップした状態に戻します。この作業は後戻りできません。宜しいですか？";
+"msg_confirm_restore"="最後にバックアップした状態に戻します。\nこの作業は後戻りできません。\n宜しいですか？";
 "msg_no_backup"="バックアップがありません";
 "msg_now_loading"="確認中...";
 "msg_end_restore"="復元を完了しました";

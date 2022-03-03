@@ -15,7 +15,7 @@ class SettingsViewController: CommonUIViewController {
     
     static func presentSheet(from: UIViewController, onDismiss: @escaping ()->Void) {
         let vc = SettingsViewController()
-        //vc.setDisablePullDownDismiss()
+        vc.setDisablePullDownDismiss()
         vc.onDismiss = onDismiss
         
         let naviController = UINavigationController()
@@ -44,8 +44,6 @@ class SettingsViewController: CommonUIViewController {
 
 		initNavigationBar()
 		initTableView()
-        
-        setDisablePullDownDismiss()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -135,12 +133,13 @@ class SettingsViewController: CommonUIViewController {
             rows: [
                 // Last Backup
                 TextCell(label: Strings.BACKUP, attrs: [
+                    .labelColor(self.view.tintColor),
                     .read { self.backupSateText },
                     .created { c, _ in
                         let cell = TextCell.cellView(c)
                         cell.valueViewWidth = 220
                         cell.accessoryType = .none
-                        self.dispLastBackup = cell.detailTextLabel
+                        self.dispLastBackup = cell.valueLabel
                         cell.textLabel?.textColor = self.view.tintColor
                     },
                     .selected { i in
@@ -165,6 +164,7 @@ class SettingsViewController: CommonUIViewController {
                 
                 // Restore
                 ButtonCell(label: Strings.RESTORE, attrs: [
+                    .tintColor(.systemRed),
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.confirmImportFromBackup()
@@ -214,7 +214,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Clear
                 ButtonCell(label: Strings.DELETE_ALL, attrs: [
-                    .tintColor(.red),
+                    .tintColor(.systemRed),
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.tryClearAll()

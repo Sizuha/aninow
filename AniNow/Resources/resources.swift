@@ -9,14 +9,13 @@
 import UIKit
 
 public class Icons {
-	static let STAR5_EMPTY = UIImage(named: "star5_empty")!
-	static let STAR5_FILL = UIImage(named: "star5_fill")!
 	static let SETTINGS = UIImage(named: "setting")!
     static let SORT = UIImage(named: "sort")!
 }
 
 public class Strings {
-	static let STAR = "★"
+    static let STAR_EMPTY = "☆"
+	static let STAR_FILL = "★"
 	
 	static let OK = "ok".localized()
 	static let CANCEL = "cancel".localized()

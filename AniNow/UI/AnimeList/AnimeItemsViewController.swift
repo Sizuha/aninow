@@ -289,7 +289,7 @@ class AnimeItemsViewController:
 	}
 
 	
-	//------ MARK: SearchBar Delegate
+	// MARK: - SearchBar Delegate
 	
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 		self.searchText = searchText

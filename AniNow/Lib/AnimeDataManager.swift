@@ -19,7 +19,6 @@ func getOldDBDir() -> URL {
 }
 
 func getDBDir() -> URL {
-    //getOldDBDir()
     FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 }
 
@@ -360,7 +359,9 @@ class AnimeDataManager {
         
         let toUrl = getDBDir().appendingPathComponent(USER_DB_FILENAME)
         if copyDbFile(from: fromUrl, to: toUrl) {
-            try? FileManager.default.removeItem(at: fromUrl)
+            if fromOldDB {
+                try? FileManager.default.removeItem(at: fromUrl)
+            }
             return true
         }
         return false

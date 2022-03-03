@@ -61,7 +61,7 @@ class AnimeItemCell: UITableViewCell, SizViewUpdater {
 	func setRating(_ stars: Int) {
 		var star = ""
 		for _ in stride(from: 0, to: stars, by: 1) {
-			star.append(Strings.STAR)
+			star.append(Strings.STAR_FILL)
 		}
 		txtRatingStar.text = star
 	}

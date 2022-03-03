@@ -84,7 +84,7 @@ class Anime: SQueryRowEx, CsvSerializable, Hashable {
         let stars = Int(rating)
         guard stars > 0 else { return "" }
 
-        return String(repeating: Strings.STAR, count: stars)
+        return String(repeating: Strings.STAR_FILL, count: stars)
     }
     
     var memo = ""

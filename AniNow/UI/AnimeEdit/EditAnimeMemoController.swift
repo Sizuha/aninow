@@ -53,7 +53,6 @@ class EditAnimeMemoController: UIViewController {
 			SizPropertyTableRow(type: .multiLine)
 				.onHeight { return self.view.frame.height * 0.45 }
 				.dataSource { return self.value }
-				.hint(Strings.MEMO)
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForMultiLine {
 						cell.setEnableEdit()

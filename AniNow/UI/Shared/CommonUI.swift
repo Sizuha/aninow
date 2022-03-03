@@ -110,12 +110,23 @@ func createEmptyView() -> UILabel {
 	return emptyView
 }
 
-func getRatingToStarText(_ rating: Int) -> String {
+func getRatingToStarText(_ rating: Int, fillEmpty: Bool = false) -> String {
 	var star = ""
+    star.reserveCapacity(5)
+    
 	for _ in stride(from: 0, to: rating, by: 1) {
-		star.append(Strings.STAR)
+		star.append(Strings.STAR_FILL)
 	}
-	return star.isEmpty ? Strings.NO_RATING : star
+    if fillEmpty {
+        for _ in 0..<(5-rating) {
+            star.append(Strings.STAR_EMPTY)
+        }
+    }
+
+    if star.isEmpty && !fillEmpty {
+        return Strings.NO_RATING
+    }
+	return star
 }
 
 class ActionPropertyTableView: SizPropertyTableView {
