@@ -66,9 +66,7 @@ class AnimeTableView: SizSectionTableView<Anime> {
 			}
 			.addAction(title: Strings.EDIT, bgColor: .blue) { action, view, handler in
 				handler(true)
-                EditAnimeViewController.presentSheet(from: self.parentViewController, item: item) {
-                    self.reloadData()
-                }
+                EditAnimeViewController.push(to: self.parentViewController.navigationController!, item: item)
 			}
 			.createConfig()
 	}

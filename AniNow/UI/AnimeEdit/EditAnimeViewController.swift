@@ -11,21 +11,30 @@ import SizUtil
 import SizUI
 
 class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
+    
+    static func push(to navi: UINavigationController, item: Anime? = nil) {
+        let editView = EditAnimeViewController()
+        if let item = item { editView.setItem(item) }
+        
+        navi.pushViewController(editView, animated: true)
+    }
 	
     static func presentSheet(from: UIViewController, item: Anime? = nil, onDismiss: @escaping ()->Void) {
-        let editNaviController = UINavigationController()
-        editNaviController.setDisablePullDownDismiss()
-        
         let editView = EditAnimeViewController()
         editView.onDismiss = onDismiss
         if let item = item { editView.setItem(item) }
         
+        let editNaviController = UINavigationController()
+        editNaviController.setDisablePullDownDismiss()
         editNaviController.pushViewController(editView, animated: false)
         from.present(editNaviController, animated: true, completion: nil)
     }
     
 	private var navigationBar: UINavigationBar!
     private var onDismiss: (()->Void)? = nil
+    var isFirst: Bool {
+        self.navigationController?.viewControllers.first == self
+    }
 	
 	private var modeNewItem = false
 	
@@ -104,7 +113,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		let btnSave = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(trySave))
 		self.navigationItem.rightBarButtonItems = [btnSave]
 		
-		if self.navigationController?.viewControllers.first == self {
+        if self.isFirst {
 			let backBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(returnBack))
 			self.navigationItem.leftBarButtonItems = [backBtn]
 		}
@@ -431,7 +440,13 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
 	@objc func returnBack() {
 		dismissKeyboard()
-        dismiss(animated: true, completion: nil)
+        
+        if self.isFirst {
+            dismiss(animated: true, completion: nil)
+        }
+        else {
+            popSelf()
+        }
 	}
 	
 	@objc func trySave() {
@@ -450,7 +465,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 				: AnimeDataManager.shared.updateItem(item)
 			
 			if result {
-				dismiss(animated: true, completion: nil)
+                returnBack()
 			}
 			else {
 				let dlg = createAlertDialog(title: Strings.ADD_NEW, message: Strings.ERR_FAIL_SAVE, buttonText: Strings.OK)
