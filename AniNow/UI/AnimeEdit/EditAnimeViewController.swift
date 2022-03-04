@@ -322,7 +322,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                     self.dispMemo.frame = CGRect(x: 0, y: 0, width: self.view.frame.width - 60, height: 0)
                     self.dispMemo.sizeToFit()
                     let height = self.dispMemo.frame.height + SizCellForMultiLine.paddingVertical*2
-                    return max(height, DEFAULT_HEIGHT)
+                    return height //max(height, 45)
                 },
                 .read {
                     let text = self.editItem.memo.isEmpty ? Strings.EMPTY_MEMO : self.editItem.memo
@@ -569,7 +569,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 	
 	private func onMemoChanged(_ text: String) {
-		self.dispMemo.text = text
+        self.dispMemo.text = text.isEmpty ? Strings.EMPTY_MEMO : text
 		self.editItem.memo = text
         self.editTableView.reloadData()
 	}
