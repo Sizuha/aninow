@@ -51,7 +51,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
 		for i in 1...10 {
 			let row = EditTextCell(label: "\(i)", attrs: [
                 .hint(Strings.NOT_USED),
-                .read { self.editItems[i] ?? "" },
+                .value { self.editItems[i] ?? "" },
                 .created { c, i in
                     let cell = EditTextCell.cellView(c)
                     cell.maxLength = 10

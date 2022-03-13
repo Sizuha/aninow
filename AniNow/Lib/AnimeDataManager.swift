@@ -19,7 +19,6 @@ func getOldDBDir() -> URL {
 }
 
 func getDBDir() -> URL {
-    //getOldDBDir()
     FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 }
 
@@ -251,6 +250,25 @@ class AnimeDataManager {
         defer { anime.close() }
         let _ = anime.delete()
     }
+    
+    func getYears() -> [Int] {
+        guard let anime = db.from(Anime.tableName) else { return [] }
+        defer { anime.close() }
+        
+        let cur = anime
+            .columns("\(Anime.F_START_DATE)/100")
+            .orderBy(Anime.F_START_DATE, desc: false)
+            .distnict()
+            .select()
+        
+        var result: [Int] = []
+        cur.forEachColumn { cur, i in
+            guard i == 0, let year = cur.getInt(i) else { return }
+            result.append(year)
+        }
+        
+        return result
+    }
 
     //MARK: - import/export CSV
     
@@ -341,7 +359,9 @@ class AnimeDataManager {
         
         let toUrl = getDBDir().appendingPathComponent(USER_DB_FILENAME)
         if copyDbFile(from: fromUrl, to: toUrl) {
-            try? FileManager.default.removeItem(at: fromUrl)
+            if fromOldDB {
+                try? FileManager.default.removeItem(at: fromUrl)
+            }
             return true
         }
         return false

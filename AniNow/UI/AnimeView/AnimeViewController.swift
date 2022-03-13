@@ -20,20 +20,12 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	private var headerView: UIView!
 	private var txtTitle: UILabel!
 	private var txtSubTitle: UILabel!
-	private var dispMemo: UITextView?
+	private var dispMemo: UILabel!
 	
 	private let HEADER_HEIGHT = CGFloat(140)
 	
 	private let medias = AnimeDataManager.shared.loadMedias()
 	
-	private var ratingBar: FloatRatingView!
-	private func applyRatingBarImages(_ ratingBar: FloatRatingView) {
-		let empty = Icons.STAR5_EMPTY
-		let full = Icons.STAR5_FILL
-        ratingBar.emptyImage = empty.withTintColor(.defaultText)
-		ratingBar.fullImage = full.withTintColor(.defaultText)
-	}
-    
     private var stepperEp: UIStepper! = nil
 	
 	convenience init(item: Anime) {
@@ -53,9 +45,6 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
 		initNaviItems()
-		
-		let _ = loadItem()
-
 		initTableView()
     }
 	
@@ -132,6 +121,21 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.sections.append(section)
 		self.tableView.setDataSource(self.sections)
         
+        // Footer: Memo View
+        self.dispMemo = UILabel(frame: CGRect.zero)
+        self.dispMemo.textAlignment = .left
+        self.dispMemo.textColor = .inputText
+        self.dispMemo.font = UIFont.systemFont(ofSize: 16)
+        self.dispMemo.translatesAutoresizingMaskIntoConstraints = true
+        self.dispMemo.isUserInteractionEnabled = false
+        self.dispMemo.backgroundColor = .clear
+        self.dispMemo.lineBreakMode = .byWordWrapping
+        self.dispMemo.numberOfLines = 0
+        self.dispMemo.text = Strings.EMPTY_MEMO
+        
+        self.tableView.tableFooterView = UIView(frame: .zero)
+        self.tableView.tableFooterView!.addSubview(self.dispMemo)
+        
 		view.addSubview(self.tableView)
 	}
     
@@ -145,14 +149,14 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
     private func createSections() -> TableSection {
         let section = TableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
         
-        // Published Date
+        // MARK: Published Date
         section.rows.append(TextCell(label: Strings.PUB_DATE, attrs: [
-            .read { self.item?.startDate?.toString() }
+            .value { self.item?.startDate?.toString() }
         ]))
         
         // MARK: Final Ep.
         section.rows.append(TextCell(label: Strings.FINAL_EP, attrs: [
-            .read {
+            .value {
                 let finalEp: Int = (self.item?.total ?? 0) > 0 ? self.item!.total : 0
                 return finalEp > 0 ? "\(finalEp)" : Strings.NONE_VALUE
             }
@@ -160,7 +164,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         // MARK: Current Ep.
         section.rows.append(StepperCell(label: Strings.LABEL_CURR_EP, attrs: [
-            .read {
+            .valueDouble {
                 let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
                 return Double(currEp)
             },
@@ -181,13 +185,13 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 
         // MARK: Media
         section.rows.append(TextCell(label: Strings.MEDIA, attrs: [
-            .read { self.medias[self.item?.media ?? 0] }
+            .value { self.medias[self.item?.media ?? 0] }
         ]))
         
         // MARK: URL
         if let url = item?.link, !url.isEmpty {
             section.rows.append(TextCell(label: "URL", attrs: [
-                .read { self.item?.link },
+                .value { self.item?.link },
                 .created { c, _ in
                     let cell = TextCell.cellView(c)
                     cell.detailTextLabel?.textColor = .link
@@ -201,34 +205,15 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         // MARK: Rating
-        section.rows.append(RatingCell(label: Strings.RATING, attrs: [
-            .read { Double(self.item?.rating ?? 0) },
+        section.rows.append(TextCell(label: Strings.RATING, attrs: [
+            .value { getRatingToStarText(Int(self.item?.rating ?? 0), fillEmpty: true) },
             .created { c, _ in
-                let cell = RatingCell.cellView(c)
-                self.applyRatingBarImages(cell.ratingBar)
-                cell.ratingBar.isUserInteractionEnabled = false
-                self.ratingBar = cell.ratingBar
+                let cell = TextCell.cellView(c)
+                cell.valueLabel.font = .systemFont(ofSize: 30)
+                cell.valueLabel.textColor = .defaultText
             }
         ]))
-        
-        // MARK: Memo
-        section.rows.append(SizPropertyTableRow(type: .multiLine)
-            .onHeight {
-                if let memoView = self.dispMemo {
-                    if memoView.text.isEmpty { return DEFAULT_HEIGHT }
-                    memoView.sizeToFit()
-                    return memoView.frame.height + SizCellForMultiLine.paddingVertical*2
-                }
-                return DEFAULT_HEIGHT
-            }
-            .dataSource { self.item?.memo }
-            .hint(Strings.EMPTY_MEMO)
-            .onCreate { c, _ in
-                if let cell = c as? SizCellForMultiLine {
-                    self.dispMemo = cell.textView
-                }
-        })
-        
+                
         return section
     }
 	
@@ -251,6 +236,29 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.item = item
 		return true
 	}
+    
+    func refershMemoView() {
+        guard let memoView = self.dispMemo else { return }
+        
+        memoView.text = self.item?.memo ?? ""
+        if memoView.text!.isEmpty { memoView.text = Strings.EMPTY_MEMO }
+        
+        memoView.frame = CGRect(
+            x: 20,
+            y: 0,
+            width: self.view.frame.width-40,
+            height: 0
+        )
+        memoView.sizeToFit()
+        //memoView.backgroundColor = .yellow
+        
+        memoView.frame = CGRect(
+            x: 20,
+            y: 0,
+            width: self.view.frame.width-40,
+            height: memoView.frame.height + 40
+        )
+    }
 	
 	func refresh() {
 		if loadItem() {
@@ -259,11 +267,11 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		}
         
         stepperEp?.isHidden = item?.finished == true
+        refershMemoView()
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		guard let ratingBar = self.ratingBar else { return }
-		applyRatingBarImages(ratingBar)
+		// nothing
 	}
 	
 	// MARK: - TableView Delegate

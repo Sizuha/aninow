@@ -48,12 +48,11 @@ class EditAnimeMemoController: UIViewController {
 	}
 	
 	private func initTableView() {
-		self.sections.append(SizPropertyTableSection(rows: [
+		self.sections.append(TableSection(rows: [
 			// Memo
 			SizPropertyTableRow(type: .multiLine)
-				.onHeight { return self.view.frame.height * 0.45 }
-				.dataSource { return self.value }
-				.hint(Strings.MEMO)
+				.onHeight { self.view.frame.height * 0.45 }
+				.value { self.value }
 				.onCreate { c, _ in
 					if let cell = c as? SizCellForMultiLine {
 						cell.setEnableEdit()

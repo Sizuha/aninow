@@ -10,6 +10,7 @@
 		0D5C1C0824D978EB00C5B4EC /* SQuery in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5C1C0724D978EB00C5B4EC /* SQuery */; };
 		0D5C1C0B24D978F900C5B4EC /* SizUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5C1C0A24D978F900C5B4EC /* SizUI */; };
 		0D5C1C0E24D9790C00C5B4EC /* SizUtil in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5C1C0D24D9790C00C5B4EC /* SizUtil */; };
+		0DBB9C24277ABA17002B8961 /* YearFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBB9C23277ABA17002B8961 /* YearFilteredViewController.swift */; };
 		D51C17EA21D2090600F7CF3D /* AllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17E921D2090600F7CF3D /* AllViewController.swift */; };
 		D51C17EC21D20A6900F7CF3D /* MediaFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17EB21D20A6900F7CF3D /* MediaFilteredViewController.swift */; };
 		D51C17EE21D20B7F00F7CF3D /* RatingFilteredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0DBB9C23277ABA17002B8961 /* YearFilteredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearFilteredViewController.swift; sourceTree = "<group>"; };
 		D51C17E921D2090600F7CF3D /* AllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllViewController.swift; sourceTree = "<group>"; };
 		D51C17EB21D20A6900F7CF3D /* MediaFilteredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilteredViewController.swift; sourceTree = "<group>"; };
 		D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingFilteredViewController.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				D5AE2E2321B101B300906CC7 /* FinishedViewController.swift */,
 				D51C17EB21D20A6900F7CF3D /* MediaFilteredViewController.swift */,
 				D51C17ED21D20B7F00F7CF3D /* RatingFilteredViewController.swift */,
+				0DBB9C23277ABA17002B8961 /* YearFilteredViewController.swift */,
 			);
 			path = AnimeList;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				D585E9E12271B99200CBB318 /* SettingsViewController.swift in Sources */,
 				D5A24CC921B660C100E2F39B /* EditAnimeViewController.swift in Sources */,
 				D56BEE0321C9D1D00070AB45 /* AnimeDataManager.swift in Sources */,
+				0DBB9C24277ABA17002B8961 /* YearFilteredViewController.swift in Sources */,
 				D5A24CBA21B6273500E2F39B /* CommonUI.swift in Sources */,
 				D5A24CAB21B123E800E2F39B /* AnimeData.swift in Sources */,
 				D51C17F721D4751700F7CF3D /* AnimeTableView.swift in Sources */,
@@ -598,7 +602,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -655,7 +659,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -672,16 +676,16 @@
 				CODE_SIGN_ENTITLEMENTS = AniNow/AniNow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = R8QQLU625A;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniNow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kishe.sizuha.AniNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -697,16 +701,16 @@
 				CODE_SIGN_ENTITLEMENTS = AniNow/AniNow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = R8QQLU625A;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniNow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kishe.sizuha.AniNow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -851,7 +855,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Sizuha/SizUI-iOS";
 			requirement = {
-				branch = master;
+				branch = dev;
 				kind = branch;
 			};
 		};

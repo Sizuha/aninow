@@ -17,7 +17,7 @@ class FinishedViewController: AnimeItemsViewController {
 	
 	override func applyFilter(to target: TableQuery) {
 		super.applyFilter(to: target)
-		let _ = target.andWhere("fin=?", true)
+		let _ = target.andWhere("\(Anime.F_FIN)=?", true)
 	}
 	
 	override func createNewItem() -> Anime {

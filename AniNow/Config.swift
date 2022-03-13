@@ -20,13 +20,13 @@ public let USER_DB_FILENAME = "user.db"
 public let BACKUP_DB_FILENAME = "backup.db"
 public let BEGIN_OF_YEAR = 1970
 
-fileprivate let ICLUD_CONTAINER_ID = "iCloud.com.kishe.sizuha.aninow"
+fileprivate let ICLOUD_CONTAINER_ID = "iCloud.com.kishe.sizuha.aninow"
 
 // for DEBUG
 public let ENABLE_STARTUP_RESET_DB = DEBUG_MODE && false
 
 public var iCloudBackupUrl: URL? {
-	let url = FileManager.default.url(forUbiquityContainerIdentifier: ICLUD_CONTAINER_ID)?.appendingPathComponent("Backup")
+	let url = FileManager.default.url(forUbiquityContainerIdentifier: ICLOUD_CONTAINER_ID)?.appendingPathComponent("Backup")
 	do {
 		try FileManager.default.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
 		return url

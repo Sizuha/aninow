@@ -9,14 +9,13 @@
 import UIKit
 
 public class Icons {
-	static let STAR5_EMPTY = UIImage(named: "star5_empty")!
-	static let STAR5_FILL = UIImage(named: "star5_fill")!
 	static let SETTINGS = UIImage(named: "setting")!
     static let SORT = UIImage(named: "sort")!
 }
 
 public class Strings {
-	static let STAR = "★"
+    static let STAR_EMPTY = "☆"
+	static let STAR_FILL = "★"
 	
 	static let OK = "ok".localized()
 	static let CANCEL = "cancel".localized()
@@ -66,10 +65,16 @@ public class Strings {
 	static var COUNT_NOW: String { return "count_now".localized() }
 	static var COUNT_FINISHED: String { return "count_finished".localized() }
 	static var BACKUP: String { return "backup".localized() }
+    static var BACKUP_AUTO: String { return "backup_auto".localized() }
 	static var RESTORE: String { return "restore".localized() }
 	static var IMPORT: String { return "import".localized() }
 	static var EXPORT: String { return "export".localized() }
 	static var LAST_BACKUP: String { return "last_backup".localized() }
+    
+    static var AUTO_BACKUP_MONTHLY: String { return "auto_backup_monthly".localized() }
+    static var AUTO_BACKUP_WEEKLY: String { return "auto_backup_weekly".localized() }
+    static var AUTO_BACKUP_DAILY: String { return "auto_backup_daily".localized() }
+    static var AUTO_BACKUP_NONE: String { return "auto_backup_none".localized() }
 	
 	static var ERR_FAIL_REMOVE: String { return "err_fail_remove".localized() }
 	static var ERR_FAIL_SAVE: String { return "err_fail_save".localized() }

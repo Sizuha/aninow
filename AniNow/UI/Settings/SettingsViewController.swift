@@ -15,7 +15,7 @@ class SettingsViewController: CommonUIViewController {
     
     static func presentSheet(from: UIViewController, onDismiss: @escaping ()->Void) {
         let vc = SettingsViewController()
-        //vc.setDisablePullDownDismiss()
+        vc.setDisablePullDownDismiss()
         vc.onDismiss = onDismiss
         
         let naviController = UINavigationController()
@@ -29,17 +29,18 @@ class SettingsViewController: CommonUIViewController {
 	
 	private var dispLastBackup: UILabel?
 	private var dateTimeFmt: DateFormatter!
-	
-	private var backupSateText: String = ""
+    private var backupSateText = ""
+
+    private var dispAutoBackup: UILabel?
     
     private var onDismiss: (()->Void)? = nil
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		backupSateText = Strings.MSG_NOW_LOADING
+        self.backupSateText = Strings.MSG_NOW_LOADING
 		
-		dateTimeFmt = SQuery.newDateTimeFormat()
-		dateTimeFmt.timeZone = TimeZone.current
+        self.dateTimeFmt = SQuery.newDateTimeFormat()
+        self.dateTimeFmt.timeZone = TimeZone.current
 
 		initNavigationBar()
 		initTableView()
@@ -107,7 +108,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Version
 				TextCell(label: "Version", attrs: [
-                    .read { "\(getAppShortVer()).\(getAppBuildVer())" }
+                    .value { "\(SizApplication.shortVersion).\(SizApplication.buildVersion)" }
                 ])
 			]
 		))
@@ -132,12 +133,13 @@ class SettingsViewController: CommonUIViewController {
             rows: [
                 // Last Backup
                 TextCell(label: Strings.BACKUP, attrs: [
-                    .read { self.backupSateText },
+                    .labelColor(self.view.tintColor),
+                    .value { self.backupSateText },
                     .created { c, _ in
                         let cell = TextCell.cellView(c)
                         cell.valueViewWidth = 220
                         cell.accessoryType = .none
-                        self.dispLastBackup = cell.detailTextLabel
+                        self.dispLastBackup = cell.valueLabel
                         cell.textLabel?.textColor = self.view.tintColor
                     },
                     .selected { i in
@@ -146,8 +148,23 @@ class SettingsViewController: CommonUIViewController {
                     }
                 ]),
                 
+                // Auto Backup
+                TextCell(label: Strings.BACKUP_AUTO, attrs: [
+                    .value { Settings.shared.autoBackupMode.toString() },
+                    .created { c, _ in
+                        let cell = TextCell.cellView(c)
+                        cell.valueViewWidth = 220
+                        self.dispAutoBackup = cell.detailTextLabel
+                    },
+                    .selected { i in
+                        self.menuTable.deselectRow(at: i, animated: true)
+                        self.showAutoBackupOptions()
+                    }
+                ]),
+                
                 // Restore
                 ButtonCell(label: Strings.RESTORE, attrs: [
+                    .tintColor(.systemRed),
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.confirmImportFromBackup()
@@ -197,7 +214,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Clear
                 ButtonCell(label: Strings.DELETE_ALL, attrs: [
-                    .tintColor(.red),
+                    .tintColor(.systemRed),
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         self.tryClearAll()
@@ -315,6 +332,26 @@ class SettingsViewController: CommonUIViewController {
             }
             .addAction(title: Strings.CANCEL, style: .cancel)
             .show(parent: self)
+    }
+    
+    /// 自動バックアップのOptionメニューを表示
+    func showAutoBackupOptions() {
+        let texts = AUTO_BACKUP_OPTIONS.map { $0.toString() }
+        let curr: Int? = AUTO_BACKUP_OPTIONS.firstIndex(of: Settings.shared.autoBackupMode)
+        
+        ItemSelector.present(
+            from: self.navigationController!,
+            title: Strings.BACKUP_AUTO,
+            items: texts,
+            selected: curr
+        ) { index in
+            Settings.shared.autoBackupMode = AUTO_BACKUP_OPTIONS[at: index] ?? Settings.shared.autoBackupMode
+            self.refreshAutoBackupState()
+        }
+    }
+    
+    func refreshAutoBackupState() {
+        self.dispAutoBackup?.text = Settings.shared.autoBackupMode.toString()
     }
 
     func restoreFromBackup(_ fromOldDB: Bool) {
