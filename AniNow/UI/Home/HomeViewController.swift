@@ -67,7 +67,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			title: Strings.LABEL_ANIME_LIST,
 			rows: [
                 TextCell(label: Strings.ALL_VIEWING, attrs: [
-                    .read { "\(self.countOfAll)" },
+                    .value { "\(self.countOfAll)" },
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         let nextView = AllViewController()
@@ -76,7 +76,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
                 ]),
                 
                 TextCell(label: Strings.NOW_VIEWING, attrs: [
-                    .read { "\(self.countOfNow)" },
+                    .value { "\(self.countOfNow)" },
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         let nextView = NowViewController()
@@ -85,7 +85,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
                 ]),
                 
                 TextCell(label: Strings.END_VIEWING, attrs: [
-                    .read { "\(self.countOfFinished)" },
+                    .value { "\(self.countOfFinished)" },
                     .selected { i in
                         self.menuTable.deselectRow(at: i, animated: true)
                         let nextView = FinishedViewController()
@@ -134,7 +134,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	
 	private func createMediaFilterMenu(_ media: Int, label: String) -> SizPropertyTableRow{
 		SizPropertyTableRow(label: label)
-			.dataSource { String(self.countByMedia[media] ?? 0) }
+			.value { "\(self.countByMedia[media] ?? 0)" }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
 				let nextView = MediaFilteredViewController()
@@ -146,7 +146,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	
 	private func createRatingFilterMenu(_ rating: Int) -> SizPropertyTableRow{
 		SizPropertyTableRow(label: getRatingToStarText(rating))
-			.dataSource { String(self.countByRating[rating] ?? 0) }
+			.value { "\(self.countByRating[rating] ?? 0)" }
 			.onSelect { i in
 				self.menuTable.deselectRow(at: i, animated: true)
 				let nextView = RatingFilteredViewController()
@@ -158,7 +158,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
     private func createYearFilterMenu(_ year: Int) -> SizPropertyTableRow{
         let label = year == 0 ? Strings.UNKNOWN : String(format: Strings.FMT_YEAR, year)
         return SizPropertyTableRow(label: label)
-            .dataSource { String(self.countByRating[0] ?? 0) }
+            .value { "\(self.countByRating[0] ?? 0)" }
             .onSelect { i in
                 self.menuTable.deselectRow(at: i, animated: true)
                 let nextView = YearFilteredViewController()

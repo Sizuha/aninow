@@ -855,7 +855,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Sizuha/SizUI-iOS";
 			requirement = {
-				branch = master;
+				branch = dev;
 				kind = branch;
 			};
 		};

@@ -168,7 +168,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		self.sections.append(TableSection(rows: [
 			// MARK: Title
 			EditTextCell(attrs: [
-                .read { self.editItem.title },
+                .value { self.editItem.title },
                 .hint(Strings.ANIME_TITLE),
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
@@ -182,7 +182,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: Title Other
             EditTextCell(attrs: [
-                .read { self.editItem.titleOther },
+                .value { self.editItem.titleOther },
                 .hint(Strings.ANIME_TITLE_2ND),
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
@@ -196,7 +196,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: URL
 			EditTextCell(attrs: [
-				.read { self.editItem.link },
+				.value { self.editItem.link },
 				.hint("URL"),
 				.created { c, _ in
 					let cell = EditTextCell.cellView(c)
@@ -223,7 +223,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		self.sections.append(TableSection(rows: [
 			// MARK: Finished
             OnOffCell(label: Strings.LABEL_FIN, attrs: [
-                .read { self.editItem.finished },
+                .valueBoolean { self.editItem.finished },
                 .created { c, _ in
                     let cell = OnOffCell.cellView(c)
                     cell.switchCtrl.isUserInteractionEnabled = false
@@ -240,7 +240,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: Final Episode
             EditTextCell(label: Strings.FINAL_EP, attrs: [
-                .read { self.editItem.total > 0 ? String(self.editItem.total) : "" },
+                .value { self.editItem.total > 0 ? String(self.editItem.total) : "" },
                 .hint("00"),
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
@@ -257,7 +257,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: Current Episode
             EditTextCell(label: Strings.LABEL_CURR_EP, attrs: [
-                .read {
+                .value {
                     self.editItem.progress > 0
                         ? progressFmt.string(for: self.editItem.progress)
                         : ""
@@ -278,7 +278,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: Published Date
             TextCell(label: Strings.PUB_DATE, attrs: [
-                .read { self.editItem.startDate?.toString() ?? Strings.UNKNOWN },
+                .value { self.editItem.startDate?.toString() ?? Strings.UNKNOWN },
                 .selected { i in
                     self.showPubDatePicker()
                     self.editTableView.deselectRow(at: i, animated: false)
@@ -288,7 +288,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: Media
             TextCell(label: Strings.MEDIA, attrs: [
-                .read { self.medias[self.editItem.media] },
+                .value { self.medias[self.editItem.media] },
                 .selected { i in
                     self.showChoiceMedia()
                     self.editTableView.deselectRow(at: i, animated: false)
@@ -298,7 +298,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			
 			// MARK: Rating
 			TextCell(label: Strings.RATING, attrs: [
-                .read { getRatingToStarText(Int(self.editItem.rating), fillEmpty: true) },
+                .value { getRatingToStarText(Int(self.editItem.rating), fillEmpty: true) },
                 .created { c, _ in
                     let cell = TextCell.cellView(c)
                     cell.valueLabel?.font = .systemFont(ofSize: 30)
@@ -333,7 +333,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                     let height = self.dispMemo.frame.height + SizCellForMultiLine.paddingVertical*2
                     return height //max(height, 45)
                 },
-                .read {
+                .value {
                     let text = self.editItem.memo.isEmpty ? Strings.EMPTY_MEMO : self.editItem.memo
                     self.dispMemo.text = text
                     return text

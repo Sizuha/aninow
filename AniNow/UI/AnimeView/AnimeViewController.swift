@@ -151,12 +151,12 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         // MARK: Published Date
         section.rows.append(TextCell(label: Strings.PUB_DATE, attrs: [
-            .read { self.item?.startDate?.toString() }
+            .value { self.item?.startDate?.toString() }
         ]))
         
         // MARK: Final Ep.
         section.rows.append(TextCell(label: Strings.FINAL_EP, attrs: [
-            .read {
+            .value {
                 let finalEp: Int = (self.item?.total ?? 0) > 0 ? self.item!.total : 0
                 return finalEp > 0 ? "\(finalEp)" : Strings.NONE_VALUE
             }
@@ -164,7 +164,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         // MARK: Current Ep.
         section.rows.append(StepperCell(label: Strings.LABEL_CURR_EP, attrs: [
-            .read {
+            .valueDouble {
                 let currEp: Float = (self.item?.progress ?? 0) > 0 ? self.item!.progress : 0
                 return Double(currEp)
             },
@@ -185,13 +185,13 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 
         // MARK: Media
         section.rows.append(TextCell(label: Strings.MEDIA, attrs: [
-            .read { self.medias[self.item?.media ?? 0] }
+            .value { self.medias[self.item?.media ?? 0] }
         ]))
         
         // MARK: URL
         if let url = item?.link, !url.isEmpty {
             section.rows.append(TextCell(label: "URL", attrs: [
-                .read { self.item?.link },
+                .value { self.item?.link },
                 .created { c, _ in
                     let cell = TextCell.cellView(c)
                     cell.detailTextLabel?.textColor = .link
@@ -206,7 +206,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         // MARK: Rating
         section.rows.append(TextCell(label: Strings.RATING, attrs: [
-            .read { getRatingToStarText(Int(self.item?.rating ?? 0), fillEmpty: true) },
+            .value { getRatingToStarText(Int(self.item?.rating ?? 0), fillEmpty: true) },
             .created { c, _ in
                 let cell = TextCell.cellView(c)
                 cell.valueLabel.font = .systemFont(ofSize: 30)

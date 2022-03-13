@@ -108,7 +108,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Version
 				TextCell(label: "Version", attrs: [
-                    .read { "\(SizApplication.shortVersion).\(SizApplication.buildVersion)" }
+                    .value { "\(SizApplication.shortVersion).\(SizApplication.buildVersion)" }
                 ])
 			]
 		))
@@ -134,7 +134,7 @@ class SettingsViewController: CommonUIViewController {
                 // Last Backup
                 TextCell(label: Strings.BACKUP, attrs: [
                     .labelColor(self.view.tintColor),
-                    .read { self.backupSateText },
+                    .value { self.backupSateText },
                     .created { c, _ in
                         let cell = TextCell.cellView(c)
                         cell.valueViewWidth = 220
@@ -150,7 +150,7 @@ class SettingsViewController: CommonUIViewController {
                 
                 // Auto Backup
                 TextCell(label: Strings.BACKUP_AUTO, attrs: [
-                    .read { Settings.shared.autoBackupMode.toString() },
+                    .value { Settings.shared.autoBackupMode.toString() },
                     .created { c, _ in
                         let cell = TextCell.cellView(c)
                         cell.valueViewWidth = 220
