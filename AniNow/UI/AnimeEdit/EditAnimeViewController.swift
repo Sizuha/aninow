@@ -245,10 +245,10 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
                     self.editTotal = cell.textField
-                    self.editTotal?.delegate = self
                     self.editTotal?.keyboardType = .numberPad
                     self.editTotal?.clearButtonMode = .always
                     cell.maxLength = 4
+                    cell.delegate = self
                 },
                 .valueChanged { value in
                     self.editItem.total = Int(value as? String ?? "0") ?? 0
@@ -266,10 +266,10 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
                     self.editProgress = cell.textField
-                    self.editProgress?.delegate = self
                     self.editProgress?.keyboardType = .decimalPad
                     self.editProgress?.clearButtonMode = .always
                     cell.maxLength = 5
+                    cell.delegate = self
                 },
                 .valueChanged { value in
                     self.editItem.progress = Float(value as? String ?? "0") ?? 0
@@ -579,8 +579,6 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 
 	private func showEditMemo() {
-        applyEditData(numberFieldOnly: true)
-        
 		let editMemoCtrl = EditAnimeMemoController()
 		editMemoCtrl.value = self.editItem.memo
 		editMemoCtrl.onChanged = onMemoChanged
