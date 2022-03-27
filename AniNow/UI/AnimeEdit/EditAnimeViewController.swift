@@ -499,15 +499,17 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		}
 	}
 	
-	private func applyEditData() {
+    private func applyEditData(numberFieldOnly: Bool = false) {
+        editItem.total = Int(editTotal?.text ?? "") ?? 0
+        if editItem.total < 0 { editItem.total = 0 }
+        
+        editItem.progress = Float(editProgress?.text ?? "") ?? 0.0
+        if editItem.progress < 0 { editItem.progress = 0.0 }
+        
+        guard !numberFieldOnly else { return }
+        
 		editItem.title = (editTitle?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 		editItem.titleOther = (editTitleOther?.text ?? "").trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-		
-        editItem.total = Int(editTotal?.text ?? "") ?? 0
-		if editItem.total < 0 { editItem.total = 0 }
-		
-		editItem.progress = Float(editProgress?.text ?? "") ?? 0.0
-		if editItem.progress < 0 { editItem.progress = 0.0 }
 		
 		editItem.finished = editFinished?.isOn == true
 		
@@ -577,6 +579,8 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 
 	private func showEditMemo() {
+        applyEditData(numberFieldOnly: true)
+        
 		let editMemoCtrl = EditAnimeMemoController()
 		editMemoCtrl.value = self.editItem.memo
 		editMemoCtrl.onChanged = onMemoChanged
