@@ -31,12 +31,7 @@ class AnimeTableView: SizSectionTableView<Anime> {
 		let item = self.sections[rowAt.section].items[rowAt.row]
 		let cellView = dequeueReusableCell(withIdentifier: "ani_item", for: rowAt)
 		if let cell = cellView as? AnimeItemCell {
-			cell.title = item.title
-			cell.SubTitle = item.titleOther
-			cell.setRating(Int(item.rating))
-			cell.setDate(item.startDate ??  YearMonth())
-			cell.setMedia(item.media)
-			cell.setProgress(current: item.progress, max: item.total)
+            cell.update(by: item)
 		}
 		return cellView
 	}

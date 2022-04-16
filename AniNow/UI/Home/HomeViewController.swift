@@ -106,31 +106,45 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			rows: (0...5).reversed().map { createRatingFilterMenu($0) }
 		))
         
-        // TODO まだ悩む。画面に戻るたびに更新しなけらばならない！
         // MARK: filter: Year
-        /*var yearsRows: [SizPropertyTableRow] = []
-        var years = AnimeDataManager.shared.getYears()
-        
-        if years.isEmpty == false {
-            menus.append(TableSection(
-                title: "西暦別",
-                rows: yearsRows
-            ))
-        }*/
+        menus.append(TableSection(
+            title: Strings.FILTER_YEAR,
+            rows: []
+        ))
 
 		menuTable.setDataSource(menus)
 		view.addSubview(menuTable)
 	}
 	
-	func updateMediaFilters() {
-		let medias = AnimeDataManager.shared.loadMedias().sorted(by: <)
-		
+    func updateMediaFilters() -> [Int:String] {
+        let medias: [Int:String] = AnimeDataManager.shared.loadMedias()
 		var mediaRows = [SizPropertyTableRow]()
-		for (code, label) in medias {
+        mediaRows.reserveCapacity(medias.count)
+        
+        let sorted = medias.sorted(by: <)
+		for (code, label) in sorted {
+            guard code > 0 else { continue }
 			mediaRows.append(createMediaFilterMenu(code, label: label))
 		}
+        // Add: 未分類
+        mediaRows.append(createMediaFilterMenu(0, label: Strings.NO_CATEGORY))
+        
 		menus[1].rows = mediaRows
+        return medias
 	}
+    
+    func updateYearFilters() -> [Int] {
+        let years = AnimeDataManager.shared.getYears()
+        var rows = [SizPropertyTableRow]()
+        rows.reserveCapacity(years.count + 1)
+        
+        for year in years {
+            rows.append(createYearFilterMenu(year))
+        }
+        
+        menus[3].rows = rows
+        return years
+    }
 	
 	private func createMediaFilterMenu(_ media: Int, label: String) -> SizPropertyTableRow{
 		SizPropertyTableRow(label: label)
@@ -158,7 +172,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
     private func createYearFilterMenu(_ year: Int) -> SizPropertyTableRow{
         let label = year == 0 ? Strings.UNKNOWN : String(format: Strings.FMT_YEAR, year)
         return SizPropertyTableRow(label: label)
-            .value { "\(self.countByRating[0] ?? 0)" }
+            .value { "\(self.countByYear[year] ?? 0)" }
             .onSelect { i in
                 self.menuTable.deselectRow(at: i, animated: true)
                 let nextView = YearFilteredViewController()
@@ -180,23 +194,30 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		fadeOut(start: 0.0, end: 0.0) { fin in
 			guard fin else { return }
 			
-			self.updateMediaFilters()
-			
 			self.startNowLoading()
 			DispatchQueue.main.async {
 				let dm = AnimeDataManager.shared
-				
+                let medias = self.updateMediaFilters()
+                let years = self.updateYearFilters()
+
 				self.countOfNow = dm.count(finished: false)
 				self.countOfFinished = dm.count(finished: true)
 				//self.countOfAll = dm.count()
 				self.countOfAll = self.countOfNow + self.countOfFinished
 				
-				let medias = AnimeDataManager.shared.loadMedias()
+                // Count: Media別
 				for (code, _) in medias {
 					self.countByMedia[code] = dm.countWithFilter { f in
-						let _ = f.andWhere("media=?", code)
+                        let _ = f.andWhere("\(Anime.F_MEDIA)=?", code)
 					}
 				}
+                
+                // Count: 年度別
+                for year in years {
+                    self.countByYear[year] = dm.countWithFilter { f in
+                        let _ = f.andWhere("\(Anime.F_START_DATE) BETWEEN ? AND ?", year*100, year*100 + 99)
+                    }
+                }
 				
 				for rating in 0...5 {
 					self.countByRating[rating] = dm.countWithFilter { f in

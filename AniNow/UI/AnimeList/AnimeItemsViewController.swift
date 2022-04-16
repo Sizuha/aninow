@@ -39,7 +39,7 @@ class AnimeItemsViewController:
 		super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
-		if DEBUG_MODE { NSLog("called: viewDidLoad()") }
+		if DEBUG_MODE { print("called: viewDidLoad()") }
 		
 		initNavigationBar()
 		initTableView()
@@ -60,7 +60,7 @@ class AnimeItemsViewController:
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if DEBUG_MODE { NSLog("called: viewWillAppear()") }
+		if DEBUG_MODE { print("called: viewWillAppear()") }
 		
 		reloadItems()
 	}
@@ -86,7 +86,7 @@ class AnimeItemsViewController:
 	
 	private func initSearchBar() {
 		self.searchBar = UISearchBar(frame: CGRect(x: 0, y: -50, width: self.view.frame.width, height: 50))
-        self.searchBar.barTintColor = .secondarySystemBackground
+        //self.searchBar.barTintColor = .secondarySystemBackground
 		self.view.addSubview(self.searchBar)
 	}
 
@@ -262,14 +262,13 @@ class AnimeItemsViewController:
 		UIView.animate(withDuration: 0.3, animations: {
 			self.searchBar.frame = CGRect(x: 0, y: toY, width: self.view.frame.width, height: 50)
 		}, completion: { fin in
-			if fin {
-				self.searchBar.text = nil
-				self.searchBar.delegate = self
-				self.searchBar.becomeFirstResponder()
-				self.animeTableView.tableFooterView?.frame =
-					CGRect(x: 0, y: 0, width: 0, height: self.view.frame.height/2.0)
-                self.animeTableView.reloadData()
-			}
+            guard fin else { return }
+            self.searchBar.text = nil
+            self.searchBar.delegate = self
+            self.searchBar.becomeFirstResponder()
+            self.animeTableView.tableFooterView?.frame =
+                CGRect(x: 0, y: 0, width: 0, height: self.view.frame.height/2.0)
+            self.animeTableView.reloadData()
 		})
 	}
 	
@@ -278,13 +277,12 @@ class AnimeItemsViewController:
 		UIView.animate(withDuration: 0.3, animations: {
 			self.searchBar.frame = CGRect(x: 0, y: -50, width: self.view.frame.width, height: 50)
 		}, completion: { fin in
-			if fin {
-				self.searchBar.delegate = nil
-				self.searchBar.text = nil
-				self.searchText = nil
-				self.animeTableView.tableFooterView?.frame = .zero
-				self.reloadItems()
-			}
+            guard fin else { return }
+            self.searchBar.delegate = nil
+            self.searchBar.text = nil
+            self.searchText = nil
+            self.animeTableView.tableFooterView?.frame = .zero
+            self.reloadItems()
 		})
 	}
 

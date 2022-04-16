@@ -24,8 +24,10 @@
 "anime_list"="작품목록";
 "filter_media"="매체별";
 "filter_rating"="평가별";
+"filter_year"="연도별";
 
 "finished"="완료";
+"finished_short"="완";
 "setting"="설정";
 "select"="선택";
 "all_view"="전체";

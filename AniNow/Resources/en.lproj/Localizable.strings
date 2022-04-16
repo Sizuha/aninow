@@ -24,8 +24,10 @@
 "anime_list"="List";
 "filter_media"="filter: Media";
 "filter_rating"="filter: Rating";
+"filter_year"="filter: Year";
 
 "finished"="Finished";
+"finished_short"="Fin";
 "setting"="Settings";
 "select"="Select";
 "all_view"="All";

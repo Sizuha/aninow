@@ -26,6 +26,7 @@ public class Strings {
 	static var LABEL_ANIME_LIST: String { return "anime_list".localized() }
 	static var FILTER_MEDIA: String { return "filter_media".localized() }
 	static var FILTER_RATING: String { return "filter_rating".localized() }
+    static var FILTER_YEAR: String { return "filter_year".localized() }
 	
 	static var SORT: String { return "sort".localized() }
 	static var SORT_BY_TITLE: String { return "sort_f_title".localized() }
@@ -39,6 +40,7 @@ public class Strings {
 	static var ALL_VIEWING: String { return "all_view".localized() }
 	static var NOW_VIEWING: String { return "now_view".localized() }
 	static var END_VIEWING: String { return "finished".localized() }
+    static var FIN: String { return "finished_short".localized() }
 	static var SETTING: String { return "setting".localized() }
 	static var SELECT: String { return "select".localized() }
 	
