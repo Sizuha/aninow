@@ -19,7 +19,7 @@ class YearFilteredViewController: AnimeItemsViewController {
     
     override func applyFilter(to target: TableQuery) {
         super.applyFilter(to: target)
-        let _ = target.andWhere("\(Anime.F_START_DATE) >= ?", self.year * 100)
+        _ = target.andWhere("\(Anime.F_START_DATE) BETWEEN ? AND ?", self.year * 100, self.year * 100 + 99)
     }
     
     override func createNewItem() -> Anime {

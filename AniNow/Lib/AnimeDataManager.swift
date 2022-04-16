@@ -98,8 +98,8 @@ class AnimeDataManager {
         let _ = table
             .andWhere("\(AnimeMedia.F_IDX) > 0")
             .select(factory: { AnimeMedia() }) { row in
-            result[row.idx] = row.label
-        }
+                result[row.idx] = row.label
+            }
         
         result[0] = Strings.NO_CATEGORY
         return result
@@ -255,16 +255,22 @@ class AnimeDataManager {
         guard let anime = db.from(Anime.tableName) else { return [] }
         defer { anime.close() }
         
+        //guard let conn = db.open() else { return [] }
+        //defer { conn.close() }
+        //let cur = conn.query(sql: "SELECT DISTINCT start_date/100 FROM anime ORDER BY start_date;")
+        
         let cur = anime
             .columns("\(Anime.F_START_DATE)/100")
-            .orderBy(Anime.F_START_DATE, desc: false)
-            .distnict()
+            .orderBy(Anime.F_START_DATE, desc: true)
+            .distinct()
             .select()
         
         var result: [Int] = []
-        cur.forEachColumn { cur, i in
-            guard i == 0, let year = cur.getInt(i) else { return }
-            result.append(year)
+        while cur.next() {
+            cur.forEachColumn { cur, i in
+                guard i == 0, let year = cur.getInt(i) else { return }
+                result.append(year)
+            }
         }
         
         return result

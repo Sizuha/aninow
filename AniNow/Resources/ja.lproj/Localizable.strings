@@ -24,8 +24,10 @@
 "anime_list"="作品一覧";
 "filter_media"="Media別";
 "filter_rating"="評価別";
+"filter_year"="西暦別";
 
 "finished"="完了";
+"finished_short"="完";
 "setting"="設定";
 "select"="選択";
 "all_view"="すべて";
@@ -38,7 +40,7 @@
 "no_category"="未分類";
 "none_value"="未定";
 "none_value2"="なし";
-"unknown"="知らない";
+"unknown"="不明";
 "empty_items"="データがありません";
 "no_rating"="評価なし";
 "not_used"="未使用";

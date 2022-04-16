@@ -57,6 +57,15 @@ class AnimeItemCell: UITableViewCell, SizViewUpdater {
 	override var detailTextLabel: UILabel? {
 		return nil
 	}
+    
+    func update(by item: Anime) {
+        self.title = item.title
+        self.SubTitle = item.titleOther
+        setRating(Int(item.rating))
+        setDate(item.startDate ??  YearMonth())
+        setMedia(item.media)
+        setProgress(item: item)
+    }
 	
 	func setRating(_ stars: Int) {
 		var star = ""
@@ -65,8 +74,12 @@ class AnimeItemCell: UITableViewCell, SizViewUpdater {
 		}
 		txtRatingStar.text = star
 	}
+    
+    func setProgress(item: Anime) {
+        setProgress(current: item.progress, max: item.total, isFinished: item.finished)
+    }
 	
-	func setProgress(current: Float, max: Int) {
+    func setProgress(current: Float, max: Int, isFinished: Bool) {
 		let progressFmt = NumberFormatter()
 		progressFmt.minimumFractionDigits = 0
 		progressFmt.maximumFractionDigits = 1
@@ -74,7 +87,7 @@ class AnimeItemCell: UITableViewCell, SizViewUpdater {
 		let currStr = progressFmt.string(for: current) ?? "0"
 		let maxStr = max > 0 ? "\(max)" : Strings.NONE_VALUE
 		
-		txtProgress.text = "Episode: \(currStr) / " + maxStr
+        txtProgress.text = "Episode: \(currStr) / \(maxStr)" + (isFinished ? " \(Strings.FIN)" : "")
 	}
 	
 	func setMedia(_ media: Int) {
