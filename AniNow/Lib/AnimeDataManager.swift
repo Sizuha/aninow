@@ -317,9 +317,9 @@ class AnimeDataManager {
     //MARK: - backup/restore
     
     func syncBackupData() -> Bool {
-        let url = iCloudBackupUrl?.appendingPathComponent(BACKUP_DB_FILENAME)
+        guard let url = iCloudBackupUrl?.appendingPathComponent(BACKUP_DB_FILENAME) else { return false }
         do {
-            try FileManager.default.startDownloadingUbiquitousItem(at: url!)
+            try FileManager.default.startDownloadingUbiquitousItem(at: url)
             return true
         }
         catch let error {

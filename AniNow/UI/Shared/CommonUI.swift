@@ -36,7 +36,12 @@ class CommonUIViewController: UIViewController {
 		}
 		self.fadeView!.backgroundColor = .black
 		self.fadeView!.isHidden = true
+        
+        let onFadeViewTap = UITapGestureRecognizer(target: self, action: #selector(self.onFadeViewTap))
+        self.fadeView?.addGestureRecognizer(onFadeViewTap)
 	}
+    
+    @objc func onFadeViewTap() {}
 	
 	private func addIndicator() {
 		guard self.indicator == nil else { return }

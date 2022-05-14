@@ -534,7 +534,13 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 
 		return valid
 	}
-	
+    
+    @objc
+    override func onFadeViewTap() {
+        self.pickerMedia.onCancel()
+        self.pickerPubDate.onCancel()
+    }
+    
 	private func showChoiceMedia() {
 		var selIdx = 0
 		for (code, _) in pickerMedia.medias {
@@ -542,8 +548,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			selIdx += 1
 		}
 		
-		fadeOut()
-		
+        fadeOut()
 		pickerMedia.selectedRows = [selIdx]
 		pickerMedia.show()
 	}
