@@ -126,7 +126,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
 	private func initPubDatePicker() {
 		pickerPubDate = DatePickerView()
-		pickerPubDate.onHidden = { self.fadeIn() }
+		pickerPubDate.onHidden = { self.fadeInWindow() }
 		pickerPubDate.onSelected = { numbers in
 			if self.editItem.startDate == nil {
 				self.editItem.startDate = YearMonth()
@@ -142,7 +142,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	
 	private func initMedaiPicker() {
 		pickerMedia = MediaPickerView()
-		pickerMedia.onHidden = { self.fadeIn() }
+		pickerMedia.onHidden = { self.fadeInWindow() }
 		pickerMedia.onSelected = { number in
 			let (code, label) = self.pickerMedia.medias[number]
 			self.editItem.media = code
@@ -534,7 +534,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			selIdx += 1
 		}
 		
-        fadeOut()
+        fadeOutWindow()
 		pickerMedia.selectedRows = [selIdx]
 		pickerMedia.show()
 	}
@@ -563,7 +563,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			idx += 1
 		}
 		
-		fadeOut()
+		fadeOutWindow()
 		
 		pickerPubDate.selectedRows = [idxY, idxM]
 		pickerPubDate.show()

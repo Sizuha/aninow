@@ -93,7 +93,7 @@ class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UI
 			.setTitle(file)
 			.setMessage(Strings.MSG_CONFIRM_IMPORT)
 			.addAction(title: Strings.CLEAR_AND_IMPORT, style: .destructive) { _ in
-				self.fadeOut { fin in
+				self.fadeOutWindow() { fin in
 					if fin {
 						self.startNowLoading()
 						DispatchQueue.main.async {
@@ -104,7 +104,7 @@ class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UI
 				}
 			}
 			.addAction(title: Strings.APPEND_IMPORT) { _ in
-				self.fadeOut { fin in
+				self.fadeOutWindow() { fin in
 					if fin {
 						self.startNowLoading()
 						DispatchQueue.main.async {
@@ -123,7 +123,7 @@ class ImportCsvViewController: CommonUIViewController, UITableViewDataSource, UI
 		let insertCount = AnimeDataManager.shared.importFrom(file: "\(SizPath.appDocument)/\(file)")
 		
 		stopNowLoading()
-		fadeIn()
+        fadeInWindow()
 		
 		SizAlertBuilder()
 			.setMessage(String(format: Strings.FMT_END_IMPORT, insertCount))

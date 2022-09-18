@@ -191,7 +191,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 	}
 	
 	func refresh() {
-		fadeOut(start: 0.0, end: 0.0) { fin in
+		fadeOutWindow(start: 0.0, end: 0.0) { fin in
 			guard fin else { return }
 			
 			self.startNowLoading()
@@ -230,7 +230,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
                 excuteAutoBackup_ifNeed()
                 
 				self.stopNowLoading()
-				self.fadeIn()
+				self.fadeInWindow()
 			}
 		}
 	}

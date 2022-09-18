@@ -235,7 +235,7 @@ class SettingsViewController: CommonUIViewController {
 		SizAlertBuilder(style: .actionSheet)
 			.setMessage(Strings.MSG_CONFIRM_EXPORT)
 			.addAction(title: Strings.OK) { _ in
-				self.fadeOut { fin in
+				self.fadeOutWindow() { fin in
 					self.startNowLoading()
 					DispatchQueue.main.async {
 						self.exportToCSV()
@@ -260,7 +260,7 @@ class SettingsViewController: CommonUIViewController {
 		AnimeDataManager.shared.exportTo(file: outFilePath)
 		
 		stopNowLoading()
-		fadeIn()
+		fadeInWindow()
 		
         let dlg = createAlertDialog(title: "\(Strings.BACKUP) (CSV)", message: Strings.MSG_END_EXPORT)
 		present(dlg, animated: true)
@@ -282,7 +282,7 @@ class SettingsViewController: CommonUIViewController {
 		let now = Date()
 		guard AnimeDataManager.shared.backup() else {
 			stopNowLoading()
-			fadeIn()
+            fadeInWindow()
 			
 			let dlg = createAlertDialog(message: Strings.MSG_FAIL)
 			present(dlg, animated: true)
@@ -294,7 +294,7 @@ class SettingsViewController: CommonUIViewController {
 		self.dispLastBackup?.text = self.backupSateText
 		
 		stopNowLoading()
-		fadeIn()
+        fadeInWindow()
 		
 		let dlg = createAlertDialog(message: Strings.MSG_END_BACKUP)
 		present(dlg, animated: true)
@@ -304,7 +304,7 @@ class SettingsViewController: CommonUIViewController {
 		SizAlertBuilder(style: .actionSheet)
 			.setMessage(Strings.MSG_CONFIRM_RESTORE)
 			.addAction(title: Strings.RESTORE, style: .destructive) { _ in
-				self.fadeOut { fin in
+				self.fadeOutWindow() { fin in
 					if fin {
 						self.startNowLoading()
 						DispatchQueue.main.async {
@@ -321,7 +321,7 @@ class SettingsViewController: CommonUIViewController {
         SizAlertBuilder(style: .actionSheet)
             .setMessage(Strings.MSG_BACKUP_FROM_OLDVER)
             .addAction(title: Strings.RESTORE, style: .destructive) { _ in
-                self.fadeOut { fin in
+                self.fadeOutWindow() { fin in
                     if fin {
                         self.startNowLoading()
                         DispatchQueue.main.async {
@@ -358,7 +358,7 @@ class SettingsViewController: CommonUIViewController {
 		let result = AnimeDataManager.shared.restore(fromOldDB: fromOldDB)
 		
 		stopNowLoading()
-		fadeIn()
+        fadeInWindow()
 		
 		guard result else {
 			SizAlertBuilder()

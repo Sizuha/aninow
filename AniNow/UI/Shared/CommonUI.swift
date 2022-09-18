@@ -19,10 +19,6 @@ class CommonUIViewController: UIViewController {
 		super.viewDidLoad()
 	}
     
-    func getKeyWindow() -> UIWindow? {
-        UIApplication.shared.getKeyWindow()
-    }
-
 	func addFadeView() {
         guard let window = getKeyWindow() else { assert(false); return }
         
@@ -45,32 +41,29 @@ class CommonUIViewController: UIViewController {
     @objc func onFadeViewTap() {}
 	
 	private func addIndicator() {
-		guard self.indicator == nil else { return }
+        if self.indicator == nil {
+            self.indicator = UIActivityIndicatorView()
+        }
 		
-		self.indicator = UIActivityIndicatorView()
 		self.indicator!.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
 		self.indicator!.center = view.center
         self.indicator!.style = UIActivityIndicatorView.Style.large
 		self.indicator!.hidesWhenStopped = true
-		
-		if let window = getKeyWindow() {
-			window.addSubview(self.indicator!)
-		}
-		else {
-			view.addSubview(self.indicator!)
-		}
+        getKeyWindow()?.addSubview(self.indicator!)
 	}
 	
 	func startNowLoading() {
 		self.addIndicator()
+        self.indicator?.superview?.bringSubviewToFront(self.indicator!)
 		self.indicator?.startAnimating()
 	}
 	
 	func stopNowLoading() {
 		self.indicator?.stopAnimating()
+        self.indicator?.removeFromSuperview()
 	}
 	
-	func fadeOut(
+	func fadeOutWindow(
 		start: CGFloat = 0.0,
 		end: CGFloat = 0.5,
 		duration: TimeInterval = 0.3,
@@ -89,7 +82,7 @@ class CommonUIViewController: UIViewController {
         )
 	}
 	
-	func fadeIn(completion: ((Bool)->Void)? = nil) {
+	func fadeInWindow(completion: ((Bool)->Void)? = nil) {
 		guard let fadeView = self.fadeView else { return }
 		
 		UIView.animate(withDuration: 0.15, delay: 0, animations: { fadeView.alpha = 0.0 }) { finished in
