@@ -12,7 +12,6 @@ import SizUtil
 
 class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	private var tableView: SizPropertyTableView!
-	private var sections = [SizPropertyTableSection]()
 	
 	private let itemID: Int
 	private var item: Anime? = nil
@@ -39,7 +38,6 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-		//super.init(coder: aDecoder)
 	}
 
     override func viewDidLoad() {
@@ -92,22 +90,20 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	private func updateHeaderInfo() {
 		guard let item = self.item else {
-			fatalError()
+			assert(false)
+            return
 		}
-		//title = item.title
         
 		let maxWidth = view.frame.width - 40
 		
 		if self.txtSubTitle != nil {
 			self.txtSubTitle.text = item.titleOther
-			
-			self.txtSubTitle.frame = CGRect(x: 20, y: 40, width: maxWidth, height: 20)
+			self.txtSubTitle.frame = CGRect(x: 20, y: 10, width: maxWidth, height: 20)
 		}
 		
 		if self.txtTitle != nil {
             self.txtTitle.text = item.title
-			
-			let y = self.txtSubTitle?.frame.maxY ?? 40
+			let y = self.txtSubTitle?.frame.maxY ?? 10
 			self.txtTitle.frame = CGRect(x: 20, y: y, width: maxWidth, height: 40)
 		}
 	}
@@ -118,8 +114,7 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
 		self.tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: HEADER_HEIGHT))
         
 		let section = createSections()
-		self.sections.append(section)
-		self.tableView.setDataSource(self.sections)
+		self.tableView.sections = [section]
         
         // Footer: Memo View
         self.dispMemo = UILabel(frame: CGRect.zero)
@@ -135,15 +130,35 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         self.tableView.tableFooterView = UIView(frame: .zero)
         self.tableView.tableFooterView!.addSubview(self.dispMemo)
+        self.tableView.didScroll = {
+            guard
+                let titleView = self.txtTitle,
+                let item = self.item
+            else { return }
+            
+            let offsetY = self.tableView.convert(titleView.frame.origin, to: self.view).y
+            if DEBUG_MODE {
+                print(offsetY)
+            }
+            
+            if offsetY < 91 {
+                self.navigationItem.title = item.title
+                self.navigationController?.navigationBar.setNeedsLayout()
+                titleView.isHidden = true
+            }
+            else {
+                self.navigationItem.title = ""
+                titleView.isHidden = false
+            }
+        }
         
 		view.addSubview(self.tableView)
 	}
     
     private func recreateSections() {
         let section = createSections()
-        self.sections.removeAll()
-        self.sections.append(section)
-        self.tableView.setDataSource(self.sections)
+        self.tableView.sections?.removeAll()
+        self.tableView.sections = [section]
     }
     
     private func createSections() -> TableSection {
