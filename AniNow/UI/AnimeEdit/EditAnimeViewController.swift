@@ -138,13 +138,6 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 				self.dispPubDate?.text = pubDate.toString()
 			}
 		}
-		
-		if let window = getKeyWindow() {
-			window.addSubview(pickerPubDate)
-		}
-		else {
-			view.addSubview(pickerPubDate)
-		}
 	}
 	
 	private func initMedaiPicker() {
@@ -154,13 +147,6 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			let (code, label) = self.pickerMedia.medias[number]
 			self.editItem.media = code
 			self.dispMedia?.text = label
-		}
-		
-		if let window = getKeyWindow() {
-			window.addSubview(pickerMedia)
-		}
-		else {
-			view.addSubview(pickerMedia)
 		}
 	}
 	

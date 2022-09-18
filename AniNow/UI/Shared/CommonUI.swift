@@ -24,16 +24,17 @@ class CommonUIViewController: UIViewController {
     }
 
 	func addFadeView() {
-		guard self.fadeView == nil else { return }
+        guard let window = getKeyWindow() else { assert(false); return }
+        
+		if self.fadeView == nil {
+            self.fadeView = UIView(frame: window.frame)
+        }
+        
+        if self.fadeView?.superview != nil {
+            self.fadeView?.removeFromSuperview()
+        }
+        window.addSubview(self.fadeView!)
 		
-        if let window = getKeyWindow() {
-			self.fadeView = UIView(frame: window.frame)
-			window.addSubview(self.fadeView!)
-		}
-		else {
-			self.fadeView = UIView(frame: self.view.frame)
-			self.view.addSubview(self.fadeView!)
-		}
 		self.fadeView!.backgroundColor = .black
 		self.fadeView!.isHidden = true
         
@@ -75,17 +76,17 @@ class CommonUIViewController: UIViewController {
 		duration: TimeInterval = 0.3,
 		completion: ((Bool)->Void)? = nil)
 	{
-		if self.fadeView == nil { addFadeView() }
-		if let fadeView = self.fadeView {
-			fadeView.alpha = start
-			fadeView.isHidden = false
-			UIView.animate(
-				withDuration: duration,
-				delay: 0,
-				animations: { fadeView.alpha = end },
-				completion: completion
-			)
-		}
+		addFadeView()
+        guard let fadeView = self.fadeView else { assert(false); return }
+        
+        fadeView.alpha = start
+        fadeView.isHidden = false
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            animations: { fadeView.alpha = end },
+            completion: completion
+        )
 	}
 	
 	func fadeIn(completion: ((Bool)->Void)? = nil) {
@@ -94,6 +95,7 @@ class CommonUIViewController: UIViewController {
 		UIView.animate(withDuration: 0.15, delay: 0, animations: { fadeView.alpha = 0.0 }) { finished in
 			if finished {
 				fadeView.isHidden = true
+                fadeView.removeFromSuperview()
 			}
 			
 			completion?(finished)
