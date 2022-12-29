@@ -63,7 +63,7 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
 		
 		// MARK: Categories
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.LABEL_ANIME_LIST,
 			rows: [
                 TextCell(label: Strings.ALL_VIEWING, attrs: [
@@ -95,19 +95,19 @@ class HomeViewController: CommonUIViewController, UINavigationControllerDelegate
 			]
 		))
 
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.FILTER_MEDIA,
 			rows: [] //mediaRows
 		))
 
 		// MARK: filter: Rating
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.FILTER_RATING,
 			rows: (0...5).reversed().map { createRatingFilterMenu($0) }
 		))
         
         // MARK: filter: Year
-        menus.append(TableSection(
+        menus.append(SizPropertyTableSection(
             title: Strings.FILTER_YEAR,
             rows: []
         ))

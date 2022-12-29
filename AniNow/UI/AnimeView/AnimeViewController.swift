@@ -161,8 +161,8 @@ class AnimeViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.tableView.sections = [section]
     }
     
-    private func createSections() -> TableSection {
-        let section = TableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
+    private func createSections() -> SizPropertyTableSection {
+        let section = SizPropertyTableSection(onCreateHeader: createHeaderCell, headerHeight: HEADER_HEIGHT)
         
         // MARK: Published Date
         section.rows.append(TextCell(label: Strings.PUB_DATE, attrs: [

@@ -103,7 +103,7 @@ class SettingsViewController: CommonUIViewController {
 		menuTable.translatesAutoresizingMaskIntoConstraints = false
         
 		// MARK: Info
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.INFO,
 			rows: [
 				// Version
@@ -114,7 +114,7 @@ class SettingsViewController: CommonUIViewController {
 		))
 		
 		// MARK: Edit Media
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			title: Strings.EDIT,
 			rows: [
 				// Media
@@ -128,7 +128,7 @@ class SettingsViewController: CommonUIViewController {
 		))
 
 		// MARK: Backup (iCloud)
-        let secBackup = TableSection(
+        let secBackup = SizPropertyTableSection(
             title: "\(Strings.BACKUP) (iCloud)",
             rows: [
                 // Last Backup
@@ -188,7 +188,7 @@ class SettingsViewController: CommonUIViewController {
 		menus.append(secBackup)
 		
 		// MARK: import/export CSV
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			title: "\(Strings.BACKUP) (CSV)",
 			rows: [
 				// Export
@@ -210,7 +210,7 @@ class SettingsViewController: CommonUIViewController {
 		))
 		
 		// MARK: etc
-		menus.append(TableSection(
+		menus.append(SizPropertyTableSection(
 			rows: [
 				// Clear
                 ButtonCell(label: Strings.DELETE_ALL, attrs: [

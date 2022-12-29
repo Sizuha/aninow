@@ -48,7 +48,7 @@ class EditAnimeMemoController: UIViewController {
 	}
 	
 	private func initTableView() {
-		self.sections.append(TableSection(rows: [
+		self.sections.append(SizPropertyTableSection(rows: [
 			// Memo
 			SizPropertyTableRow(type: .multiLine)
 				.onHeight { self.view.frame.height * 0.45 }

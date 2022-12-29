@@ -114,9 +114,10 @@ class AnimeDataManager {
         }
         defer { table.close() }
         
-        let (row, _) = table
+        let row = table
             .andWhere("idx=?", code)
             .selectOne { AnimeMedia() }
+            .row
         
         guard let label = row?.label else {
             return Strings.UNKNOWN
@@ -154,13 +155,14 @@ class AnimeDataManager {
                 Anime.F_RATING,
                 Anime.F_FIN
             )
-            .select { Anime() }.0
+            .select { Anime() }
+            .rows
     }
     
     func loadDetail(id: Int) -> Anime? {
         guard let anime = db.from(Anime.tableName) else { return nil }
         defer { anime.close() }
-        return anime.setWhere("\(Anime.F_IDX)=?", id).selectOne { Anime() }.0
+        return anime.setWhere("\(Anime.F_IDX)=?", id).selectOne { Anime() }.row
     }
     
     func count(finished: Bool? = nil) -> Int {
@@ -242,7 +244,8 @@ class AnimeDataManager {
         defer { anime.close() }
         return anime
             .andWhere("removed IS NULL OR removed=0")
-            .select { Anime() }.0
+            .select { Anime() }
+            .rows
     }
     
     func removeAll() {

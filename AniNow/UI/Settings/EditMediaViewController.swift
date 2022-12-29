@@ -66,7 +66,7 @@ class EditMediaViewController: UIViewController, UITextFieldDelegate {
             ])
 			rows.append(row)
 		}
-		menus.append(TableSection(rows: rows))
+		menus.append(SizPropertyTableSection(rows: rows))
 		
 		menuTable.setDataSource(menus)
 		menuTable.onDeleteItem = { i in

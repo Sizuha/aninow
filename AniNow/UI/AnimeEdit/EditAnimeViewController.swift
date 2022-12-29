@@ -151,7 +151,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 	}
 	
 	private func initTableView() {
-		self.sections.append(TableSection(rows: [
+		self.sections.append(SizPropertyTableSection(rows: [
 			// MARK: Title
 			EditTextCell(attrs: [
                 .value { self.editItem.title },
@@ -206,7 +206,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		if self.editItem.total <= 0 { self.editItem.total = 0 }
 		if self.editItem.progress <= 0 { self.editItem.progress = 0 }
 		
-		self.sections.append(TableSection(rows: [
+		self.sections.append(SizPropertyTableSection(rows: [
 			// MARK: Finished
             OnOffCell(label: Strings.LABEL_FIN, attrs: [
                 .valueBoolean { self.editItem.finished },
@@ -230,9 +230,15 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .hint("00"),
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
-                    self.editTotal = cell.textField
-                    self.editTotal?.keyboardType = .numberPad
-                    self.editTotal?.clearButtonMode = .always
+                    guard let textField = cell.textField else { assert(false); return }
+                    textField.keyboardType = .numberPad
+                    textField.clearButtonMode = .always
+                    textField.returnKeyType = .next
+                    textField.inputAccessoryView = Toolbar(items: [
+                        .flexibleSpace,
+                        .button(title: Strings.NEXT, style: .done, target: self, action: #selector(self.didEndEditFinalEp))
+                    ])
+                    self.editTotal = textField
                     cell.maxLength = 4
                     cell.delegate = self
                 },
@@ -251,9 +257,15 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
                 .hint("00"),
                 .created { c, _ in
                     let cell = EditTextCell.cellView(c)
-                    self.editProgress = cell.textField
-                    self.editProgress?.keyboardType = .decimalPad
-                    self.editProgress?.clearButtonMode = .always
+                    guard let textField = cell.textField else { assert(false); return }
+                    textField.keyboardType = .decimalPad
+                    textField.clearButtonMode = .always
+                    textField.returnKeyType = .done
+                    textField.inputAccessoryView = Toolbar(items: [
+                        .flexibleSpace,
+                        .system(item: .done, target: self, action: #selector(self.didEndEditCurrEp))
+                    ])
+                    self.editProgress = textField
                     cell.maxLength = 5
                     cell.delegate = self
                 },
@@ -298,7 +310,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
             ])
 		]))
 		
-		self.sections.append(TableSection(rows: [
+		self.sections.append(SizPropertyTableSection(rows: [
 			// MARK: Memo
             TextCell(label: "", attrs: [
                 .labelColor(.inputText),
@@ -337,7 +349,7 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 		]))
 		
 		if !modeNewItem { // MARK: Delete
-			self.sections.append(TableSection(rows: [
+			self.sections.append(SizPropertyTableSection(rows: [
 				ButtonCell(label: Strings.REMOVE, attrs: [
                     .tintColor(.red),
                     .selected { i in
@@ -386,24 +398,19 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
         self.dispRating?.text = getRatingToStarText(rating, fillEmpty: true)
         self.editItem.rating = Float(rating)
     }
-	
+    
+    @objc func didEndEditFinalEp() {
+        guard let edit = self.editTotal else { return }
+        _ = textFieldShouldReturn(edit)
+    }
+    
+    @objc func didEndEditCurrEp() {
+        guard let edit = self.editProgress else { return }
+        _ = textFieldShouldReturn(edit)
+    }
+
 	// MARK: - UITextFieldDelegate
     
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        let btnEndEdit = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(endEdit))
-//        self.navigationItem.rightBarButtonItems = [btnEndEdit]
-//    }
-//
-//    @objc
-//    func endEdit() {
-//        dismissKeyboard()
-//    }
-    
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//        let btnSave = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(trySave))
-//        self.navigationItem.rightBarButtonItems = [btnSave]
-//    }
-	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if textField.returnKeyType == .done {
 			textField.resignFirstResponder()
@@ -412,8 +419,13 @@ class EditAnimeViewController: CommonUIViewController, UITextFieldDelegate {
 			switch textField {
 			case self.editTitle:
 				self.editTitleOther?.becomeFirstResponder()
+                
 			case self.editTitleOther:
 				self.editUrl?.becomeFirstResponder()
+                
+            case self.editTotal:
+                self.editProgress?.becomeFirstResponder()
+                
 			default:
 				textField.resignFirstResponder()
 			}

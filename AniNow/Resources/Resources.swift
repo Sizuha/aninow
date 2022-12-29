@@ -22,6 +22,7 @@ public class Strings {
 	static let REMOVE = "remove".localized()
 	static let ADD_NEW = "add_new".localized()
 	static let EDIT = "edit".localized()
+    static let NEXT = "next".localized()
 	
 	static var LABEL_ANIME_LIST: String { return "anime_list".localized() }
 	static var FILTER_MEDIA: String { return "filter_media".localized() }

@@ -29,7 +29,7 @@
 		D5A24CAE21B4CC3B00E2F39B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CAD21B4CC3B00E2F39B /* Config.swift */; };
 		D5A24CB021B4E70300E2F39B /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CAF21B4E70300E2F39B /* YearMonth.swift */; };
 		D5A24CBA21B6273500E2F39B /* CommonUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CB921B6273500E2F39B /* CommonUI.swift */; };
-		D5A24CBC21B63E6500E2F39B /* resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CBB21B63E6500E2F39B /* resources.swift */; };
+		D5A24CBC21B63E6500E2F39B /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CBB21B63E6500E2F39B /* Resources.swift */; };
 		D5A24CBE21B643E700E2F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5A24CBD21B643E700E2F39B /* Assets.xcassets */; };
 		D5A24CC021B649B400E2F39B /* NowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A24CBF21B649B400E2F39B /* NowViewController.swift */; };
 		D5A24CC421B65BC200E2F39B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D5A24CC621B65BC200E2F39B /* Localizable.strings */; };
@@ -84,7 +84,7 @@
 		D5A24CAD21B4CC3B00E2F39B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D5A24CAF21B4E70300E2F39B /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
 		D5A24CB921B6273500E2F39B /* CommonUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUI.swift; sourceTree = "<group>"; };
-		D5A24CBB21B63E6500E2F39B /* resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = resources.swift; sourceTree = "<group>"; };
+		D5A24CBB21B63E6500E2F39B /* Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		D5A24CBD21B643E700E2F39B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D5A24CBF21B649B400E2F39B /* NowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowViewController.swift; sourceTree = "<group>"; };
 		D5A24CC121B65B4700E2F39B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -213,7 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				D5A24CBD21B643E700E2F39B /* Assets.xcassets */,
-				D5A24CBB21B63E6500E2F39B /* resources.swift */,
+				D5A24CBB21B63E6500E2F39B /* Resources.swift */,
 				D5A24CC621B65BC200E2F39B /* Localizable.strings */,
 				D5AE2E2A21B101B400906CC7 /* LaunchScreen.storyboard */,
 			);
@@ -468,7 +468,7 @@
 				D51C17EA21D2090600F7CF3D /* AllViewController.swift in Sources */,
 				D585E9DE2271B24700CBB318 /* MediaPickerView.swift in Sources */,
 				D585E9DC2271A94C00CBB318 /* DatePickerView.swift in Sources */,
-				D5A24CBC21B63E6500E2F39B /* resources.swift in Sources */,
+				D5A24CBC21B63E6500E2F39B /* Resources.swift in Sources */,
 				D51C17EC21D20A6900F7CF3D /* MediaFilteredViewController.swift in Sources */,
 				D51C17EE21D20B7F00F7CF3D /* RatingFilteredViewController.swift in Sources */,
 				D5A24CC021B649B400E2F39B /* NowViewController.swift in Sources */,
