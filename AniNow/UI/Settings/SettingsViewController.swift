@@ -108,7 +108,7 @@ class SettingsViewController: CommonUIViewController {
 			rows: [
 				// Version
 				TextCell(label: "Version", attrs: [
-                    .value { "\(SizApplication.shortVersion).\(SizApplication.buildVersion)" }
+                    .value { SizApplication.shortVersion }
                 ])
 			]
 		))
