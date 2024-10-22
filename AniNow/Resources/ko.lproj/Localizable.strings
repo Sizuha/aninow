@@ -39,7 +39,7 @@
 "memo"="메모";
 "empty_memo"="메모없음";
 "no_category"="미분류";
-"none_value"="미정";
+"none_value"="불명";
 "none_value2"="없음";
 "unknown"="모름";
 "empty_items"="비어있음";
