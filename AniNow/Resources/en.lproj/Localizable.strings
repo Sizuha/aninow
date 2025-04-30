@@ -39,7 +39,7 @@
 "memo"="Memo";
 "empty_memo"="";
 "no_category"="etc.";
-"none_value"="None";
+"none_value"="Unknown";
 "none_value2"="None";
 "unknown"="Unknown";
 "empty_items"="Empty";
