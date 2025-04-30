@@ -1,4 +1,5 @@
 {
+  "originHash" : "7a5eba3fa8ef190d357fb1dc8cc13ded4e9af7f988e77fa7f257c7522fe79f4b",
   "pins" : [
     {
       "identity" : "sizui-ios",
@@ -28,5 +29,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
